@@ -1,0 +1,11 @@
+[Oo]bj
+[Bb]in
+*.user
+*.suo
+*.[Cc]ache
+*.bak
+*.log 
+*.DS_Store
+[Tt]humbs.db
+*.userprefs
+*.nupkg
