@@ -1,5 +1,12 @@
 Raygun Appender for log4net
-=======
+===========================
+
+Configuration
+-------------
+
+* apiKey : The API key for accessing your application in raygun.io. Can be found under 'Application Settings' of your Raygun app.
+* retries : The number of times to try and send the exception raygun message to the raygun.io API before giving up and discarding the message.
+* timeBetweenRetries : The time to wait between retry attempts. If none is specified then a default of 5 seconds is used.
 
 Usage
 -----
@@ -23,3 +30,22 @@ Usage
 </configuration>
 ```
 
+Questions
+---------
+
+*I have to use version X of log4net, because of reasons*
+
+You might need to add a binding redirection to your application configuration file, redirecting to the version of log4net you are using.
+
+E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
+
+```
+<runtime>
+  <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+    <dependentAssembly>
+      <assemblyIdentity name="log4net" publicKeyToken="669e0ddf0bb1aa2a" culture="neutral" />
+      <bindingRedirect oldVersion="0.0.0.0-1.2.12.0" newVersion="1.2.12.0" />
+    </dependentAssembly>
+  </assemblyBinding>
+</runtime>
+```
