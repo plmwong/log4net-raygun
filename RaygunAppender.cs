@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
-using System.Web;
 using log4net.Appender;
 using log4net.Core;
 using Mindscape.Raygun4Net;
@@ -12,31 +10,18 @@ namespace log4net.Raygun
 {
     public class RaygunAppender : AppenderSkeleton
     {
-        private const int MaximumNumberOfAttemptsToLogToRaygun = 10;
-        private readonly TimeSpan _initialIntervalBetweenRetries = TimeSpan.FromMilliseconds(5000);
-        private static readonly string AssemblyFullName = GetAssemblyFullName();
+        public static readonly TimeSpan DefaultTimeBetweenRetries = TimeSpan.FromMilliseconds(5000);
 
-        private static string GetAssemblyFullName()
-        {
-            if (HttpContext.Current != null)
-            {
-                var baseWebApplicationType = HttpContext.Current.ApplicationInstance.GetType().BaseType;
-
-                if (baseWebApplicationType != null)
-                {
-                    return baseWebApplicationType.Assembly.FullName;
-                }
-            }
-
-            return Assembly.GetEntryAssembly() != null ? Assembly.GetEntryAssembly().FullName : null;
-        }
-
-        protected class UserCustomDataKey
-        {
-            public const string AssemblyFulllName = "Assembly FullName";
-        }
+        private TimeSpan _timeBetweenRetries;
+        private static readonly string ApplicationAssemblyFullName = AssemblyResolver.GetApplicationAssembly().FullName;
 
         public virtual string ApiKey { get; set; }
+        public virtual int Retries { get; set; }
+        public virtual TimeSpan TimeBetweenRetries
+        {
+            get { return _timeBetweenRetries == TimeSpan.Zero ? DefaultTimeBetweenRetries : _timeBetweenRetries; }
+            set { _timeBetweenRetries = value; }
+        }
 
         protected override void Append(LoggingEvent loggingEvent)
         {
@@ -53,7 +38,7 @@ namespace log4net.Raygun
                 if (exception != null)
                 {
                     new TaskFactory().StartNew(() =>
-                        Retry.Action(() => SendExceptionToRaygun(exception), MaximumNumberOfAttemptsToLogToRaygun, _initialIntervalBetweenRetries));
+                        Retry.Action(() => SendExceptionToRaygun(exception), Retries, TimeBetweenRetries));
                 }
             }
         }
@@ -68,18 +53,23 @@ namespace log4net.Raygun
 
         private static RaygunMessage BuildRaygunExceptionMessage(Exception exception)
         {
-            var userCustomData = new Dictionary<string, string> {{UserCustomDataKey.AssemblyFulllName, AssemblyFullName}};
+            var userCustomData = new Dictionary<string, string> { { UserCustomDataKey.AssemblyFulllName, ApplicationAssemblyFullName } };
 
             var raygunMessage = RaygunMessageBuilder.New
                 .SetExceptionDetails(exception)
                 .SetClientDetails()
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
-                .SetVersion(null)
+                .SetVersion(AssemblyResolver.GetApplicationAssembly().GetName().Version.ToString())
                 .SetUserCustomData(userCustomData)
                 .Build();
 
             return raygunMessage;
+        }
+
+        protected class UserCustomDataKey
+        {
+            public const string AssemblyFulllName = "Assembly FullName";
         }
     }
 }
