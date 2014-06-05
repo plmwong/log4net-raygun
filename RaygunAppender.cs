@@ -13,7 +13,7 @@ namespace log4net.Raygun
         public static readonly TimeSpan DefaultTimeBetweenRetries = TimeSpan.FromMilliseconds(5000);
 
         private TimeSpan _timeBetweenRetries;
-        private static readonly string ApplicationAssemblyFullName = AssemblyResolver.GetApplicationAssembly().FullName;
+        private static readonly string ApplicationAssemblyFullName = AssemblyResolver.GetApplicationAssembly() != null ? AssemblyResolver.GetApplicationAssembly().FullName : "Not supplied.";
 
         public virtual string ApiKey { get; set; }
         public virtual int Retries { get; set; }
@@ -27,33 +27,52 @@ namespace log4net.Raygun
         {
             if (loggingEvent.Level >= Level.Error)
             {
-                var exceptionObject = loggingEvent.ExceptionObject;
-                var exception = exceptionObject != null ? exceptionObject.GetBaseException() : null;
+                Exception exception = null;
+                string loggedMessage = null;
 
-                if (exception == null && loggingEvent.MessageObject is Exception)
+                var exceptionObject = loggingEvent.ExceptionObject;
+                if (exceptionObject != null)
                 {
-                    exception = loggingEvent.MessageObject as Exception;
+                    exception = exceptionObject.GetBaseException();
+                }
+
+                var messageObject = loggingEvent.MessageObject;
+                if (messageObject != null)
+                {
+                    var messageObjectAsException = messageObject as Exception;
+                    if (exception == null && messageObjectAsException != null)
+                    {
+                        exception = messageObjectAsException;
+                    }
+                    else
+                    {
+                        loggedMessage = messageObject.ToString();
+                    }
                 }
 
                 if (exception != null)
                 {
                     new TaskFactory().StartNew(() =>
-                        Retry.Action(() => SendExceptionToRaygun(exception), Retries, TimeBetweenRetries));
+                        Retry.Action(() => SendExceptionToRaygun(exception, loggedMessage), Retries, TimeBetweenRetries));
                 }
             }
         }
 
-        private void SendExceptionToRaygun(Exception exception)
+        private void SendExceptionToRaygun(Exception exception, string loggedMessage)
         {
             var raygunClient = new RaygunClient(ApiKey);
-            var raygunMessage = BuildRaygunExceptionMessage(exception);
+            var raygunMessage = BuildRaygunExceptionMessage(exception, loggedMessage);
 
             raygunClient.Send(raygunMessage);
         }
 
-        private static RaygunMessage BuildRaygunExceptionMessage(Exception exception)
+        private static RaygunMessage BuildRaygunExceptionMessage(Exception exception, string loggedMessage)
         {
-            var userCustomData = new Dictionary<string, string> { { UserCustomDataKey.AssemblyFulllName, ApplicationAssemblyFullName } };
+            var userCustomData = new Dictionary<string, string>
+            {
+                { UserCustomDataKey.AssemblyFulllName, ApplicationAssemblyFullName },
+                { UserCustomDataKey.LoggedMessage, loggedMessage ?? "Not supplied."}
+            };
 
             var raygunMessage = RaygunMessageBuilder.New
                 .SetExceptionDetails(exception)
@@ -70,6 +89,7 @@ namespace log4net.Raygun
         protected class UserCustomDataKey
         {
             public const string AssemblyFulllName = "Assembly FullName";
+            public const string LoggedMessage = "Logged Message";
         }
     }
 }
