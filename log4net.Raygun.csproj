@@ -72,21 +72,21 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
-  <Target Name="AfterBuild">
+  <Target Name="AfterBuild" Condition=" '$(OS)' != 'Unix' ">
     <!-- Load up the information from the assembly -->
     <GetAssemblyIdentity AssemblyFiles="$(OutputPath)$(AssemblyName).dll">
       <Output TaskParameter="Assemblies" ItemName="OutputAssemblyInfo" />
     </GetAssemblyIdentity>
     <Message Text="Info: %(OutputAssemblyInfo.Version)" />
   </Target>
-  <Target Name="Package">
+  <Target Name="Package" Condition=" '$(OS)' != 'Unix' ">
     <!-- Ensure the Package directory exists for this project -->
     <RemoveDir Directories="NuGet" />
     <MakeDir Directories="NuGet" />
     <!-- Package the project -->
     <Exec WorkingDirectory="$(BuildDir)" Command=".\.nuget\NuGet.exe pack -Verbosity detailed -Symbols -OutputDir &quot;NuGet&quot; -Version %(OutputAssemblyInfo.Version) -Properties &quot;Configuration=$(Configuration)&quot;" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
