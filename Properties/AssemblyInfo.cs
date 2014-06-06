@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+using System.Runtime.CompilerServices;
+
+
 [assembly: AssemblyTitle("log4net.Raygun")]
 [assembly: AssemblyDescription("Simple log4net appender which logs to the raygun.io API.")]
 [assembly: AssemblyConfiguration("")]
@@ -33,3 +36,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: InternalsVisibleTo("log4net.Raygun.Tests")]

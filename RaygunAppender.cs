@@ -11,8 +11,21 @@ namespace log4net.Raygun
     public class RaygunAppender : AppenderSkeleton
     {
         public static readonly TimeSpan DefaultTimeBetweenRetries = TimeSpan.FromMilliseconds(5000);
-
         private TimeSpan _timeBetweenRetries;
+
+		private readonly IUserCustomDataBuilder _userCustomDataBuilder;
+		private readonly Func<string, IRaygunClient> _raygunClientFactory;
+
+		public RaygunAppender() 
+			: this(new UserCustomDataBuilder(), apiKey => new RaygunClient(apiKey))
+		{
+		}
+
+		internal RaygunAppender(IUserCustomDataBuilder userCustomDataBuilder, Func<string, IRaygunClient> raygunClientFactory)
+		{
+			_userCustomDataBuilder = userCustomDataBuilder;
+			_raygunClientFactory = raygunClientFactory;
+		}
 
         public virtual string ApiKey { get; set; }
         public virtual int Retries { get; set; }
@@ -34,30 +47,36 @@ namespace log4net.Raygun
                     exception = exceptionObject.GetBaseException();
                 }
 
-                var messageObject = loggingEvent.MessageObject;
-                if (messageObject != null)
-                {
-                    var messageObjectAsException = messageObject as Exception;
-                    if (exception == null && messageObjectAsException != null)
-                    {
-                        exception = messageObjectAsException;
-                    }
-                }
+				if (exception == null) {
+					var messageObject = loggingEvent.MessageObject;
+					if (messageObject != null)
+					{
+						var messageObjectAsException = messageObject as Exception;
+						if (messageObjectAsException != null)
+						{
+							exception = messageObjectAsException;
+						}
+					}
+				}
 
                 if (exception != null)
                 {
-                    new TaskFactory().StartNew(() =>
-                        Retry.Action(() => SendExceptionToRaygun(exception, loggingEvent), Retries, TimeBetweenRetries));
+					SendExceptionToRaygunInBackground(exception, loggingEvent);
                 }
             }
         }
 
+		private void SendExceptionToRaygunInBackground(Exception exception, LoggingEvent loggingEvent)
+		{
+			new TaskFactory()
+				.StartNew(() => Retry.Action(() => SendExceptionToRaygun(exception, loggingEvent), Retries, TimeBetweenRetries));
+		}
+
         private void SendExceptionToRaygun(Exception exception, LoggingEvent loggingEvent)
         {
-            var raygunClient = new RaygunClient(ApiKey);
+			var raygunClient = _raygunClientFactory(ApiKey);
 
-            var userCustomDataBuilder = new UserCustomDataBuilder();
-            var userCustomData = userCustomDataBuilder.Build(exception, loggingEvent);
+			var userCustomData = _userCustomDataBuilder.Build(loggingEvent);
             var raygunMessage = BuildRaygunExceptionMessage(exception, userCustomData);
 
             raygunClient.Send(raygunMessage);

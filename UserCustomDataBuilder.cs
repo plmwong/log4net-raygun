@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using log4net.Core;
 
 namespace log4net.Raygun
 {
-    public class UserCustomDataBuilder
+	public class UserCustomDataBuilder : IUserCustomDataBuilder
     {
         private const string NotSupplied = "Not supplied.";
         private static readonly string ApplicationAssemblyFullName = AssemblyResolver.GetApplicationAssembly() != null ? AssemblyResolver.GetApplicationAssembly().FullName : NotSupplied;
 
-        public Dictionary<string, string> Build(Exception exception, LoggingEvent loggingEvent)
+        public Dictionary<string, string> Build(LoggingEvent loggingEvent)
         {
             var userCustomData = new Dictionary<string, string>
             {
@@ -26,7 +25,7 @@ namespace log4net.Raygun
             return userCustomData;
         }
 
-        protected class UserCustomDataKey
+		protected static class UserCustomDataKey
         {
             public const string AssemblyFullName = "Assembly FullName";
             public const string Domain = "Domain";
