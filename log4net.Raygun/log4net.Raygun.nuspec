@@ -9,7 +9,7 @@
     <projectUrl>https://bitbucket.org/plmw/log4net.raygun</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Initial release.</releaseNotes>
+    <releaseNotes>log4net.Raygun is a simple log4net appender which logs error events to the raygun.io API.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>log4net raygun appender</tags>
   </metadata>
