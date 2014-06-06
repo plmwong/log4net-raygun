@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Diagnostics;
 
 namespace log4net.Raygun
 {
@@ -17,8 +18,10 @@ namespace log4net.Raygun
                 {
                     action.Invoke();
                 }
-                catch (Exception)
+				catch (Exception ex)
                 {
+					Debug.WriteLine(string.Format("Exception on attempt #{0}: {1}", attempts, ex));
+
                     if (attempts >= numberOfRetries)
                     {
                         throw;

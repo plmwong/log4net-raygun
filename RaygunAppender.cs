@@ -15,16 +15,18 @@ namespace log4net.Raygun
 
 		private readonly IUserCustomDataBuilder _userCustomDataBuilder;
 		private readonly Func<string, IRaygunClient> _raygunClientFactory;
+		private readonly TaskScheduler _taskScheduler;
 
 		public RaygunAppender() 
-			: this(new UserCustomDataBuilder(), apiKey => new RaygunClient(apiKey))
+			: this(new UserCustomDataBuilder(), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), TaskScheduler.Default)
 		{
 		}
 
-		internal RaygunAppender(IUserCustomDataBuilder userCustomDataBuilder, Func<string, IRaygunClient> raygunClientFactory)
+		internal RaygunAppender(IUserCustomDataBuilder userCustomDataBuilder, Func<string, IRaygunClient> raygunClientFactory, TaskScheduler taskScheduler)
 		{
 			_userCustomDataBuilder = userCustomDataBuilder;
 			_raygunClientFactory = raygunClientFactory;
+			_taskScheduler = taskScheduler;
 		}
 
         public virtual string ApiKey { get; set; }
@@ -68,7 +70,7 @@ namespace log4net.Raygun
 
 		private void SendExceptionToRaygunInBackground(Exception exception, LoggingEvent loggingEvent)
 		{
-			new TaskFactory()
+			new TaskFactory(_taskScheduler)
 				.StartNew(() => Retry.Action(() => SendExceptionToRaygun(exception, loggingEvent), Retries, TimeBetweenRetries));
 		}
 
@@ -84,12 +86,14 @@ namespace log4net.Raygun
 
         private static RaygunMessage BuildRaygunExceptionMessage(Exception exception, Dictionary<string, string> userCustomData)
         {
+			var applicationAssembly = AssemblyResolver.GetApplicationAssembly();
+
             var raygunMessage = RaygunMessageBuilder.New
                 .SetExceptionDetails(exception)
                 .SetClientDetails()
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
-                .SetVersion(AssemblyResolver.GetApplicationAssembly().GetName().Version.ToString())
+				.SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
                 .SetUserCustomData(userCustomData)
                 .Build();
 
