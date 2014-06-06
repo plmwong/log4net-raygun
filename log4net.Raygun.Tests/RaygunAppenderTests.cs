@@ -68,6 +68,26 @@ namespace log4net.Raygun.Tests
 
 			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
 		}
+
+		[Test]
+		public void WhenBuildingRaygunMessageToSendSetTheUserCustomDataFromBuilder()
+		{
+			var fatalLoggingEvent = new LoggingEvent(GetType(), null, "RaygunAppenderTests", Level.Error, new TestException(), null);
+
+			_appender.DoAppend(fatalLoggingEvent);
+
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData, Is.SameAs(_fakeUserCustomDataBuilder.UserCustomData));
+		}
+
+		[Test]
+		public void WhenBuildingRaygunMessageToSendTheMachineNameIsSet()
+		{
+			var fatalLoggingEvent = new LoggingEvent(GetType(), null, "RaygunAppenderTests", Level.Error, new TestException(), null);
+
+			_appender.DoAppend(fatalLoggingEvent);
+
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.MachineName, Is.EqualTo(Environment.MachineName));
+		}
 	}
 }
 

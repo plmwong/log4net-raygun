@@ -6,10 +6,9 @@ namespace log4net.Raygun.Tests
 	{
 		private RaygunMessage _lastMessageSent;
 
-		public RaygunMessage LastMessageSent {
-			get {
-				return _lastMessageSent;
-			}
+		public RaygunMessage LastMessageSent
+		{
+			get { return _lastMessageSent; }
 		}
 
 		public void Send(RaygunMessage raygunMessage)
