@@ -5,15 +5,17 @@ namespace log4net.Raygun
 	public class AssemblyResolver
     {
 		private readonly IHttpContext _httpContext;
+		private readonly IAssembly _assemblyLoader;
 		private const string AspNamespace = "ASP";
 
-		public AssemblyResolver() : this(new HttpContextAdapter())
+		public AssemblyResolver() : this(new HttpContextAdapter(), new AssemblyAdapter())
 		{
 		}
 
-		internal AssemblyResolver(IHttpContext httpContext)
+		internal AssemblyResolver(IHttpContext httpContext, IAssembly assemblyLoader)
 		{
 			_httpContext = httpContext;
+			_assemblyLoader = assemblyLoader;
 		}
 
         public Assembly GetApplicationAssembly()
@@ -25,7 +27,7 @@ namespace log4net.Raygun
                 return baseWebApplicationAssembly;
             }
 
-            return Assembly.GetEntryAssembly();
+			return _assemblyLoader.GetEntryAssembly();
         }
 
         private Assembly GetWebApplicationAssembly()

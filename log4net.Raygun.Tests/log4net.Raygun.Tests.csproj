@@ -63,6 +63,8 @@
     <Compile Include="Fakes\FakeUserCustomDataBuilder.cs" />
     <Compile Include="Fakes\FakeHttpApplication.cs" />
     <Compile Include="Fakes\FakeAppDomainManager.cs" />
+    <Compile Include="Fakes\FakeAssemblyLoader.cs" />
+    <Compile Include="RetryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AllPropertiesSet.config">

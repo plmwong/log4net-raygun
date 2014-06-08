@@ -65,6 +65,8 @@
     <Compile Include="RaygunClientAdapter.cs" />
     <Compile Include="IHttpContext.cs" />
     <Compile Include="HttpContextAdapter.cs" />
+    <Compile Include="AssemblyAdapter.cs" />
+    <Compile Include="IAssembly.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

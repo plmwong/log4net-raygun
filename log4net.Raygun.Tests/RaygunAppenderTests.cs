@@ -34,7 +34,7 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenLoggingEventIsAnErrorSendRaygunMessage()
 		{
-			var errorLoggingEvent = new LoggingEvent(GetType(), null, "RaygunAppenderTests", Level.Error, null, new TestException());
+			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, null, new TestException());
 			_appender.DoAppend(errorLoggingEvent);
 
 			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
@@ -43,7 +43,7 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenLoggingEventIsFatalSendRaygunMessage()
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, "RaygunAppenderTests", Level.Fatal, null, new TestException());
+			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Fatal, null, new TestException());
 
 			_appender.DoAppend(fatalLoggingEvent);
 
@@ -53,7 +53,7 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenLoggingErrorEventWithoutExceptionDataDoNothing()
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, "RaygunAppenderTests", Level.Error, null, null);
+			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, null, null);
 
 			_appender.DoAppend(fatalLoggingEvent);
 
@@ -63,7 +63,7 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenLoggingErrorEventWithExceptionInMessageDataSendRaygunMessage()
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, "RaygunAppenderTests", Level.Error, new TestException(), null);
+			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 
 			_appender.DoAppend(fatalLoggingEvent);
 
@@ -73,7 +73,7 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenBuildingRaygunMessageToSendSetTheUserCustomDataFromBuilder()
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, "RaygunAppenderTests", Level.Error, new TestException(), null);
+			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 
 			_appender.DoAppend(fatalLoggingEvent);
 
@@ -83,7 +83,7 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenBuildingRaygunMessageToSendTheMachineNameIsSet()
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, "RaygunAppenderTests", Level.Error, new TestException(), null);
+			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 
 			_appender.DoAppend(fatalLoggingEvent);
 

@@ -11,7 +11,7 @@ namespace log4net.Raygun.Tests
 		public void WhenHttpContextIsAvailableGetAssemblyFromApplicationInstanceAssembly()
 		{
 			var fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
-			var assemblyResolver = new AssemblyResolver(fakeHttpContext);
+			var assemblyResolver = new AssemblyResolver(fakeHttpContext, null);
 
 			var resolvedAssembly = assemblyResolver.GetApplicationAssembly();
 			var fakeHttpApplicationAssembly = fakeHttpContext.ApplicationInstance.GetType().Assembly;
@@ -22,13 +22,12 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenHttpContextIsNotAvailableThenGetAssemblyFromCurrentExecutingAssembly()
 		{
-			var assemblyResolver = new AssemblyResolver(null);
+			var fakeAssemblyLoader = new FakeAssemblyLoader(GetType().Assembly);
+			var assemblyResolver = new AssemblyResolver(null, fakeAssemblyLoader);
 
 			var resolvedAssembly = assemblyResolver.GetApplicationAssembly();
 
-			//TODO: NUnit test context does not have an EntryAssembly, so need to workaround this
-			//TODO: for a proper test
-			Assert.That(resolvedAssembly, Is.EqualTo(null));
+			Assert.That(resolvedAssembly, Is.EqualTo(GetType().Assembly));
 		}
 	}
 }
