@@ -5,7 +5,7 @@ namespace log4net.Raygun
 {
 	public class UserCustomDataBuilder : IUserCustomDataBuilder
     {
-        private const string NotSupplied = "Not supplied.";
+		internal const string NotSupplied = "Not supplied.";
 
         public Dictionary<string, string> Build(LoggingEvent loggingEvent)
         {
@@ -42,7 +42,7 @@ namespace log4net.Raygun
 	        }
 	    }
 
-	    protected static class UserCustomDataKey
+		internal protected static class UserCustomDataKey
         {
             public const string AssemblyFullName = "Assembly FullName";
             public const string Domain = "Domain";
