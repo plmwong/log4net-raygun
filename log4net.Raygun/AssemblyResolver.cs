@@ -1,11 +1,22 @@
 ﻿using System.Reflection;
-using System.Web;
 
 namespace log4net.Raygun
 {
-    public class AssemblyResolver
+	public class AssemblyResolver
     {
-        public static Assembly GetApplicationAssembly()
+		private readonly IHttpContext _httpContext;
+		private const string AspNamespace = "ASP";
+
+		public AssemblyResolver() : this(new HttpContextAdapter())
+		{
+		}
+
+		internal AssemblyResolver(IHttpContext httpContext)
+		{
+			_httpContext = httpContext;
+		}
+
+        public Assembly GetApplicationAssembly()
         {
             var baseWebApplicationAssembly = GetWebApplicationAssembly();
 
@@ -17,15 +28,19 @@ namespace log4net.Raygun
             return Assembly.GetEntryAssembly();
         }
 
-        private static Assembly GetWebApplicationAssembly()
+        private Assembly GetWebApplicationAssembly()
         {
-            if (HttpContext.Current != null)
+			if (_httpContext != null && _httpContext.ApplicationInstance != null)
             {
-                var baseWebApplicationType = HttpContext.Current.ApplicationInstance.GetType().BaseType;
+				var webApplicationType = _httpContext.ApplicationInstance.GetType();
 
-                if (baseWebApplicationType != null)
-                {
-                    return baseWebApplicationType.Assembly;
+				if (webApplicationType != null)
+				{
+					while (webApplicationType.Namespace == AspNamespace) {
+						webApplicationType = webApplicationType.BaseType;
+					}
+
+                    return webApplicationType.Assembly;
                 }
             }
 

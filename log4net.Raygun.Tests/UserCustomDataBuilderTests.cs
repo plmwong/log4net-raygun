@@ -16,15 +16,15 @@ namespace log4net.Raygun.Tests
             _userCustomDataBuilder = new UserCustomDataBuilder();
         }
 
-        [Test]
-        public void LoggingEventPropertiesAreAddedToUserCustomData()
-        {
-            var loggingEventWithProperties = new LoggingEvent(new LoggingEventData { Properties = new PropertiesDictionary() });
-            loggingEventWithProperties.Properties["TestPropertyKey"] = "TestPropertyValue";
+		[Test]
+		public void LoggingEventPropertiesAreAddedToUserCustomData()
+		{
+			var loggingEventWithProperties = new LoggingEvent(new LoggingEventData { Properties = new PropertiesDictionary() });
+			loggingEventWithProperties.Properties["TestPropertyKey"] = "TestPropertyValue";
 
-            var userCustomData = _userCustomDataBuilder.Build(loggingEventWithProperties);
+			var userCustomData = _userCustomDataBuilder.Build(loggingEventWithProperties);
 
-            Assert.That(userCustomData, Has.Exactly(1).EqualTo(new KeyValuePair<string, string>("Properties.TestPropertyKey", "TestPropertyValue")));
-        }
+			Assert.That(userCustomData, Has.Exactly(1).EqualTo(new KeyValuePair<string, string>("Properties.TestPropertyKey", "TestPropertyValue")));
+		}
     }
 }

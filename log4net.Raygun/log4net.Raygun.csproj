@@ -63,6 +63,8 @@
     <Compile Include="IUserCustomDataBuilder.cs" />
     <Compile Include="IRaygunClient.cs" />
     <Compile Include="RaygunClientAdapter.cs" />
+    <Compile Include="IHttpContext.cs" />
+    <Compile Include="HttpContextAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

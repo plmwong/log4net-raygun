@@ -86,7 +86,8 @@ namespace log4net.Raygun
 
         private static RaygunMessage BuildRaygunExceptionMessage(Exception exception, Dictionary<string, string> userCustomData)
         {
-			var applicationAssembly = AssemblyResolver.GetApplicationAssembly();
+			var assemblyResolver = new AssemblyResolver();
+			var applicationAssembly = assemblyResolver.GetApplicationAssembly();
 
             var raygunMessage = RaygunMessageBuilder.New
                 .SetExceptionDetails(exception)

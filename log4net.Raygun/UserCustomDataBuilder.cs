@@ -6,13 +6,16 @@ namespace log4net.Raygun
 	public class UserCustomDataBuilder : IUserCustomDataBuilder
     {
         private const string NotSupplied = "Not supplied.";
-        private static readonly string ApplicationAssemblyFullName = AssemblyResolver.GetApplicationAssembly() != null ? AssemblyResolver.GetApplicationAssembly().FullName : NotSupplied;
 
         public Dictionary<string, string> Build(LoggingEvent loggingEvent)
         {
+			var assemblyResolver = new AssemblyResolver();
+			var applicationAssembly = assemblyResolver.GetApplicationAssembly();
+			var applicationAssemblyFullName = applicationAssembly != null ? applicationAssembly.FullName : NotSupplied;
+
             var userCustomData = new Dictionary<string, string>
             {
-                { UserCustomDataKey.AssemblyFullName, ApplicationAssemblyFullName },
+				{ UserCustomDataKey.AssemblyFullName, applicationAssemblyFullName },
                 { UserCustomDataKey.Domain, loggingEvent.Domain ?? NotSupplied},
                 { UserCustomDataKey.Identity, loggingEvent.Identity ?? NotSupplied},
                 { UserCustomDataKey.ClassName, loggingEvent.LocationInformation.ClassName ?? NotSupplied},

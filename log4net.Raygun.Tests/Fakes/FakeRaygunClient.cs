@@ -1,6 +1,6 @@
 ﻿using Mindscape.Raygun4Net.Messages;
 
-namespace log4net.Raygun.Tests
+namespace log4net.Raygun.Tests.Fakes
 {
 	public class FakeRaygunClient : IRaygunClient
 	{

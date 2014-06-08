@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using log4net.Core;
-using System;
+using log4net.Raygun.Tests.Fakes;
 
 namespace log4net.Raygun.Tests
 {
