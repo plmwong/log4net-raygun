@@ -69,17 +69,17 @@ namespace log4net.Raygun
         }
 
 		private void SendExceptionToRaygunInBackground(Exception exception, LoggingEvent loggingEvent)
-		{
+        {
+            var userCustomData = _userCustomDataBuilder.Build(loggingEvent);
+            var raygunMessage = BuildRaygunExceptionMessage(exception, userCustomData);
+
 			new TaskFactory(_taskScheduler)
-				.StartNew(() => Retry.Action(() => SendExceptionToRaygun(exception, loggingEvent), Retries, TimeBetweenRetries));
+                .StartNew(() => Retry.Action(() => SendExceptionToRaygun(raygunMessage), Retries, TimeBetweenRetries));
 		}
 
-        private void SendExceptionToRaygun(Exception exception, LoggingEvent loggingEvent)
+        private void SendExceptionToRaygun(RaygunMessage raygunMessage)
         {
-			var raygunClient = _raygunClientFactory(ApiKey);
-
-			var userCustomData = _userCustomDataBuilder.Build(loggingEvent);
-            var raygunMessage = BuildRaygunExceptionMessage(exception, userCustomData);
+            var raygunClient = _raygunClientFactory(ApiKey);
 
             raygunClient.Send(raygunMessage);
         }
