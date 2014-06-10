@@ -14,12 +14,12 @@ https://www.nuget.org/packages/log4net.Raygun/
 Configuration
 -------------
 
-* apiKey : The API key for accessing your application in raygun.io. Can be found under 'Application Settings' of your Raygun app.
-* retries : The number of times to try and send the exception raygun message to the raygun.io API before giving up and discarding the message.
-* timeBetweenRetries : The time to wait between retry attempts. If none is specified then a default of 5 seconds is used.
+* **apiKey** (required) : The API key for accessing your application in raygun.io. The API key can be found under 'Application Settings' of your Raygun app.
+* **retries** (optional) : The number of times to try and send the exception raygun message to the raygun.io API before giving up and discarding the message. If this setting is not specified, then retries are *disabled* and the appender will only try to log to raygun once, and discard the message if unsuccessful.
+* **timeBetweenRetries** (optional) : A TimeSpan of the time to wait between retry attempts. If this setting is not specified, then a default of '00:00:05' (5 seconds) is used.
 
-Example
--------
+Configuration Example
+---------------------
 
 ```
 <?xml version="1.0" encoding="utf-8" ?>
@@ -31,9 +31,11 @@ Example
   <log4net>
     ...
     <appender name="RaygunAppender" type="log4net.Raygun.RaygunAppender, log4net.Raygun">
-      <apiKey value="<raygun.io API key>" />
-      <retries value="<number of times to retry sending to raygun.io>" />
-      <timeBetweenRetries value="<time to wait between retries>" />
+      <apiKey value="8oe2eItifdYUuxVOe4VhqQ==" />
+      <!-- Attempt to send errors to raygun 15 times -->
+      <retries value="15" />
+      <!-- Wait 1 minute between retry attempts -->
+      <timeBetweenRetries value="00:01:00" />
     </appender>
 	...
   </log4net>
