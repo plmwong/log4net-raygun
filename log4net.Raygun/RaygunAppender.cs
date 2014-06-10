@@ -77,16 +77,19 @@ namespace log4net.Raygun
             var userCustomData = _userCustomDataBuilder.Build(loggingEvent);
             var raygunMessage = BuildRaygunExceptionMessage(exception, userCustomData);
 
-			new TaskFactory(_taskScheduler)
-                .StartNew(() => Retry.Action(() => SendExceptionToRaygun(raygunMessage), Retries, TimeBetweenRetries))
-                .ContinueWith(e =>
-                {
-                    if (e.Exception != null)
-                    {
-                        ErrorHandler.Error(string.Format("RaygunAppender: Could not send error to the Raygun API, retried {0} times", Retries), e.Exception);
-                    }
-                }, TaskContinuationOptions.OnlyOnFaulted);
-		}
+		    new TaskFactory(_taskScheduler)
+		        .StartNew(() => Retry.Action(() =>
+		        {
+		            try
+		            {
+		                SendExceptionToRaygun(raygunMessage);
+		            }
+		            catch (Exception ex)
+		            {
+                        ErrorHandler.Error(string.Format("RaygunAppender: Could not send error to the Raygun API, retried {0} times", Retries), ex);
+		            }
+		        }, Retries, TimeBetweenRetries));
+        }
 
         private void SendExceptionToRaygun(RaygunMessage raygunMessage)
         {

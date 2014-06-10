@@ -46,15 +46,15 @@ namespace log4net.Raygun.Tests
         [Test]
         public void WhenSendingErrorToRaygunFailsThenThatIsLogged()
         {
-            _appender = new RaygunAppender(_fakeUserCustomDataBuilder, apiKey => new FakeBrokenRaygunClient(), _currentThreadTaskScheduler);
-            _fakeErrorHandler = new FakeErrorHandler();
+            var appender = new RaygunAppender(_fakeUserCustomDataBuilder, apiKey => new FakeBrokenRaygunClient(), _currentThreadTaskScheduler);
+            var fakeErrorHandler = new FakeErrorHandler();
 
-            _appender.ErrorHandler = _fakeErrorHandler;
+            appender.ErrorHandler = fakeErrorHandler;
 
             var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, null, new TestException());
-            _appender.DoAppend(errorLoggingEvent);
+            appender.DoAppend(errorLoggingEvent);
 
-            Assert.That(_fakeErrorHandler.Errors, Has.Exactly(1).StartsWith("RaygunAppender: Could not send error to the Raygun API, retried 0 times"));
+            Assert.That(fakeErrorHandler.Errors, Has.Exactly(1).StartsWith("RaygunAppender: Could not send error to the Raygun API, retried 0 times"));
         }
     }
 }
