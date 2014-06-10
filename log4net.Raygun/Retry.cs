@@ -20,7 +20,7 @@ namespace log4net.Raygun
                 }
 				catch (Exception ex)
                 {
-					Debug.WriteLine(string.Format("Exception on retry attempt #{0}: {1}", attempts, ex));
+					Debug.WriteLine("Exception on retry attempt #{0}: {1}", attempts, ex);
 
                     if (attempts >= numberOfRetries)
                     {

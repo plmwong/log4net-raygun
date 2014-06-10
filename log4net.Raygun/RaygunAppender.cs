@@ -63,7 +63,11 @@ namespace log4net.Raygun
 
                 if (exception != null)
                 {
-					SendExceptionToRaygunInBackground(exception, loggingEvent);
+                    SendExceptionToRaygunInBackground(exception, loggingEvent);
+                }
+                else
+                {
+                    ErrorHandler.Error("RaygunAppender: Could not find any exception to log");
                 }
             }
         }
@@ -74,11 +78,23 @@ namespace log4net.Raygun
             var raygunMessage = BuildRaygunExceptionMessage(exception, userCustomData);
 
 			new TaskFactory(_taskScheduler)
-                .StartNew(() => Retry.Action(() => SendExceptionToRaygun(raygunMessage), Retries, TimeBetweenRetries));
+                .StartNew(() => Retry.Action(() => SendExceptionToRaygun(raygunMessage), Retries, TimeBetweenRetries))
+                .ContinueWith(e =>
+                {
+                    if (e.Exception != null)
+                    {
+                        ErrorHandler.Error(string.Format("RaygunAppender: Could not send error to the Raygun API, retried {0} times", Retries), e.Exception);
+                    }
+                }, TaskContinuationOptions.OnlyOnFaulted);
 		}
 
         private void SendExceptionToRaygun(RaygunMessage raygunMessage)
         {
+            if (string.IsNullOrEmpty(ApiKey))
+            {
+                ErrorHandler.Error("RaygunAppender: API Key is empty");
+            }
+
             var raygunClient = _raygunClientFactory(ApiKey);
 
             raygunClient.Send(raygunMessage);

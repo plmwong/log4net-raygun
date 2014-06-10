@@ -47,8 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\FakeBrokenRaygunClient.cs" />
+    <Compile Include="Fakes\FakeErrorHandler.cs" />
     <Compile Include="RaygunAppenderConfigurationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RaygunAppenderLoggingTests.cs" />
     <Compile Include="RaygunAppenderTests.cs" />
     <Compile Include="CurrentThreadTaskScheduler.cs" />
     <Compile Include="TestException.cs" />
@@ -92,7 +95,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Fakes\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
