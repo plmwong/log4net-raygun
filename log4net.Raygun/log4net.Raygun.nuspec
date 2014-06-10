@@ -1,18 +1,22 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
+    <id>log4net.1.2.10.Raygun</id>
     <version>$version$</version>
-    <title>$title$</title>
+    <title>log4net.Raygun [1.2.10]</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
     <projectUrl>https://bitbucket.org/plmw/log4net.raygun</projectUrl>
     <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>log4net.Raygun is a simple log4net appender which logs error events to the raygun.io API. NOTE: This package use the old key version of log4net (1.2.10 and older).</releaseNotes>
+    <releaseNotes>log4net.Raygun is a simple log4net appender which logs error exceptions to the raygun.io API. NOTE: This package uses last version of log4net which used the old strong name key (1.2.10).</releaseNotes>
     <copyright>Copyright 2014</copyright>
-    <tags>log4net raygun appender</tags>
+    <tags>log4net raygun appender oldkey</tags>
+    <dependencies>
+      <dependency id="log4net" version="[1.2.10]" />
+      <dependency id="Mindscape.Raygun4Net" version="[2.1.0,)" />
+    </dependencies>
   </metadata>
   <files>
     <file src="bin\Release\net40\log4net.Raygun.dll" target="lib\net40\log4net.Raygun.dll" />
@@ -20,8 +24,4 @@
     <file src="bin\Release\net45\log4net.Raygun.dll" target="lib\net45\log4net.Raygun.dll" />
     <file src="bin\Release\net45\log4net.Raygun.pdb" target="lib\net45\log4net.Raygun.pdb" />
   </files>
-  <dependencies>
-    <dependency id="log4net" version="(,1.2.10]" />
-    <dependency id="Mindscape.Raygun4Net" version="[2.1.0,)" />
-  </dependencies>
 </package>
