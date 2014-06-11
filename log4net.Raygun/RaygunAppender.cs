@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using log4net.Appender;
 using log4net.Core;
+using log4net.Util;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
 
@@ -39,6 +40,7 @@ namespace log4net.Raygun
 
         protected override void Append(LoggingEvent loggingEvent)
         {
+            LogLog.Debug(string.Format("RaygunAppender: Received Logging Event with Logging Level '{0}'", loggingEvent.Level));
             if (loggingEvent.Level >= Level.Error)
             {
                 Exception exception = null;
@@ -47,6 +49,7 @@ namespace log4net.Raygun
                 if (exceptionObject != null)
                 {
                     exception = exceptionObject.GetBaseException();
+                    LogLog.Debug(string.Format("RaygunAppender: Setting Exception to BaseException of LoggingEvent.ExceptionObject"));
                 }
 
 				if (exception == null) {
@@ -56,7 +59,8 @@ namespace log4net.Raygun
 						var messageObjectAsException = messageObject as Exception;
 						if (messageObjectAsException != null)
 						{
-							exception = messageObjectAsException;
+                            exception = messageObjectAsException;
+                            LogLog.Debug(string.Format("RaygunAppender: Setting Exception to MessageObject"));
 						}
 					}
 				}
@@ -67,16 +71,19 @@ namespace log4net.Raygun
                 }
                 else
                 {
-                    ErrorHandler.Error("RaygunAppender: Could not find any exception to log");
+                    ErrorHandler.Error("RaygunAppender: Could not find any Exception to log. Doing nothing.");
                 }
             }
         }
 
 		private void SendExceptionToRaygunInBackground(Exception exception, LoggingEvent loggingEvent)
         {
+            LogLog.Debug("RaygunAppender: Building UserCustomData Dictionary");
             var userCustomData = _userCustomDataBuilder.Build(loggingEvent);
+            LogLog.Debug("RaygunAppender: Building Raygun Message");
             var raygunMessage = BuildRaygunExceptionMessage(exception, userCustomData);
 
+            LogLog.Debug(string.Format("RaygunAppender: Sending Raygun Message in a background task. Retries: '{0}', TimeBetweenRetries: '{1}'", Retries, TimeBetweenRetries));
 		    new TaskFactory(_taskScheduler)
 		        .StartNew(() => Retry.Action(() =>
 		        {
