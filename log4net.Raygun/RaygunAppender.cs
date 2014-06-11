@@ -78,12 +78,12 @@ namespace log4net.Raygun
 
 		private void SendExceptionToRaygunInBackground(Exception exception, LoggingEvent loggingEvent)
         {
-            LogLog.Debug("RaygunAppender: Building UserCustomData Dictionary");
+            LogLog.Debug("RaygunAppender: Building UserCustomData dictionary");
             var userCustomData = _userCustomDataBuilder.Build(loggingEvent);
-            LogLog.Debug("RaygunAppender: Building Raygun Message");
+            LogLog.Debug("RaygunAppender: Building Raygun message");
             var raygunMessage = BuildRaygunExceptionMessage(exception, userCustomData);
 
-            LogLog.Debug(string.Format("RaygunAppender: Sending Raygun Message in a background task. Retries: '{0}', TimeBetweenRetries: '{1}'", Retries, TimeBetweenRetries));
+            LogLog.Debug(string.Format("RaygunAppender: Sending Raygun message in a background task. Retries: '{0}', TimeBetweenRetries: '{1}'", Retries, TimeBetweenRetries));
 		    new TaskFactory(_taskScheduler)
 		        .StartNew(() => Retry.Action(() =>
 		        {
@@ -108,10 +108,13 @@ namespace log4net.Raygun
             var raygunClient = _raygunClientFactory(ApiKey);
 
             raygunClient.Send(raygunMessage);
+
+            LogLog.Debug("RaygunAppender: Raygun message sent");
         }
 
         private static RaygunMessage BuildRaygunExceptionMessage(Exception exception, Dictionary<string, string> userCustomData)
         {
+            LogLog.Debug("RaygunAppender: Resolving application assembly");
 			var assemblyResolver = new AssemblyResolver();
 			var applicationAssembly = assemblyResolver.GetApplicationAssembly();
 
