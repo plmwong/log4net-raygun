@@ -31,7 +31,7 @@ namespace log4net.Raygun.Tests
             var errorLoggingEvent = new LoggingEvent(new LoggingEventData { Level = Level.Error });
             _appender.DoAppend(errorLoggingEvent);
 
-            Assert.That(_fakeErrorHandler.Errors, Has.Exactly(1).EqualTo("RaygunAppender: Could not find any exception to log"));
+            Assert.That(_fakeErrorHandler.Errors, Has.Exactly(1).EqualTo("RaygunAppender: Could not find any Exception to log. Doing nothing."));
         }
 
         [Test]

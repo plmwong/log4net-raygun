@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using System.Diagnostics;
+using log4net.Util;
 
 namespace log4net.Raygun
 {
@@ -20,13 +20,14 @@ namespace log4net.Raygun
                 }
 				catch (Exception ex)
                 {
-					Debug.WriteLine("Exception on retry attempt #{0}: {1}", attempts, ex);
+                    LogLog.Debug(RaygunAppender.DeclaringType, string.Format("RaygunAppender: Exception on retry attempt #{0}: {1}", attempts, ex));
 
                     if (attempts >= numberOfRetries)
                     {
                         throw;
                     }
 
+                    LogLog.Debug(RaygunAppender.DeclaringType, string.Format("RaygunAppender: Waiting {0} until next attempt.", initialWaitInterval));
                     Thread.Sleep(initialWaitInterval);
 
                     continue;

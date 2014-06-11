@@ -69,6 +69,7 @@
     <None Include="AllPropertiesSet.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="App.config" />
     <None Include="NoPropertiesSet.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
