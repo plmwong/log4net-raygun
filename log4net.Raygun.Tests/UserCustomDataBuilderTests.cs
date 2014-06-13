@@ -91,6 +91,9 @@ namespace log4net.Raygun.Tests
 		public EventMappingAssertionPropertyBuilder Property(Func<LoggingEvent, string> propertySelector)
 		{
 			var loggingEventPropertyValue = propertySelector(_loggingEvent);
+
+		    loggingEventPropertyValue = loggingEventPropertyValue.NotSuppliedIfNullOrEmpty();
+
 			return new EventMappingAssertionPropertyBuilder(loggingEventPropertyValue, _userCustomData);
 		}
 	}

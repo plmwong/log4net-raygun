@@ -5,24 +5,22 @@ namespace log4net.Raygun
 {
 	public class UserCustomDataBuilder : IUserCustomDataBuilder
     {
-		internal const string NotSupplied = "Not supplied.";
-
-        public Dictionary<string, string> Build(LoggingEvent loggingEvent)
+	    public Dictionary<string, string> Build(LoggingEvent loggingEvent)
         {
 			var assemblyResolver = new AssemblyResolver();
 			var applicationAssembly = assemblyResolver.GetApplicationAssembly();
-			var applicationAssemblyFullName = applicationAssembly != null ? applicationAssembly.FullName : NotSupplied;
+			var applicationAssemblyFullName = applicationAssembly != null ? applicationAssembly.FullName.NotSuppliedIfNullOrEmpty() : UserCustomDataBuilderExtensions.NotSupplied;
 
             var userCustomData = new Dictionary<string, string>
             {
 				{ UserCustomDataKey.AssemblyFullName, applicationAssemblyFullName },
-                { UserCustomDataKey.Domain, loggingEvent.Domain ?? NotSupplied},
-                { UserCustomDataKey.Identity, loggingEvent.Identity ?? NotSupplied},
-                { UserCustomDataKey.ClassName, loggingEvent.LocationInformation.ClassName ?? NotSupplied},
-                { UserCustomDataKey.ThreadName, loggingEvent.ThreadName ?? NotSupplied},
-                { UserCustomDataKey.RenderedMessage, loggingEvent.RenderedMessage ?? NotSupplied},
+                { UserCustomDataKey.Domain, loggingEvent.Domain.NotSuppliedIfNullOrEmpty() },
+                { UserCustomDataKey.Identity, loggingEvent.Identity.NotSuppliedIfNullOrEmpty() },
+                { UserCustomDataKey.LocationInfo, loggingEvent.LocationInformation.FullInfo.NotSuppliedIfNullOrEmpty() },
+                { UserCustomDataKey.ThreadName, loggingEvent.ThreadName.NotSuppliedIfNullOrEmpty() },
+                { UserCustomDataKey.RenderedMessage, loggingEvent.RenderedMessage.NotSuppliedIfNullOrEmpty() },
                 { UserCustomDataKey.TimeStamp, loggingEvent.TimeStamp.ToString("O")},
-                { UserCustomDataKey.UserName, loggingEvent.UserName ?? NotSupplied}
+                { UserCustomDataKey.UserName, loggingEvent.UserName.NotSuppliedIfNullOrEmpty() }
             };
 
             AddCustomProperties(loggingEvent, userCustomData);
@@ -47,7 +45,7 @@ namespace log4net.Raygun
             public const string AssemblyFullName = "Assembly FullName";
             public const string Domain = "Domain";
             public const string Identity = "Identity";
-            public const string ClassName = "Class Name";
+            public const string LocationInfo = "Location Info";
             public const string RenderedMessage = "Rendered Message";
             public const string ThreadName = "Thread Name";
             public const string TimeStamp = "Time Stamp";
