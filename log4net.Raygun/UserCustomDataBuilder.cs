@@ -14,9 +14,11 @@ namespace log4net.Raygun
             var userCustomData = new Dictionary<string, string>
             {
 				{ UserCustomDataKey.AssemblyFullName, applicationAssemblyFullName },
-                { UserCustomDataKey.Domain, loggingEvent.Domain.NotSuppliedIfNullOrEmpty() },
+				{ UserCustomDataKey.Domain, loggingEvent.Domain.NotSuppliedIfNullOrEmpty() },
+				{ UserCustomDataKey.Level, loggingEvent.Level != null ? loggingEvent.Level.Name : UserCustomDataBuilderExtensions.NotSupplied },
                 { UserCustomDataKey.Identity, loggingEvent.Identity.NotSuppliedIfNullOrEmpty() },
-                { UserCustomDataKey.LocationInfo, loggingEvent.LocationInformation.FullInfo.NotSuppliedIfNullOrEmpty() },
+				{ UserCustomDataKey.LocationInfo, loggingEvent.LocationInformation != null 
+					? loggingEvent.LocationInformation.FullInfo.NotSuppliedIfNullOrEmpty() : UserCustomDataBuilderExtensions.NotSupplied },
                 { UserCustomDataKey.ThreadName, loggingEvent.ThreadName.NotSuppliedIfNullOrEmpty() },
                 { UserCustomDataKey.RenderedMessage, loggingEvent.RenderedMessage.NotSuppliedIfNullOrEmpty() },
                 { UserCustomDataKey.TimeStamp, loggingEvent.TimeStamp.ToString("O")},
@@ -42,8 +44,9 @@ namespace log4net.Raygun
 
 		internal protected static class UserCustomDataKey
         {
-            public const string AssemblyFullName = "Assembly FullName";
-            public const string Domain = "Domain";
+			public const string AssemblyFullName = "Assembly FullName";
+			public const string Domain = "Domain";
+			public const string Level = "Level";
             public const string Identity = "Identity";
             public const string LocationInfo = "Location Info";
             public const string RenderedMessage = "Rendered Message";

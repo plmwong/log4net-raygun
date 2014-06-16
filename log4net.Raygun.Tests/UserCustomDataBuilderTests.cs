@@ -28,6 +28,14 @@ namespace log4net.Raygun.Tests
 		}
 
 		[Test]
+		public void LoggingEventLevelIsAddedToUserCustomData()
+		{
+			LoggingEventAssert.When(l => l.Level = Level.Debug)
+				.Property(l => l.Level.Name)
+				.ShouldMapTo(UserCustomDataBuilder.UserCustomDataKey.Level);
+		}
+
+		[Test]
 		public void LoggingEventIdentityIsAddedToUserCustomData()
 		{
 			LoggingEventAssert.When(l => l.Identity = "TestIdentity")
@@ -63,13 +71,56 @@ namespace log4net.Raygun.Tests
 		}
     }
 
+	public class LoggingEventDataWrapper {
+		public string LoggerName;
+
+		public string Domain;
+
+		public string ExceptionString;
+
+		public string Identity;
+
+		public string UserName;
+
+		public LocationInfo LocationInfo;
+
+		public DateTime TimeStamp;
+
+		public string ThreadName;
+
+		public string Message;
+
+		public Level Level;
+
+		public PropertiesDictionary Properties;
+
+		public LoggingEventData ToLoggingEventData()
+		{
+			return new LoggingEventData 
+			{
+				LoggerName = LoggerName,
+				Domain = Domain,
+				ExceptionString = ExceptionString,
+				Identity = Identity,
+				UserName = UserName,
+				LocationInfo = LocationInfo,
+				TimeStamp = TimeStamp,
+				ThreadName = ThreadName,
+				Message = Message,
+				Level = Level,
+				Properties = Properties
+			};
+		}
+	}
+
 	public static class LoggingEventAssert
 	{
-		public static EventMappingAssertionBuilder When(Action<LoggingEventData> loggingEventDataInitialiser)
+		public static EventMappingAssertionBuilder When(Action<LoggingEventDataWrapper> loggingEventDataInitialiser)
 		{
-			var loggingEventData = new LoggingEventData();
+			var loggingEventData = new LoggingEventDataWrapper();
 			loggingEventDataInitialiser(loggingEventData);
-			var loggingEvent = new LoggingEvent(loggingEventData);
+
+			var loggingEvent = new LoggingEvent(loggingEventData.ToLoggingEventData());
 			var userCustomDataBuilder = new UserCustomDataBuilder();
 			var userCustomData = userCustomDataBuilder.Build(loggingEvent);
 
@@ -90,7 +141,7 @@ namespace log4net.Raygun.Tests
 
 		public EventMappingAssertionPropertyBuilder Property(Func<LoggingEvent, string> propertySelector)
 		{
-			var loggingEventPropertyValue = propertySelector(_loggingEvent);
+ 			var loggingEventPropertyValue = propertySelector(_loggingEvent);
 
 		    loggingEventPropertyValue = loggingEventPropertyValue.NotSuppliedIfNullOrEmpty();
 
