@@ -13,6 +13,8 @@ namespace log4net.Raygun.Tests
 		private FakeRaygunClient _fakeRaygunClient;
 		private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
 
+		protected Level[] LoggingLevels = { Level.Debug, Level.Info, Level.Warn, Level.Error, Level.Fatal };
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -23,37 +25,20 @@ namespace log4net.Raygun.Tests
 		}
 
 		[Test]
-		public void WhenLoggingEventIsNotAnErrorDoNothing()
+		[TestCaseSource("LoggingLevels")]
+		public void WhenLoggingEventContainsAnExceptionThenSendRaygunMessage(Level loggingLevel)
 		{
-			var debugLoggingEvent = new LoggingEvent(new LoggingEventData { Level = Level.Debug });
-			_appender.DoAppend(debugLoggingEvent);
-
-			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Null);
-		}
-
-		[Test]
-		public void WhenLoggingEventIsAnErrorSendRaygunMessage()
-		{
-			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, null, new TestException());
-			_appender.DoAppend(errorLoggingEvent);
+			var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, new TestException());
+			_appender.DoAppend(loggingEvent);
 
 			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
 		}
 
 		[Test]
-		public void WhenLoggingEventIsFatalSendRaygunMessage()
+		[TestCaseSource("LoggingLevels")]
+		public void WhenLoggingEventWithoutExceptionDataThenDoNothing(Level loggingLevel)
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Fatal, null, new TestException());
-
-			_appender.DoAppend(fatalLoggingEvent);
-
-			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
-		}
-
-		[Test]
-		public void WhenLoggingErrorEventWithoutExceptionDataDoNothing()
-		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, null, null);
+			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, null);
 
 			_appender.DoAppend(fatalLoggingEvent);
 
@@ -61,17 +46,7 @@ namespace log4net.Raygun.Tests
 		}
 
 		[Test]
-		public void WhenLoggingErrorEventWithExceptionInMessageDataSendRaygunMessage()
-		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
-
-			_appender.DoAppend(fatalLoggingEvent);
-
-			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
-		}
-
-		[Test]
-		public void WhenBuildingRaygunMessageToSendSetTheUserCustomDataFromBuilder()
+		public void WhenBuildingRaygunMessageToSendThenSetTheUserCustomDataFromBuilder()
 		{
 			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 
@@ -81,7 +56,7 @@ namespace log4net.Raygun.Tests
 		}
 
 		[Test]
-		public void WhenBuildingRaygunMessageToSendTheMachineNameIsSet()
+		public void WhenBuildingRaygunMessageToSendThenTheMachineNameIsSet()
 		{
 			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 

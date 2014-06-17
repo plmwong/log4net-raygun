@@ -66,6 +66,7 @@
     <Compile Include="HttpContextAdapter.cs" />
     <Compile Include="AssemblyAdapter.cs" />
     <Compile Include="IAssembly.cs" />
+    <Compile Include="UserCustomDataBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.Raygun.nuspec" />
