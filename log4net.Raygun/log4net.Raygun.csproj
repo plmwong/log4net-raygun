@@ -84,7 +84,9 @@
     <Compile Include="UserCustomDataBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="log4net.Raygun.nuspec" />
+    <None Include="log4net.Raygun.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
