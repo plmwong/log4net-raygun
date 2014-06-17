@@ -41,39 +41,38 @@ namespace log4net.Raygun
         protected override void Append(LoggingEvent loggingEvent)
         {
             LogLog.Debug(string.Format("RaygunAppender: Received Logging Event with Logging Level '{0}'", loggingEvent.Level));
-            if (loggingEvent.Level >= Level.Error)
-            {
-                Exception exception = null;
-                
-                var exceptionObject = loggingEvent.ExceptionObject;
-                if (exceptionObject != null)
-                {
-                    exception = exceptionObject.GetBaseException();
-                    LogLog.Debug(string.Format("RaygunAppender: Setting Exception to BaseException of LoggingEvent.ExceptionObject"));
-                }
+        
+			Exception exception = null;
+        
+			var exceptionObject = loggingEvent.ExceptionObject;
+			if (exceptionObject != null) 
+			{
+				exception = exceptionObject.GetBaseException();
+                LogLog.Debug(string.Format("RaygunAppender: Setting Exception to BaseException of LoggingEvent.ExceptionObject"));
+			}
 
-				if (exception == null) {
-					var messageObject = loggingEvent.MessageObject;
-					if (messageObject != null)
+			if (exception == null) 
+			{
+				var messageObject = loggingEvent.MessageObject;
+				if (messageObject != null) 
+				{
+					var messageObjectAsException = messageObject as Exception;
+					if (messageObjectAsException != null) 
 					{
-						var messageObjectAsException = messageObject as Exception;
-						if (messageObjectAsException != null)
-						{
-                            exception = messageObjectAsException;
-                            LogLog.Debug(string.Format("RaygunAppender: Setting Exception to MessageObject"));
-						}
+						exception = messageObjectAsException;
+                        LogLog.Debug(string.Format("RaygunAppender: Setting Exception to MessageObject"));
 					}
 				}
+			}
 
-                if (exception != null)
-                {
-                    SendExceptionToRaygunInBackground(exception, loggingEvent);
-                }
-                else
-                {
-                    ErrorHandler.Error("RaygunAppender: Could not find any Exception to log. Doing nothing.");
-                }
-            }
+			if (exception != null) 
+			{
+				SendExceptionToRaygunInBackground(exception, loggingEvent);
+			} 
+			else 
+			{
+				ErrorHandler.Error("RaygunAppender: Could not find any Exception to log. Doing nothing.");
+			}
         }
 
 		private void SendExceptionToRaygunInBackground(Exception exception, LoggingEvent loggingEvent)

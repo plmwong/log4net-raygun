@@ -5,7 +5,7 @@ Raygun Appender for log4net
 
 Intro
 -----
-A basic log4net appender which can be used to send ERROR/FATAL level exceptions to raygun.io. It will also map most of the log4net LoggingEvent fields to the UserCustomData dictionary in the Raygun message sent.
+A basic log4net appender which can be used to send logged exceptions to raygun.io. It will also map most of the log4net LoggingEvent fields to the UserCustomData dictionary in the Raygun message sent.
 
 NuGet
 -----
@@ -31,6 +31,7 @@ Configuration Example
   <log4net>
     ...
     <appender name="RaygunAppender" type="log4net.Raygun.RaygunAppender, log4net.Raygun">
+      <threshold value="ERROR" />
       <apiKey value="8oe2eItifdYUuxVOe4VhqQ==" />
       <!-- Attempt to send errors to raygun 15 times -->
       <retries value="15" />

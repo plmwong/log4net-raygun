@@ -2,9 +2,6 @@
 using log4net.Core;
 using log4net.Util;
 using NUnit.Framework;
-using System;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace log4net.Raygun.Tests
 {
@@ -25,6 +22,14 @@ namespace log4net.Raygun.Tests
 			LoggingEventAssert.When(l => l.Domain = "TestDomain")
 				.Property(l => l.Domain)
 				.ShouldMapTo(UserCustomDataBuilder.UserCustomDataKey.Domain);
+		}
+
+		[Test]
+		public void LoggingEventLevelIsAddedToUserCustomData()
+		{
+			LoggingEventAssert.When(l => l.Level = Level.Debug)
+				.Property(l => l.Level.Name)
+				.ShouldMapTo(UserCustomDataBuilder.UserCustomDataKey.Level);
 		}
 
 		[Test]
@@ -62,56 +67,4 @@ namespace log4net.Raygun.Tests
 			Assert.That(userCustomData, Has.Exactly(1).EqualTo(new KeyValuePair<string, string>("Properties.TestPropertyKey", "TestPropertyValue")));
 		}
     }
-
-	public static class LoggingEventAssert
-	{
-		public static EventMappingAssertionBuilder When(Action<LoggingEventData> loggingEventDataInitialiser)
-		{
-			var loggingEventData = new LoggingEventData();
-			loggingEventDataInitialiser(loggingEventData);
-			var loggingEvent = new LoggingEvent(loggingEventData);
-			var userCustomDataBuilder = new UserCustomDataBuilder();
-			var userCustomData = userCustomDataBuilder.Build(loggingEvent);
-
-			return new EventMappingAssertionBuilder(loggingEvent, userCustomData);
-		}
-	}
-
-	public class EventMappingAssertionBuilder
-	{
-		private readonly LoggingEvent _loggingEvent;
-		private readonly Dictionary<string, string> _userCustomData;
-
-		public EventMappingAssertionBuilder(LoggingEvent loggingEvent, Dictionary<string, string> userCustomData)
-		{
-			_loggingEvent = loggingEvent;
-			_userCustomData = userCustomData;
-		}
-
-		public EventMappingAssertionPropertyBuilder Property(Func<LoggingEvent, string> propertySelector)
-		{
-			var loggingEventPropertyValue = propertySelector(_loggingEvent);
-			return new EventMappingAssertionPropertyBuilder(loggingEventPropertyValue, _userCustomData);
-		}
-	}
-
-	public class EventMappingAssertionPropertyBuilder
-	{
-		private readonly string _loggingEventValue;
-		private readonly Dictionary<string, string> _userCustomData;
-
-		public EventMappingAssertionPropertyBuilder(string loggingEventValue, Dictionary<string, string> userCustomData)
-		{
-			_loggingEventValue = loggingEventValue;
-			_userCustomData = userCustomData;
-		}
-
-		public EventMappingAssertionPropertyBuilder ShouldMapTo(string key)
-		{
-			var userCustomDataValue = _userCustomData[key];
-			Assert.That(userCustomDataValue, Is.EqualTo(_loggingEventValue));
-
-			return this;
-		}
-	}
 }

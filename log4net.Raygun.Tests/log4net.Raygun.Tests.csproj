@@ -65,6 +65,8 @@
     <Compile Include="Fakes\FakeAppDomainManager.cs" />
     <Compile Include="Fakes\FakeAssemblyLoader.cs" />
     <Compile Include="RetryTests.cs" />
+    <Compile Include="LoggingEventDataWrapper.cs" />
+    <Compile Include="LoggingEventAssert.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AllPropertiesSet.config">
