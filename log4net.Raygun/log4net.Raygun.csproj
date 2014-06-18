@@ -89,6 +89,9 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="log4net.Raygun.nuspec.dependencies.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -110,6 +113,10 @@
     <MakeDir Directories="NuGet" />
     <!-- Package the project -->
     <Exec WorkingDirectory="$(BuildDir)" Command="$(ProjectDir)\..\.nuget\NuGet.exe pack -Verbosity detailed -Symbols -OutputDir &quot;NuGet&quot; -Version %(OutputAssemblyInfo.Version) -Properties &quot;Configuration=$(Configuration)&quot;" />
+  </Target>
+  <Target Name="FixDependencies">
+    <Exec WorkingDirectory="$(BuildDir)" Command="$(ProjectDir)\..\tools\nuget-dep.exe &quot;$(ProjectDir)log4net.Raygun.nuspec.dependencies.xml&quot; &quot;$(ProjectDir)NuGet\log4net.Raygun.%(OutputAssemblyInfo.Version).nupkg&quot;" />
+	<Exec WorkingDirectory="$(BuildDir)" Command="$(ProjectDir)\..\tools\nuget-dep.exe &quot;$(ProjectDir)log4net.Raygun.nuspec.dependencies.xml&quot; &quot;$(ProjectDir)NuGet\log4net.Raygun.%(OutputAssemblyInfo.Version).symbols.nupkg&quot;" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
