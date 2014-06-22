@@ -20,7 +20,7 @@ https://www.nuget.org/packages/log4net.1.2.10.Raygun
 Configuration
 -------------
 
-* `apiKey (required) : The API key for accessing your application in raygun.io. The API key can be found under 'Application Settings' of your Raygun app.
+* `apiKey` (required) : The API key for accessing your application in raygun.io. The API key can be found under 'Application Settings' of your Raygun app.
 * `retries` (optional) : The number of times to try and send the exception raygun message to the raygun.io API before giving up and discarding the message. If this setting is not specified, then retries are *disabled* and the appender will only try to log to raygun once, and discard the message if unsuccessful.
 * `timeBetweenRetries` (optional) : A `TimeSpan` of the time to wait between retry attempts. If this setting is not specified, then a default of '00:00:05' (5 seconds) is used.
 
