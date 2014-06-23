@@ -17,11 +17,16 @@ NOTE: This package uses the last version of log4net which used the old strong na
     <copyright>Copyright 2014</copyright>
     <tags>log4net raygun appender oldkey</tags>
     <dependencies>
-      <dependency id="log4net" version="[1.2.10]" />
-      <dependency id="Mindscape.Raygun4Net" version="[2.1.0,)" />
+      <group>
+        <dependency id="System.Threading.Tasks" version="[3.0.1,)" />
+        <dependency id="log4net" version="[1.2.10]" />
+        <dependency id="Mindscape.Raygun4Net" version="[2.1.0,)" />
+      </group>
     </dependencies>
   </metadata>
   <files>
+    <file src="bin\Release\net35\log4net.Raygun.dll" target="lib\net35\log4net.Raygun.dll" />
+    <file src="bin\Release\net35\log4net.Raygun.pdb" target="lib\net35\log4net.Raygun.pdb" />
     <file src="bin\Release\net40\log4net.Raygun.dll" target="lib\net40\log4net.Raygun.dll" />
     <file src="bin\Release\net40\log4net.Raygun.pdb" target="lib\net40\log4net.Raygun.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.dll" target="lib\net45\log4net.Raygun.dll" />
