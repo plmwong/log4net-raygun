@@ -56,6 +56,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Mindscape.Raygun4Net">
       <HintPath>..\packages\Mindscape.Raygun4Net.2.1.0\lib\net35\Mindscape.Raygun4Net.dll</HintPath>
