@@ -23,6 +23,8 @@ Configuration
 * `apiKey` (required) : The API key for accessing your application in raygun.io. The API key can be found under 'Application Settings' of your Raygun app.
 * `retries` (optional) : The number of times to try and send the exception raygun message to the raygun.io API before giving up and discarding the message. If this setting is not specified, then retries are *disabled* and the appender will only try to log to raygun once, and discard the message if unsuccessful.
 * `timeBetweenRetries` (optional) : A `TimeSpan` of the time to wait between retry attempts. If this setting is not specified, then a default of '00:00:05' (5 seconds) is used.
+* `ExceptionFilter` (optional) : The assembly qualified class name for an implementation of `IExceptionFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from an Exception.
+* `RenderedMessageFilter` (optional) : The assembly qualified class name for an implementation of `IRenderedMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from the RenderedMessage in UserCustomData.
 
 A log4net `threshold` should be used to filter out logging levels. By default, all levels of logging which contain an `Exception` will be sent to Raygun.
 
@@ -45,6 +47,9 @@ Configuration Example
       <retries value="15" />
       <!-- Wait 1 minute between retry attempts -->
       <timeBetweenRetries value="00:01:00" />
+      <!-- Optional filters for filtering exceptions and messages before sending to raygun -->
+      <exceptionFilter value="SomeOtherAssembly.SensitiveInformationExceptionFilter, SomeOtherAssembly" />
+      <renderedMessageFilter value="SomeOtherAssembly.SensitiveInformationRenderedMessageFilter, SomeOtherAssembly" />
     </appender>
 	...
   </log4net>
@@ -74,3 +79,8 @@ E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
 *My application uses the older 1.2.10 version of log4net, before they went and changed the public key*
 
 You need to use the https://www.nuget.org/packages/log4net.1.2.10.Raygun version built against that version of log4net. The source for this is located in the `log4net-1.2.10` branch.
+
+*My application logs sensitive information which we would rather not send to a third-party*
+
+log4net.Raygun now allows you to implement an `IExceptionFilter` and a `IRenderedMessageFilter`, and then configure the RaygunAppender to use these filters in the appender configuration.
+The filters allow for exceptions and/or the rendered log4net message to be sanitized before it is sent to raygun.
