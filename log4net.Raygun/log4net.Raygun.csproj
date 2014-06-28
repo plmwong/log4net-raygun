@@ -82,6 +82,8 @@
     <Compile Include="AssemblyAdapter.cs" />
     <Compile Include="IAssembly.cs" />
     <Compile Include="UserCustomDataBuilderExtensions.cs" />
+    <Compile Include="Filters\IRenderedMessageFilter.cs" />
+    <Compile Include="Filters\IExceptionFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.Raygun.nuspec">
@@ -116,7 +118,7 @@
   </Target>
   <Target Name="FixDependencies">
     <Exec WorkingDirectory="$(BuildDir)" Command="$(ProjectDir)\..\tools\nuget-dep.exe &quot;$(ProjectDir)log4net.Raygun.nuspec.dependencies.xml&quot; &quot;$(ProjectDir)NuGet\log4net.Raygun.%(OutputAssemblyInfo.Version).nupkg&quot;" />
-	<Exec WorkingDirectory="$(BuildDir)" Command="$(ProjectDir)\..\tools\nuget-dep.exe &quot;$(ProjectDir)log4net.Raygun.nuspec.dependencies.xml&quot; &quot;$(ProjectDir)NuGet\log4net.Raygun.%(OutputAssemblyInfo.Version).symbols.nupkg&quot;" />
+    <Exec WorkingDirectory="$(BuildDir)" Command="$(ProjectDir)\..\tools\nuget-dep.exe &quot;$(ProjectDir)log4net.Raygun.nuspec.dependencies.xml&quot; &quot;$(ProjectDir)NuGet\log4net.Raygun.%(OutputAssemblyInfo.Version).symbols.nupkg&quot;" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -125,4 +127,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Filters\" />
+  </ItemGroup>
 </Project>

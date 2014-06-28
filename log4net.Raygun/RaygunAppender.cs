@@ -6,6 +6,7 @@ using log4net.Core;
 using log4net.Util;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
+using log4net.Raygun.Filters;
 
 namespace log4net.Raygun
 {
@@ -38,6 +39,9 @@ namespace log4net.Raygun
             get { return _timeBetweenRetries == TimeSpan.Zero ? DefaultTimeBetweenRetries : _timeBetweenRetries; }
             set { _timeBetweenRetries = value; }
         }
+
+		public virtual string ExceptionFilter { get; set; }
+		public virtual string RenderedMessageFilter { get; set; }
 
         protected override void Append(LoggingEvent loggingEvent)
         {
@@ -112,22 +116,48 @@ namespace log4net.Raygun
             LogLog.Debug(DeclaringType, "RaygunAppender: Raygun message sent");
         }
 
-        private static RaygunMessage BuildRaygunExceptionMessage(Exception exception, Dictionary<string, string> userCustomData)
+        private RaygunMessage BuildRaygunExceptionMessage(Exception exception, Dictionary<string, string> userCustomData)
         {
             LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
 			var assemblyResolver = new AssemblyResolver();
 			var applicationAssembly = assemblyResolver.GetApplicationAssembly();
 
             var raygunMessage = RaygunMessageBuilder.New
-                .SetExceptionDetails(exception)
+				.SetExceptionDetails(ExceptionFilter != null ? FilterException(exception) : exception)
                 .SetClientDetails()
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
 				.SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
-                .SetUserCustomData(userCustomData)
+				.SetUserCustomData(RenderedMessageFilter != null ? FilterRenderedMessage(userCustomData) : userCustomData)
                 .Build();
 
             return raygunMessage;
         }
+
+		private Exception FilterException(Exception exception)
+		{
+			var exceptionFilterType = Type.GetType(ExceptionFilter);
+			var exceptionFilter = Activator.CreateInstance(exceptionFilterType) as IExceptionFilter;
+
+			if (exceptionFilter != null) {
+				return exceptionFilter.Filter(exception);
+			}
+
+			return exception;
+		}
+
+		private Dictionary<string, string> FilterRenderedMessage(Dictionary<string, string> userCustomData)
+		{
+			var renderedMessageFilterType = Type.GetType(RenderedMessageFilter);
+			var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IRenderedMessageFilter;
+
+			if (renderedMessageFilter != null && userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
+			{
+				var oldValue = userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage];
+				userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = renderedMessageFilter.Filter(oldValue);
+			}
+
+			return userCustomData;
+		}
     }
 }
