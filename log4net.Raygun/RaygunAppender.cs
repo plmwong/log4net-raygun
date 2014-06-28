@@ -137,10 +137,15 @@ namespace log4net.Raygun
 		private Exception FilterException(Exception exception)
 		{
 			var exceptionFilterType = Type.GetType(ExceptionFilter);
-			var exceptionFilter = Activator.CreateInstance(exceptionFilterType) as IExceptionFilter;
 
-			if (exceptionFilter != null) {
-				return exceptionFilter.Filter(exception);
+			if (exceptionFilterType != null)
+			{
+				var exceptionFilter = Activator.CreateInstance(exceptionFilterType) as IExceptionFilter;
+
+				if (exceptionFilter != null) 
+				{
+					return exceptionFilter.Filter(exception);
+				}
 			}
 
 			return exception;
@@ -149,12 +154,16 @@ namespace log4net.Raygun
 		private Dictionary<string, string> FilterRenderedMessage(Dictionary<string, string> userCustomData)
 		{
 			var renderedMessageFilterType = Type.GetType(RenderedMessageFilter);
-			var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IRenderedMessageFilter;
 
-			if (renderedMessageFilter != null && userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
+			if (renderedMessageFilterType != null)
 			{
-				var oldValue = userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage];
-				userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = renderedMessageFilter.Filter(oldValue);
+				var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IRenderedMessageFilter;
+
+				if (renderedMessageFilter != null && userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
+				{
+					var oldValue = userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage];
+					userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = renderedMessageFilter.Filter(oldValue);
+				}
 			}
 
 			return userCustomData;

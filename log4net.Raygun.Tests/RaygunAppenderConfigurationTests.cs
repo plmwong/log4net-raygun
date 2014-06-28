@@ -6,98 +6,95 @@ using NUnit.Framework;
 
 namespace log4net.Raygun.Tests
 {
-    public class RaygunAppenderConfigurationTests
+    [TestFixture]
+    public class GivenRaygunAppenderPropertiesAreSetInXmlConfiguration
     {
-        [TestFixture]
-        public class GivenRaygunAppenderPropertiesAreSetInXmlConfiguration
+        private RaygunAppender _raygunAppender;
+
+        [SetUp]
+        public void WhenRaygunAppenderIsConfiguredFromXml()
         {
-            private RaygunAppender _raygunAppender;
+            var fileInfo = new FileInfo("AllPropertiesSet.config");
+            XmlConfigurator.Configure(fileInfo);
 
-            [SetUp]
-            public void WhenRaygunAppenderIsConfiguredFromXml()
-            {
-                var fileInfo = new FileInfo("AllPropertiesSet.config");
-                XmlConfigurator.Configure(fileInfo);
-
-                var appenders = LogManager.GetRepository().GetAppenders();
-                _raygunAppender = appenders.Cast<RaygunAppender>().Single();
-            }
-
-            [Test]
-            public void ThenApiKeyIsSet()
-            {
-                Assert.That(_raygunAppender.ApiKey, Is.EqualTo("IAmAnAPIKey"));
-            }
-
-            [Test]
-            public void ThenRetriesIsSet()
-            {
-                Assert.That(_raygunAppender.Retries, Is.EqualTo(11));
-			}
-
-			[Test]
-			public void ThenExceptionFilterIsSet()
-			{
-				Assert.That(_raygunAppender.ExceptionFilter, Is.EqualTo("exceptionFilter"));
-			}
-
-			[Test]
-			public void ThenRenderedMessageFilterIsSet()
-			{
-				Assert.That(_raygunAppender.RenderedMessageFilter, Is.EqualTo("messageFilter"));
-			}
-
-            [Test]
-            public void ThenTimeBetweenRetriesIsSet()
-            {
-                Assert.That(_raygunAppender.TimeBetweenRetries, Is.EqualTo(TimeSpan.FromSeconds(1)));
-            }
+            var appenders = LogManager.GetRepository().GetAppenders();
+            _raygunAppender = appenders.Cast<RaygunAppender>().Single();
         }
 
-        [TestFixture]
-        public class GivenRaygunAppenderPropertiesAreNotSetInXmlConfiguration
+        [Test]
+        public void ThenApiKeyIsSet()
         {
-            private RaygunAppender _raygunAppender;
+            Assert.That(_raygunAppender.ApiKey, Is.EqualTo("IAmAnAPIKey"));
+        }
 
-            [SetUp]
-            public void WhenRaygunAppenderIsConfiguredFromXml()
-            {
-                var fileInfo = new FileInfo("NoPropertiesSet.config");
-                XmlConfigurator.Configure(fileInfo);
+        [Test]
+        public void ThenRetriesIsSet()
+        {
+            Assert.That(_raygunAppender.Retries, Is.EqualTo(11));
+		}
 
-                var appenders = LogManager.GetRepository().GetAppenders();
-                _raygunAppender = appenders.Cast<RaygunAppender>().Single();
-            }
+		[Test]
+		public void ThenExceptionFilterIsSet()
+		{
+			Assert.That(_raygunAppender.ExceptionFilter, Is.EqualTo("exceptionFilter"));
+		}
 
-            [Test]
-            public void ThenApiKeyIsSet()
-            {
-                Assert.That(_raygunAppender.ApiKey, Is.Null);
-            }
+		[Test]
+		public void ThenRenderedMessageFilterIsSet()
+		{
+			Assert.That(_raygunAppender.RenderedMessageFilter, Is.EqualTo("messageFilter"));
+		}
 
-            [Test]
-            public void ThenRetriesIsSet()
-            {
-                Assert.That(_raygunAppender.Retries, Is.EqualTo(0));
-			}
+        [Test]
+        public void ThenTimeBetweenRetriesIsSet()
+        {
+            Assert.That(_raygunAppender.TimeBetweenRetries, Is.EqualTo(TimeSpan.FromSeconds(1)));
+        }
+    }
 
-			[Test]
-			public void ThenExceptionFilterIsSet()
-			{
-				Assert.That(_raygunAppender.ExceptionFilter, Is.Null);
-			}
+    [TestFixture]
+    public class GivenRaygunAppenderPropertiesAreNotSetInXmlConfiguration
+    {
+        private RaygunAppender _raygunAppender;
 
-			[Test]
-			public void ThenRenderedMessageFilterIsSet()
-			{
-				Assert.That(_raygunAppender.RenderedMessageFilter, Is.Null);
-			}
+        [SetUp]
+        public void WhenRaygunAppenderIsConfiguredFromXml()
+        {
+            var fileInfo = new FileInfo("NoPropertiesSet.config");
+            XmlConfigurator.Configure(fileInfo);
 
-            [Test]
-            public void ThenTimeBetweenRetriesIsSet()
-            {
-                Assert.That(_raygunAppender.TimeBetweenRetries, Is.EqualTo(RaygunAppender.DefaultTimeBetweenRetries));
-            }
+            var appenders = LogManager.GetRepository().GetAppenders();
+            _raygunAppender = appenders.Cast<RaygunAppender>().Single();
+        }
+
+        [Test]
+        public void ThenApiKeyIsSet()
+        {
+            Assert.That(_raygunAppender.ApiKey, Is.Null);
+        }
+
+        [Test]
+        public void ThenRetriesIsSet()
+        {
+            Assert.That(_raygunAppender.Retries, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void ThenExceptionFilterIsSet()
+		{
+			Assert.That(_raygunAppender.ExceptionFilter, Is.Null);
+		}
+
+		[Test]
+		public void ThenRenderedMessageFilterIsSet()
+		{
+			Assert.That(_raygunAppender.RenderedMessageFilter, Is.Null);
+		}
+
+        [Test]
+        public void ThenTimeBetweenRetriesIsSet()
+        {
+            Assert.That(_raygunAppender.TimeBetweenRetries, Is.EqualTo(RaygunAppender.DefaultTimeBetweenRetries));
         }
     }
 }
