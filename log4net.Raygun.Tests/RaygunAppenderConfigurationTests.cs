@@ -33,7 +33,19 @@ namespace log4net.Raygun.Tests
             public void ThenRetriesIsSet()
             {
                 Assert.That(_raygunAppender.Retries, Is.EqualTo(11));
-            }
+			}
+
+			[Test]
+			public void ThenExceptionFilterIsSet()
+			{
+				Assert.That(_raygunAppender.ExceptionFilter, Is.EqualTo("exceptionFilter"));
+			}
+
+			[Test]
+			public void ThenRenderedMessageFilterIsSet()
+			{
+				Assert.That(_raygunAppender.RenderedMessageFilter, Is.EqualTo("messageFilter"));
+			}
 
             [Test]
             public void ThenTimeBetweenRetriesIsSet()
@@ -67,7 +79,19 @@ namespace log4net.Raygun.Tests
             public void ThenRetriesIsSet()
             {
                 Assert.That(_raygunAppender.Retries, Is.EqualTo(0));
-            }
+			}
+
+			[Test]
+			public void ThenExceptionFilterIsSet()
+			{
+				Assert.That(_raygunAppender.ExceptionFilter, Is.Null);
+			}
+
+			[Test]
+			public void ThenRenderedMessageFilterIsSet()
+			{
+				Assert.That(_raygunAppender.RenderedMessageFilter, Is.Null);
+			}
 
             [Test]
             public void ThenTimeBetweenRetriesIsSet()
