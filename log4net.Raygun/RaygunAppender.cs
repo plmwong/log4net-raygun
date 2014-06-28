@@ -140,10 +140,12 @@ namespace log4net.Raygun
 
 			if (exceptionFilterType != null)
 			{
+				LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activating instance of exception filter for '{0}'", exceptionFilterType.AssemblyQualifiedName));
 				var exceptionFilter = Activator.CreateInstance(exceptionFilterType) as IExceptionFilter;
 
 				if (exceptionFilter != null) 
 				{
+					LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Filtering through exception filter '{0}'", exceptionFilterType.AssemblyQualifiedName));
 					return exceptionFilter.Filter(exception);
 				}
 			}
@@ -157,10 +159,12 @@ namespace log4net.Raygun
 
 			if (renderedMessageFilterType != null)
 			{
+				LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activating instance of rendered message filter for '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
 				var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IRenderedMessageFilter;
 
 				if (renderedMessageFilter != null && userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
 				{
+					LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Filtering through rendered message filter '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
 					var oldValue = userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage];
 					userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = renderedMessageFilter.Filter(oldValue);
 				}
