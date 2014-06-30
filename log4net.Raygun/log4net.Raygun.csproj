@@ -80,6 +80,8 @@
     <Compile Include="AssemblyAdapter.cs" />
     <Compile Include="IAssembly.cs" />
     <Compile Include="UserCustomDataBuilderExtensions.cs" />
+    <Compile Include="Filters\IRenderedMessageFilter.cs" />
+    <Compile Include="Filters\IExceptionFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.Raygun.nuspec">
@@ -123,4 +125,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Filters\" />
+  </ItemGroup>
 </Project>
