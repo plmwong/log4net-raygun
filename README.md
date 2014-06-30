@@ -59,23 +59,6 @@ Configuration Example
 Questions
 ---------
 
-*I have to use version X of log4net, because of reasons*
-
-You might need to add a binding redirection to your application configuration file, redirecting to the version of log4net you are using.
-
-E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
-
-```
-<runtime>
-  <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
-    <dependentAssembly>
-      <assemblyIdentity name="log4net" publicKeyToken="669e0ddf0bb1aa2a" culture="neutral" />
-      <bindingRedirect oldVersion="0.0.0.0-1.2.12.0" newVersion="1.2.12.0" />
-    </dependentAssembly>
-  </assemblyBinding>
-</runtime>
-```
-
 *My application uses the older 1.2.10 version of log4net, before they went and changed the public key*
 
 You need to use the https://www.nuget.org/packages/log4net.1.2.10.Raygun version built against that version of log4net. The source for this is located in the `log4net-1.2.10` branch.
@@ -96,4 +79,21 @@ public class RenderedMessageFilter : IRenderedMessageFilter
 		return newMessage;
 	}
 }
+```
+
+*I have to use version X of log4net, because of reasons*
+
+You might need to add a binding redirection to your application configuration file, redirecting to the version of log4net you are using.
+
+E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
+
+```
+<runtime>
+  <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+    <dependentAssembly>
+      <assemblyIdentity name="log4net" publicKeyToken="669e0ddf0bb1aa2a" culture="neutral" />
+      <bindingRedirect oldVersion="0.0.0.0-1.2.12.0" newVersion="1.2.12.0" />
+    </dependentAssembly>
+  </assemblyBinding>
+</runtime>
 ```

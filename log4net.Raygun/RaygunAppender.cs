@@ -138,7 +138,7 @@ namespace log4net.Raygun
 		{
 			var exceptionFilterType = Type.GetType(ExceptionFilter);
 
-			if (exceptionFilterType != null)
+			if (exceptionFilterType != null) 
 			{
 				LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activating instance of exception filter for '{0}'", exceptionFilterType.AssemblyQualifiedName));
 				var exceptionFilter = Activator.CreateInstance(exceptionFilterType) as IExceptionFilter;
@@ -148,6 +148,14 @@ namespace log4net.Raygun
 					LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Filtering through exception filter '{0}'", exceptionFilterType.AssemblyQualifiedName));
 					return exceptionFilter.Filter(exception);
 				}
+				else 
+				{
+					ErrorHandler.Error(string.Format("RaygunAppender: Configured exception filter '{0}' is not an IExceptionFilter", ExceptionFilter));
+				}
+			} 
+			else 
+			{
+				ErrorHandler.Error(string.Format("RaygunAppender: Configured exception filter '{0}' is not a type", ExceptionFilter));
 			}
 
 			return exception;
@@ -168,6 +176,14 @@ namespace log4net.Raygun
 					var oldValue = userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage];
 					userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = renderedMessageFilter.Filter(oldValue);
 				}
+				else 
+				{
+					ErrorHandler.Error(string.Format("RaygunAppender: Configured rendered message filter '{0}' is not an IRenderedMessageFilter", RenderedMessageFilter));
+				}
+			} 
+			else 
+			{
+				ErrorHandler.Error(string.Format("RaygunAppender: Configured rendered message filter '{0}' is not a type", RenderedMessageFilter));
 			}
 
 			return userCustomData;
