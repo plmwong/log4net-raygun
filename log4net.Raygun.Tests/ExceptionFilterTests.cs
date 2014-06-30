@@ -29,12 +29,13 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenFilterIsSetThenExceptionsAreFirstPassedThroughTheExceptionFilter()
 		{
-			_appender.ExceptionFilter = typeof(FakeExceptionFilter).AssemblyQualifiedName;
+			_appender.ExceptionFilter = typeof(FakeMessageFilter).AssemblyQualifiedName;
 
 			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new NullReferenceException(), null);
 			_appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("log4net.Raygun.Tests.TestException"));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("I changed your message!"));
 		}
 
 		[Test]
@@ -45,7 +46,8 @@ namespace log4net.Raygun.Tests
 			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new NullReferenceException(), null);
 			_appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("Object reference not set to an instance of an object."));
 		}
 
 		[Test]
@@ -56,7 +58,8 @@ namespace log4net.Raygun.Tests
 			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new NullReferenceException(), null);
 			_appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("Object reference not set to an instance of an object."));
 		}
 	}
 }
