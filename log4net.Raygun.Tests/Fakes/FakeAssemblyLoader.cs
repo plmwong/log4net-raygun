@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace log4net.Raygun.Tests
+namespace log4net.Raygun.Tests.Fakes
 {
 	public class FakeAssemblyLoader : IAssembly
 	{
