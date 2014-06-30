@@ -29,12 +29,12 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenFilterIsSetThenRenderedMessageIsFirstPassedThroughRenderedMessageFilter()
 		{
-			_appender.RenderedMessageFilter = typeof(FakeRenderedMessageFilter).AssemblyQualifiedName;
+			_appender.RenderedMessageFilter = typeof(FakeMessageFilter).AssemblyQualifiedName;
 
 			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 			_appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage], Is.EqualTo(FakeRenderedMessageFilter.ReplacementMessage));
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage], Is.EqualTo(FakeMessageFilter.ReplacementMessage));
 		}
 
 		[Test]

@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyResolver.cs" />
+    <Compile Include="IMessageFilter.cs" />
     <Compile Include="RaygunAppender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Retry.cs" />
@@ -80,8 +81,6 @@
     <Compile Include="AssemblyAdapter.cs" />
     <Compile Include="IAssembly.cs" />
     <Compile Include="UserCustomDataBuilderExtensions.cs" />
-    <Compile Include="Filters\IRenderedMessageFilter.cs" />
-    <Compile Include="Filters\IExceptionFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.Raygun.nuspec">
@@ -125,7 +124,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Filters\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

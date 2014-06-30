@@ -6,7 +6,6 @@ using log4net.Core;
 using log4net.Util;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
-using log4net.Raygun.Filters;
 
 namespace log4net.Raygun
 {
@@ -122,7 +121,7 @@ namespace log4net.Raygun
 			var applicationAssembly = assemblyResolver.GetApplicationAssembly();
 
             var raygunMessage = RaygunMessageBuilder.New
-				.SetExceptionDetails(ExceptionFilter != null ? FilterException(exception) : exception)
+				.SetExceptionDetails(exception)
                 .SetClientDetails()
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
@@ -130,32 +129,37 @@ namespace log4net.Raygun
 				.SetUserCustomData(RenderedMessageFilter != null ? FilterRenderedMessage(userCustomData) : userCustomData)
                 .Build();
 
+            if (ExceptionFilter != null && raygunMessage.Details.Error != null)
+            {
+                raygunMessage.Details.Error.Message = FilterException(exception.Message);
+            }
+
             return raygunMessage;
         }
 
-		private Exception FilterException(Exception exception)
+		private string FilterException(string exceptionMessage)
 		{
 			var exceptionFilterType = Type.GetType(ExceptionFilter);
 
 			if (exceptionFilterType != null) 
 			{
 				LogLog.Debug(string.Format("RaygunAppender: Activating instance of exception filter for '{0}'", exceptionFilterType.AssemblyQualifiedName));
-				var exceptionFilter = Activator.CreateInstance(exceptionFilterType) as IExceptionFilter;
+				var exceptionFilter = Activator.CreateInstance(exceptionFilterType) as IMessageFilter;
 
 				if (exceptionFilter != null) 
 				{
 					LogLog.Debug(string.Format("RaygunAppender: Filtering through exception filter '{0}'", exceptionFilterType.AssemblyQualifiedName));
-					return exceptionFilter.Filter(exception);
+                    return exceptionFilter.Filter(exceptionMessage);
 				}
 			
                 ErrorHandler.Error(string.Format("RaygunAppender: Configured exception filter '{0}' is not an IExceptionFilter", ExceptionFilter));
-			} 
+			}
 			else 
 			{
 				ErrorHandler.Error(string.Format("RaygunAppender: Configured exception filter '{0}' is not a type", ExceptionFilter));
 			}
 
-			return exception;
+            return exceptionMessage;
 		}
 
 		private Dictionary<string, string> FilterRenderedMessage(Dictionary<string, string> userCustomData)
@@ -165,7 +169,7 @@ namespace log4net.Raygun
 			if (renderedMessageFilterType != null)
 			{
 				LogLog.Debug(string.Format("RaygunAppender: Activating instance of rendered message filter for '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
-				var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IRenderedMessageFilter;
+				var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IMessageFilter;
 
 				if (renderedMessageFilter != null && userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
 				{
