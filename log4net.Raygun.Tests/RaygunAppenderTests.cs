@@ -38,9 +38,9 @@ namespace log4net.Raygun.Tests
 		[TestCaseSource("LoggingLevels")]
 		public void WhenLoggingEventWithoutExceptionDataThenDoNothing(Level loggingLevel)
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, null);
+			var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, null);
 
-			_appender.DoAppend(fatalLoggingEvent);
+			_appender.DoAppend(loggingEvent);
 
 			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Null);
 		}
@@ -48,9 +48,9 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenBuildingRaygunMessageToSendThenSetTheUserCustomDataFromBuilder()
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
+			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 
-			_appender.DoAppend(fatalLoggingEvent);
+			_appender.DoAppend(errorLoggingEvent);
 
 			Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData, Is.SameAs(_fakeUserCustomDataBuilder.UserCustomData));
 		}
@@ -58,9 +58,9 @@ namespace log4net.Raygun.Tests
 		[Test]
 		public void WhenBuildingRaygunMessageToSendThenTheMachineNameIsSet()
 		{
-			var fatalLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
+			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 
-			_appender.DoAppend(fatalLoggingEvent);
+			_appender.DoAppend(errorLoggingEvent);
 
 			Assert.That(_fakeRaygunClient.LastMessageSent.Details.MachineName, Is.EqualTo(Environment.MachineName));
 		}

@@ -91,6 +91,10 @@
     <Compile Include="RetryTests.cs" />
     <Compile Include="LoggingEventDataWrapper.cs" />
     <Compile Include="LoggingEventAssert.cs" />
+    <Compile Include="ExceptionFilterTests.cs" />
+    <Compile Include="RenderedMessageFilterTests.cs" />
+    <Compile Include="Fakes\FakeRenderedMessageFilter.cs" />
+    <Compile Include="Fakes\FakeExceptionFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AllPropertiesSet.config">
