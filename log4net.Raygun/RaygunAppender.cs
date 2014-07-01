@@ -132,7 +132,7 @@ namespace log4net.Raygun
 
             if (ExceptionFilter != null && raygunMessage.Details.Error != null)
             {
-                raygunMessage.Details.Error.Message = FilterException(exception.Message);
+                raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, FilterException(exception.Message));
             }
 
             return raygunMessage;
