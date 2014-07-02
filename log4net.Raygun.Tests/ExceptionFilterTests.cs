@@ -13,14 +13,16 @@ namespace log4net.Raygun.Tests
 		private FakeRaygunClient _fakeRaygunClient;
 		private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
 		private FakeErrorHandler _fakeErrorHandler;
+	    private FakeHttpContext _fakeHttpContext;
 
-		[SetUp]
+	    [SetUp]
 		public void SetUp()
-		{
+        {
+            _fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
 			_fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
 			_fakeRaygunClient = new FakeRaygunClient();
 			_currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-			_appender = new RaygunAppender(_fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new RaygunAppender(_fakeHttpContext, _fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
 			_fakeErrorHandler = new FakeErrorHandler();
 
 			_appender.ErrorHandler = _fakeErrorHandler;
@@ -47,7 +49,11 @@ namespace log4net.Raygun.Tests
 			_appender.DoAppend(errorLoggingEvent);
 
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
-            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: Object reference not set to an instance of an object."));
+#if __MonoCS__
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: A null value was found where an object instance was required."));
+#else
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: Object reference not set to an instance of an object."));
+#endif
 		}
 
 		[Test]
@@ -59,7 +65,11 @@ namespace log4net.Raygun.Tests
 			_appender.DoAppend(errorLoggingEvent);
 
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
-            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: Object reference not set to an instance of an object."));
+#if __MonoCS__
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: A null value was found where an object instance was required."));
+#else
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: Object reference not set to an instance of an object."));
+#endif
 		}
 	}
 }
