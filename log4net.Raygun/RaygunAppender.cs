@@ -15,19 +15,19 @@ namespace log4net.Raygun
         public static readonly TimeSpan DefaultTimeBetweenRetries = TimeSpan.FromMilliseconds(5000);
         private TimeSpan _timeBetweenRetries;
 
-        private readonly IHttpContext _httpContext;
+        private readonly Func<IHttpContext> _httpContextFactory;
 		private readonly IUserCustomDataBuilder _userCustomDataBuilder;
 		private readonly Func<string, IRaygunClient> _raygunClientFactory;
 		private readonly TaskScheduler _taskScheduler;
 
         public RaygunAppender() 
-			: this(new HttpContextAdapter(), new UserCustomDataBuilder(), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), TaskScheduler.Default)
+			: this(() => new HttpContextAdapter(), new UserCustomDataBuilder(), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), TaskScheduler.Default)
 		{
 		}
 
-		internal RaygunAppender(IHttpContext httpContext, IUserCustomDataBuilder userCustomDataBuilder, Func<string, IRaygunClient> raygunClientFactory, TaskScheduler taskScheduler)
+		internal RaygunAppender(Func<IHttpContext> httpContextFactory, IUserCustomDataBuilder userCustomDataBuilder, Func<string, IRaygunClient> raygunClientFactory, TaskScheduler taskScheduler)
 		{
-		    _httpContext = httpContext;
+            _httpContextFactory = httpContextFactory;
 			_userCustomDataBuilder = userCustomDataBuilder;
 			_raygunClientFactory = raygunClientFactory;
 			_taskScheduler = taskScheduler;
@@ -125,10 +125,11 @@ namespace log4net.Raygun
 
             var raygunMessageBuilder = RaygunMessageBuilder.New;
 
-            if (_httpContext != null && _httpContext.Instance != null)
+            var httpContext = _httpContextFactory();
+            if (httpContext != null && httpContext.Instance != null)
             {
                 LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
-                raygunMessageBuilder.SetHttpDetails(_httpContext.Instance);
+                raygunMessageBuilder.SetHttpDetails(httpContext.Instance);
             }
 
             raygunMessageBuilder.SetExceptionDetails(exception)
