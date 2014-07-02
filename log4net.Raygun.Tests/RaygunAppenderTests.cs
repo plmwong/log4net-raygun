@@ -47,6 +47,16 @@ namespace log4net.Raygun.Tests
 			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Null);
 		}
 
+        [Test]
+        public void WhenBuildingRaygunMessageToSendThenSetTheHttpDetailsFromHttpContext()
+        {
+            var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
+
+            _appender.DoAppend(errorLoggingEvent);
+
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Request.HostName, Is.EqualTo(FakeHttpContext.FakeHostName));
+        }
+
 		[Test]
 		public void WhenBuildingRaygunMessageToSendThenSetTheUserCustomDataFromBuilder()
 		{

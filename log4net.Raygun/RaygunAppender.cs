@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using log4net.Appender;
 using log4net.Core;
@@ -41,6 +42,7 @@ namespace log4net.Raygun
             set { _timeBetweenRetries = value; }
         }
 
+        public virtual string IgnoredFormNames { get; set; }
 		public virtual string ExceptionFilter { get; set; }
 		public virtual string RenderedMessageFilter { get; set; }
 
@@ -129,7 +131,7 @@ namespace log4net.Raygun
             if (httpContext != null && httpContext.Instance != null)
             {
                 LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
-                raygunMessageBuilder.SetHttpDetails(httpContext.Instance);
+                raygunMessageBuilder.SetHttpDetails(httpContext.Instance, string.IsNullOrEmpty(IgnoredFormNames) ? null : IgnoredFormNames.Split(',').ToList());
             }
 
             raygunMessageBuilder.SetExceptionDetails(exception)

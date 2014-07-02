@@ -33,6 +33,12 @@ namespace log4net.Raygun.Tests
             Assert.That(_raygunAppender.Retries, Is.EqualTo(11));
 		}
 
+        [Test]
+        public void ThenIgnoredFormNamesIsSet()
+        {
+            Assert.That(_raygunAppender.IgnoredFormNames, Is.EqualTo("foo,bar"));
+        }
+
 		[Test]
 		public void ThenExceptionFilterIsSet()
 		{

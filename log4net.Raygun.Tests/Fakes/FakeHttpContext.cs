@@ -6,6 +6,7 @@ namespace log4net.Raygun.Tests.Fakes
 	public class FakeHttpContext : IHttpContext
 	{
 		private readonly HttpApplication _httpApplication;
+	    internal const string FakeHostName = "bar";
 
 		public static FakeHttpContext For(HttpApplication httpApplication)
 		{
@@ -19,7 +20,7 @@ namespace log4net.Raygun.Tests.Fakes
 
 	    public HttpContext Instance
 	    {
-	        get { return new HttpContext(new HttpRequest("foo", "http://bar", "baz"), new HttpResponse(new StringWriter())); }
+            get { return new HttpContext(new HttpRequest("foo", "http://" + FakeHostName, "baz"), new HttpResponse(new StringWriter())); }
 	    }
 
 	    public HttpApplication ApplicationInstance
