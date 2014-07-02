@@ -22,7 +22,7 @@ namespace log4net.Raygun.Tests
 			_userCustomDataBuilder = new UserCustomDataBuilder();
 			_fakeRaygunClient = new FakeRaygunClient();
 			_currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new RaygunAppender(_fakeHttpContext, _userCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new RaygunAppender(() => _fakeHttpContext, _userCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
 			_fakeErrorHandler = new FakeErrorHandler();
 
 			_appender.ErrorHandler = _fakeErrorHandler;
