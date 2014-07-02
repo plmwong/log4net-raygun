@@ -11,6 +11,11 @@ namespace log4net.Raygun
 			_httpContext = HttpContext.Current;
 		}
 
+	    public HttpContext Instance
+	    {
+	        get { return _httpContext; }
+	    }
+
 		public HttpApplication ApplicationInstance
 		{
 			get

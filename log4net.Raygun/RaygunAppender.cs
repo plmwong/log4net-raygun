@@ -15,17 +15,19 @@ namespace log4net.Raygun
         public static readonly TimeSpan DefaultTimeBetweenRetries = TimeSpan.FromMilliseconds(5000);
         private TimeSpan _timeBetweenRetries;
 
+        private readonly IHttpContext _httpContext;
 		private readonly IUserCustomDataBuilder _userCustomDataBuilder;
 		private readonly Func<string, IRaygunClient> _raygunClientFactory;
 		private readonly TaskScheduler _taskScheduler;
 
-		public RaygunAppender() 
-			: this(new UserCustomDataBuilder(), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), TaskScheduler.Default)
+        public RaygunAppender() 
+			: this(new HttpContextAdapter(), new UserCustomDataBuilder(), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), TaskScheduler.Default)
 		{
 		}
 
-		internal RaygunAppender(IUserCustomDataBuilder userCustomDataBuilder, Func<string, IRaygunClient> raygunClientFactory, TaskScheduler taskScheduler)
+		internal RaygunAppender(IHttpContext httpContext, IUserCustomDataBuilder userCustomDataBuilder, Func<string, IRaygunClient> raygunClientFactory, TaskScheduler taskScheduler)
 		{
+		    _httpContext = httpContext;
 			_userCustomDataBuilder = userCustomDataBuilder;
 			_raygunClientFactory = raygunClientFactory;
 			_taskScheduler = taskScheduler;
@@ -121,15 +123,23 @@ namespace log4net.Raygun
 			var assemblyResolver = new AssemblyResolver();
 			var applicationAssembly = assemblyResolver.GetApplicationAssembly();
 
-            var raygunMessage = RaygunMessageBuilder.New
-				.SetExceptionDetails(exception)
-                .SetClientDetails()
-                .SetEnvironmentDetails()
-                .SetMachineName(Environment.MachineName)
-				.SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
-				.SetUserCustomData(RenderedMessageFilter != null ? FilterRenderedMessage(userCustomData) : userCustomData)
-                .Build();
+            var raygunMessageBuilder = RaygunMessageBuilder.New;
 
+            if (_httpContext != null && _httpContext.Instance != null)
+            {
+                LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
+                raygunMessageBuilder.SetHttpDetails(_httpContext.Instance);
+            }
+
+            raygunMessageBuilder.SetExceptionDetails(exception)
+                                .SetClientDetails()
+                                .SetEnvironmentDetails()
+                                .SetMachineName(Environment.MachineName)
+                                .SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
+                                .SetUserCustomData(RenderedMessageFilter != null ? FilterRenderedMessage(userCustomData) : userCustomData);
+
+            var raygunMessage = raygunMessageBuilder.Build();
+            
             if (ExceptionFilter != null && raygunMessage.Details.Error != null)
             {
                 raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, FilterException(exception.Message));

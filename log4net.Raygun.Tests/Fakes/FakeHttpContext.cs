@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.IO;
+using System.Web;
 
 namespace log4net.Raygun.Tests.Fakes
 {
@@ -16,7 +17,12 @@ namespace log4net.Raygun.Tests.Fakes
 			_httpApplication = httpApplication;
 		}
 
-		public HttpApplication ApplicationInstance
+	    public HttpContext Instance
+	    {
+	        get { return new HttpContext(new HttpRequest("foo", "http://bar", "baz"), new HttpResponse(new StringWriter())); }
+	    }
+
+	    public HttpApplication ApplicationInstance
 		{
 			get
 			{

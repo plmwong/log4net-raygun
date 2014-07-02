@@ -13,14 +13,16 @@ namespace log4net.Raygun.Tests
 		private FakeRaygunClient _fakeRaygunClient;
 		private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
 		private FakeErrorHandler _fakeErrorHandler;
+	    private FakeHttpContext _fakeHttpContext;
 
-		[SetUp]
+	    [SetUp]
 		public void SetUp()
-		{
+        {
+            _fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
 			_fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
 			_fakeRaygunClient = new FakeRaygunClient();
 			_currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-			_appender = new RaygunAppender(_fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new RaygunAppender(_fakeHttpContext, _fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
 			_fakeErrorHandler = new FakeErrorHandler();
 
 			_appender.ErrorHandler = _fakeErrorHandler;
