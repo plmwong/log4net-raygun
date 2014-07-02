@@ -9,19 +9,21 @@ namespace log4net.Raygun.Tests
 	public class RaygunAppenderTests
 	{
 		private RaygunAppender _appender;
-		private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
+	    private FakeHttpContext _fakeHttpContext;
+        private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
 		private FakeRaygunClient _fakeRaygunClient;
 		private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
 
 		protected Level[] LoggingLevels = { Level.Debug, Level.Info, Level.Warn, Level.Error, Level.Fatal };
 
-		[SetUp]
+	    [SetUp]
 		public void SetUp()
 		{
+            _fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
 			_fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
 			_fakeRaygunClient = new FakeRaygunClient();
 			_currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-			_appender = new RaygunAppender(_fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new RaygunAppender(_fakeHttpContext, _fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
 		}
 
 		[Test]
