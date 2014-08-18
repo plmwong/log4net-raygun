@@ -2,21 +2,21 @@
 
 namespace log4net.Raygun
 {
-	public class AssemblyResolver
+    public class AssemblyResolver
     {
-		private readonly IHttpContext _httpContext;
-		private readonly IAssembly _assemblyLoader;
-		private const string AspNamespace = "ASP";
+        private readonly IHttpContext _httpContext;
+        private readonly IAssembly _assemblyLoader;
+        private const string AspNamespace = "ASP";
 
-		public AssemblyResolver() : this(new HttpContextAdapter(), new AssemblyAdapter())
-		{
-		}
+        public AssemblyResolver() : this(new HttpContextAdapter(), new AssemblyAdapter())
+        {
+        }
 
-		internal AssemblyResolver(IHttpContext httpContext, IAssembly assemblyLoader)
-		{
-			_httpContext = httpContext;
-			_assemblyLoader = assemblyLoader;
-		}
+        internal AssemblyResolver(IHttpContext httpContext, IAssembly assemblyLoader)
+        {
+            _httpContext = httpContext;
+            _assemblyLoader = assemblyLoader;
+        }
 
         public Assembly GetApplicationAssembly()
         {
@@ -27,20 +27,21 @@ namespace log4net.Raygun
                 return baseWebApplicationAssembly;
             }
 
-			return _assemblyLoader.GetEntryAssembly();
+            return _assemblyLoader.GetEntryAssembly();
         }
 
         private Assembly GetWebApplicationAssembly()
         {
-			if (_httpContext != null && _httpContext.ApplicationInstance != null)
+            if (_httpContext != null && _httpContext.ApplicationInstance != null)
             {
-				var webApplicationType = _httpContext.ApplicationInstance.GetType();
+                var webApplicationType = _httpContext.ApplicationInstance.GetType();
 
-				if (webApplicationType != null)
-				{
-					while (webApplicationType.Namespace == AspNamespace) {
-						webApplicationType = webApplicationType.BaseType;
-					}
+                if (webApplicationType != null)
+                {
+                    while (webApplicationType.Namespace == AspNamespace)
+                    {
+                        webApplicationType = webApplicationType.BaseType;
+                    }
 
                     return webApplicationType.Assembly;
                 }

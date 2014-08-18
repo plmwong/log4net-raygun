@@ -3,26 +3,29 @@ using log4net.Core;
 
 namespace log4net.Raygun
 {
-	public class UserCustomDataBuilder : IUserCustomDataBuilder
+    public class UserCustomDataBuilder : IUserCustomDataBuilder
     {
-	    public Dictionary<string, string> Build(LoggingEvent loggingEvent)
+        public Dictionary<string, string> Build(LoggingEvent loggingEvent)
         {
-			var assemblyResolver = new AssemblyResolver();
-			var applicationAssembly = assemblyResolver.GetApplicationAssembly();
-			var applicationAssemblyFullName = applicationAssembly != null ? applicationAssembly.FullName.NotSuppliedIfNullOrEmpty() : UserCustomDataBuilderExtensions.NotSupplied;
+            var assemblyResolver = new AssemblyResolver();
+            var applicationAssembly = assemblyResolver.GetApplicationAssembly();
+            var applicationAssemblyFullName = applicationAssembly != null ? applicationAssembly.FullName.NotSuppliedIfNullOrEmpty() : UserCustomDataBuilderExtensions.NotSupplied;
 
             var userCustomData = new Dictionary<string, string>
             {
-				{ UserCustomDataKey.AssemblyFullName, applicationAssemblyFullName },
-				{ UserCustomDataKey.Domain, loggingEvent.Domain.NotSuppliedIfNullOrEmpty() },
-				{ UserCustomDataKey.Level, loggingEvent.Level != null ? loggingEvent.Level.Name : UserCustomDataBuilderExtensions.NotSupplied },
-                { UserCustomDataKey.Identity, loggingEvent.Identity.NotSuppliedIfNullOrEmpty() },
-				{ UserCustomDataKey.LocationInfo, loggingEvent.LocationInformation != null 
-					? loggingEvent.LocationInformation.FullInfo.NotSuppliedIfNullOrEmpty() : UserCustomDataBuilderExtensions.NotSupplied },
-                { UserCustomDataKey.ThreadName, loggingEvent.ThreadName.NotSuppliedIfNullOrEmpty() },
-                { UserCustomDataKey.RenderedMessage, loggingEvent.RenderedMessage.NotSuppliedIfNullOrEmpty() },
-                { UserCustomDataKey.TimeStamp, loggingEvent.TimeStamp.ToString("O")},
-                { UserCustomDataKey.UserName, loggingEvent.UserName.NotSuppliedIfNullOrEmpty() }
+                {UserCustomDataKey.AssemblyFullName, applicationAssemblyFullName},
+                {UserCustomDataKey.Domain, loggingEvent.Domain.NotSuppliedIfNullOrEmpty()},
+                {UserCustomDataKey.Level, loggingEvent.Level != null ? loggingEvent.Level.Name : UserCustomDataBuilderExtensions.NotSupplied},
+                {UserCustomDataKey.Identity, loggingEvent.Identity.NotSuppliedIfNullOrEmpty()},
+                {
+                    UserCustomDataKey.LocationInfo, loggingEvent.LocationInformation != null
+                        ? loggingEvent.LocationInformation.FullInfo.NotSuppliedIfNullOrEmpty()
+                        : UserCustomDataBuilderExtensions.NotSupplied
+                },
+                {UserCustomDataKey.ThreadName, loggingEvent.ThreadName.NotSuppliedIfNullOrEmpty()},
+                {UserCustomDataKey.RenderedMessage, loggingEvent.RenderedMessage.NotSuppliedIfNullOrEmpty()},
+                {UserCustomDataKey.TimeStamp, loggingEvent.TimeStamp.ToString("O")},
+                {UserCustomDataKey.UserName, loggingEvent.UserName.NotSuppliedIfNullOrEmpty()}
             };
 
             AddCustomProperties(loggingEvent, userCustomData);
@@ -30,23 +33,23 @@ namespace log4net.Raygun
             return userCustomData;
         }
 
-	    private static void AddCustomProperties(LoggingEvent loggingEvent, Dictionary<string, string> userCustomData)
-	    {
-	        if (loggingEvent.Properties != null)
-	        {
-	            foreach (var propertyKey in loggingEvent.Properties.GetKeys())
-	            {
-	                var propertyValue = loggingEvent.Properties[propertyKey].ToString();
-	                userCustomData.Add(string.Format("{0}.{1}", UserCustomDataKey.PropertiesPrefix, propertyKey), propertyValue);
-	            }
-	        }
-	    }
-
-		internal protected static class UserCustomDataKey
+        private static void AddCustomProperties(LoggingEvent loggingEvent, Dictionary<string, string> userCustomData)
         {
-			public const string AssemblyFullName = "Assembly FullName";
-			public const string Domain = "Domain";
-			public const string Level = "Level";
+            if (loggingEvent.Properties != null)
+            {
+                foreach (var propertyKey in loggingEvent.Properties.GetKeys())
+                {
+                    var propertyValue = loggingEvent.Properties[propertyKey].ToString();
+                    userCustomData.Add(string.Format("{0}.{1}", UserCustomDataKey.PropertiesPrefix, propertyKey), propertyValue);
+                }
+            }
+        }
+
+        protected internal static class UserCustomDataKey
+        {
+            public const string AssemblyFullName = "Assembly FullName";
+            public const string Domain = "Domain";
+            public const string Level = "Level";
             public const string Identity = "Identity";
             public const string LocationInfo = "Location Info";
             public const string RenderedMessage = "Rendered Message";

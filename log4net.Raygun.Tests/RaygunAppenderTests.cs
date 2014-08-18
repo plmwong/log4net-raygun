@@ -5,47 +5,47 @@ using log4net.Raygun.Tests.Fakes;
 
 namespace log4net.Raygun.Tests
 {
-	[TestFixture]
-	public class RaygunAppenderTests
-	{
-		private RaygunAppender _appender;
-	    private FakeHttpContext _fakeHttpContext;
+    [TestFixture]
+    public class RaygunAppenderTests
+    {
+        private RaygunAppender _appender;
+        private FakeHttpContext _fakeHttpContext;
         private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
-		private FakeRaygunClient _fakeRaygunClient;
-		private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
+        private FakeRaygunClient _fakeRaygunClient;
+        private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
 
-		protected Level[] LoggingLevels = { Level.Debug, Level.Info, Level.Warn, Level.Error, Level.Fatal };
+        protected Level[] LoggingLevels = {Level.Debug, Level.Info, Level.Warn, Level.Error, Level.Fatal};
 
-	    [SetUp]
-		public void SetUp()
-		{
+        [SetUp]
+        public void SetUp()
+        {
             _fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
-			_fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
-			_fakeRaygunClient = new FakeRaygunClient();
-			_currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
+            _fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
+            _fakeRaygunClient = new FakeRaygunClient();
+            _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
             _appender = new RaygunAppender(() => _fakeHttpContext, _fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
-		}
+        }
 
-		[Test]
-		[TestCaseSource("LoggingLevels")]
-		public void WhenLoggingEventContainsAnExceptionThenSendRaygunMessage(Level loggingLevel)
-		{
-			var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, new TestException());
-			_appender.DoAppend(loggingEvent);
+        [Test]
+        [TestCaseSource("LoggingLevels")]
+        public void WhenLoggingEventContainsAnExceptionThenSendRaygunMessage(Level loggingLevel)
+        {
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, new TestException());
+            _appender.DoAppend(loggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
-		}
+            Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
+        }
 
-		[Test]
-		[TestCaseSource("LoggingLevels")]
-		public void WhenLoggingEventWithoutExceptionDataThenDoNothing(Level loggingLevel)
-		{
-			var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, null);
+        [Test]
+        [TestCaseSource("LoggingLevels")]
+        public void WhenLoggingEventWithoutExceptionDataThenDoNothing(Level loggingLevel)
+        {
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, null);
 
-			_appender.DoAppend(loggingEvent);
+            _appender.DoAppend(loggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent, Is.Null);
-		}
+            Assert.That(_fakeRaygunClient.LastMessageSent, Is.Null);
+        }
 
         [Test]
         public void WhenBuildingRaygunMessageToSendThenSetTheHttpDetailsFromHttpContext()
@@ -57,25 +57,24 @@ namespace log4net.Raygun.Tests
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.Request.HostName, Is.EqualTo(FakeHttpContext.FakeHostName));
         }
 
-		[Test]
-		public void WhenBuildingRaygunMessageToSendThenSetTheUserCustomDataFromBuilder()
-		{
-			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
+        [Test]
+        public void WhenBuildingRaygunMessageToSendThenSetTheUserCustomDataFromBuilder()
+        {
+            var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 
-			_appender.DoAppend(errorLoggingEvent);
+            _appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData, Is.SameAs(_fakeUserCustomDataBuilder.UserCustomData));
-		}
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData, Is.SameAs(_fakeUserCustomDataBuilder.UserCustomData));
+        }
 
-		[Test]
-		public void WhenBuildingRaygunMessageToSendThenTheMachineNameIsSet()
-		{
-			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
+        [Test]
+        public void WhenBuildingRaygunMessageToSendThenTheMachineNameIsSet()
+        {
+            var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
 
-			_appender.DoAppend(errorLoggingEvent);
+            _appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.MachineName, Is.EqualTo(Environment.MachineName));
-		}
-	}
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.MachineName, Is.EqualTo(Environment.MachineName));
+        }
+    }
 }
-

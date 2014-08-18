@@ -2,9 +2,8 @@
 
 namespace log4net.Raygun
 {
-	public interface IRaygunClient
-	{
-		void Send(RaygunMessage raygunMessage);
-	}
+    public interface IRaygunClient
+    {
+        void Send(RaygunMessage raygunMessage);
+    }
 }
-
