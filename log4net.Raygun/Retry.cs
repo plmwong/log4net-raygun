@@ -18,7 +18,7 @@ namespace log4net.Raygun
                 {
                     action.Invoke();
                 }
-				catch (Exception ex)
+                catch (Exception ex)
                 {
                     LogLog.Debug(RaygunAppender.DeclaringType, string.Format("RaygunAppender: Exception on retry attempt #{0}: {1}", attempts, ex));
 

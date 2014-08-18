@@ -4,46 +4,46 @@ using System;
 
 namespace log4net.Raygun.Tests
 {
-	public class LoggingEventDataWrapper 
-	{
-		public string LoggerName;
+    public class LoggingEventDataWrapper
+    {
+        public string LoggerName;
 
-		public string Domain;
+        public string Domain;
 
-		public string ExceptionString;
+        public string ExceptionString;
 
-		public string Identity;
+        public string Identity;
 
-		public string UserName;
+        public string UserName;
 
-		public LocationInfo LocationInfo;
+        public LocationInfo LocationInfo;
 
-		public DateTime TimeStamp;
+        public DateTime TimeStamp;
 
-		public string ThreadName;
+        public string ThreadName;
 
-		public string Message;
+        public string Message;
 
-		public Level Level;
+        public Level Level;
 
-		public PropertiesDictionary Properties;
+        public PropertiesDictionary Properties;
 
-		public LoggingEventData ToLoggingEventData()
-		{
-			return new LoggingEventData 
-			{
-				LoggerName = LoggerName,
-				Domain = Domain,
-				ExceptionString = ExceptionString,
-				Identity = Identity,
-				UserName = UserName,
-				LocationInfo = LocationInfo,
-				TimeStamp = TimeStamp,
-				ThreadName = ThreadName,
-				Message = Message,
-				Level = Level,
-				Properties = Properties
-			};
-		}
-	}
+        public LoggingEventData ToLoggingEventData()
+        {
+            return new LoggingEventData
+            {
+                LoggerName = LoggerName,
+                Domain = Domain,
+                ExceptionString = ExceptionString,
+                Identity = Identity,
+                UserName = UserName,
+                LocationInfo = LocationInfo,
+                TimeStamp = TimeStamp,
+                ThreadName = ThreadName,
+                Message = Message,
+                Level = Level,
+                Properties = Properties
+            };
+        }
+    }
 }

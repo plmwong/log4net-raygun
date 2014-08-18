@@ -7,7 +7,11 @@ namespace log4net.Raygun.Tests.Fakes
     public class FakeErrorHandler : IErrorHandler
     {
         private readonly List<string> _errors = new List<string>();
-        public List<string> Errors { get { return _errors; }}
+
+        public List<string> Errors
+        {
+            get { return _errors; }
+        }
 
         public void Error(string message, Exception e, ErrorCode errorCode)
         {

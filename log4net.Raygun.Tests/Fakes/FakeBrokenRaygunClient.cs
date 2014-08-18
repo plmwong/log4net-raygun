@@ -2,12 +2,11 @@
 
 namespace log4net.Raygun.Tests.Fakes
 {
-	public class FakeBrokenRaygunClient : IRaygunClient
-	{
-		public void Send(RaygunMessage raygunMessage)
-		{
-			throw new TestException();
-		}
-	}
+    public class FakeBrokenRaygunClient : IRaygunClient
+    {
+        public void Send(RaygunMessage raygunMessage)
+        {
+            throw new TestException();
+        }
+    }
 }
-

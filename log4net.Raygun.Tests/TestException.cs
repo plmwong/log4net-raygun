@@ -2,8 +2,7 @@
 
 namespace log4net.Raygun.Tests
 {
-	public class TestException : Exception
-	{
-	}
+    public class TestException : Exception
+    {
+    }
 }
-

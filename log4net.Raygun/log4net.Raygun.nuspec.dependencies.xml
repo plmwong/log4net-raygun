@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <dependencies xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <group targetFramework="net35">
     <dependency id="System.Threading.Tasks" version="[3.0.1,)" />
