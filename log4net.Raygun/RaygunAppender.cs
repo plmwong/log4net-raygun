@@ -138,6 +138,7 @@ namespace log4net.Raygun
             raygunMessageBuilder
                 .SetExceptionDetails(exception)
                 .SetClientDetails()
+                .SetTags(ExtractTagsFromLoggingEventProperties(loggingEvent.Properties))
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
                 .SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
@@ -162,6 +163,21 @@ namespace log4net.Raygun
             }
 
             return raygunMessage;
+        }
+
+        private IList<string> ExtractTagsFromLoggingEventProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
+        {
+            if (loggingEventProperties.Contains(PropertyKeys.Tags))
+            {
+                var rawTags = loggingEventProperties[PropertyKeys.Tags] as string;
+
+                if (!string.IsNullOrEmpty(rawTags))
+                {
+                    return rawTags.Split('|').ToList();
+                }
+            }
+
+            return null;
         }
 
         private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData)
@@ -198,6 +214,11 @@ namespace log4net.Raygun
             }
 
             return message;
+        }
+
+        protected internal static class PropertyKeys
+        {
+            public const string Tags = "log4net.Raygun.Tags";
         }
     }
 }

@@ -55,10 +55,10 @@
     <Reference Include="Mindscape.Raygun4Net, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Release 4.5|AnyCPU'">
       <HintPath>..\packages\Mindscape.Raygun4Net.3.3.1\lib\net45\Mindscape.Raygun4Net.dll</HintPath>
     </Reference>
-	<Reference Include="Mindscape.Raygun4Net, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL" Condition=" '$(Configuration)|$(Platform)' == 'Release 4.0|AnyCPU'">
+    <Reference Include="Mindscape.Raygun4Net, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL" Condition=" '$(Configuration)|$(Platform)' == 'Release 4.0|AnyCPU'">
       <HintPath>..\packages\Mindscape.Raygun4Net.3.3.1\lib\net40\Mindscape.Raygun4Net.dll</HintPath>
     </Reference>
-	<Reference Include="Mindscape.Raygun4Net, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL" Condition=" '$(Configuration)|$(Platform)' == 'Release 3.5|AnyCPU'">
+    <Reference Include="Mindscape.Raygun4Net, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL" Condition=" '$(Configuration)|$(Platform)' == 'Release 3.5|AnyCPU'">
       <HintPath>..\packages\Mindscape.Raygun4Net.3.3.1\lib\net35\Mindscape.Raygun4Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -85,6 +85,7 @@
     <Compile Include="RaygunAppenderLoggingTests.cs" />
     <Compile Include="RaygunAppenderTests.cs" />
     <Compile Include="CurrentThreadTaskScheduler.cs" />
+    <Compile Include="TagsTests.cs" />
     <Compile Include="TestException.cs" />
     <Compile Include="UserCustomDataBuilderTests.cs" />
     <Compile Include="AssemblyResolverTests.cs" />
