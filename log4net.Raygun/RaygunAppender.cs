@@ -74,14 +74,7 @@ namespace log4net.Raygun
                 }
             }
 
-            if (exception != null)
-            {
-                SendExceptionToRaygunInBackground(exception, loggingEvent);
-            }
-            else
-            {
-                ErrorHandler.Error("RaygunAppender: Could not find any Exception to log. Doing nothing.");
-            }
+            SendExceptionToRaygunInBackground(exception, loggingEvent);
         }
 
         private void SendExceptionToRaygunInBackground(Exception exception, LoggingEvent loggingEvent)
@@ -89,7 +82,8 @@ namespace log4net.Raygun
             LogLog.Debug(DeclaringType, "RaygunAppender: Building UserCustomData dictionary");
             var userCustomData = _userCustomDataBuilder.Build(loggingEvent);
             LogLog.Debug(DeclaringType, "RaygunAppender: Building Raygun message");
-            var raygunMessage = BuildRaygunExceptionMessage(exception, userCustomData);
+
+            RaygunMessage raygunMessage = BuildRaygunMessage(exception, loggingEvent, userCustomData);
 
             LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Sending Raygun message in a background task. Retries: '{0}', TimeBetweenRetries: '{1}'", Retries, TimeBetweenRetries));
             new TaskFactory(_taskScheduler)
@@ -120,7 +114,7 @@ namespace log4net.Raygun
             LogLog.Debug(DeclaringType, "RaygunAppender: Raygun message sent");
         }
 
-        private RaygunMessage BuildRaygunExceptionMessage(Exception exception, Dictionary<string, string> userCustomData)
+        private RaygunMessage BuildRaygunMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData)
         {
             LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
             var assemblyResolver = new AssemblyResolver();
@@ -134,14 +128,15 @@ namespace log4net.Raygun
                 LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
                 
                 var messageOptions = new RaygunRequestMessageOptions(string.IsNullOrEmpty(IgnoredFormNames) ? Enumerable.Empty<string>() : IgnoredFormNames.Split(',').ToList(),
-                    Enumerable.Empty<string>(),
-                    Enumerable.Empty<string>(),
-                    Enumerable.Empty<string>());
+                                                                     Enumerable.Empty<string>(),
+                                                                     Enumerable.Empty<string>(),
+                                                                     Enumerable.Empty<string>());
 
                 raygunMessageBuilder.SetHttpDetails(httpContext.Instance, messageOptions);
             }
 
-            raygunMessageBuilder.SetExceptionDetails(exception)
+            raygunMessageBuilder
+                .SetExceptionDetails(exception)
                 .SetClientDetails()
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
@@ -150,14 +145,21 @@ namespace log4net.Raygun
 
             var raygunMessage = raygunMessageBuilder.Build();
 
-            if (ExceptionFilter != null && raygunMessage.Details.Error != null)
+            if (exception != null)
             {
-                raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, FilterException(exception.Message));
+                if (ExceptionFilter != null && raygunMessage.Details.Error != null)
+                {
+                    raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, FilterException(exception.Message));
+                }
+            }
+            else
+            {
+                raygunMessage.Details.Error = new RaygunErrorMessage {Message = loggingEvent.RenderedMessage, ClassName = loggingEvent.LocationInformation.ClassName};
             }
 
             return raygunMessage;
         }
-
+        
         private string FilterException(string exceptionMessage)
         {
             var exceptionFilterType = Type.GetType(ExceptionFilter);

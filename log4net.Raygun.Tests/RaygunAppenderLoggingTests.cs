@@ -28,15 +28,6 @@ namespace log4net.Raygun.Tests
         }
 
         [Test]
-        public void WhenNoExceptionIsGivenInTheLoggingEventThenThatIsLogged()
-        {
-            var errorLoggingEvent = new LoggingEvent(new LoggingEventData {Level = Level.Error});
-            _appender.DoAppend(errorLoggingEvent);
-
-            Assert.That(_fakeErrorHandler.Errors, Has.Exactly(1).EqualTo("RaygunAppender: Could not find any Exception to log. Doing nothing."));
-        }
-
-        [Test]
         public void WhenNoApiKeyIsConfiguredInTheAppenderThenThatIsLogged()
         {
             var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, null, new TestException());
