@@ -2,9 +2,8 @@
 
 namespace log4net.Raygun
 {
-	public interface IAssembly
-	{
-		Assembly GetEntryAssembly();
-	}
+    public interface IAssembly
+    {
+        Assembly GetEntryAssembly();
+    }
 }
-

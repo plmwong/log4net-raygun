@@ -1,6 +1,20 @@
 Raygun4Net - Raygun.io Provider for .NET Framework
 ===================
 
+=========================================================================================================
+|                                         ! IMPORTANT CHANGE IN 3.0 !                                   |
+|                                                                                                       |
+| The ignoreFormDataNames configuration setting has been removed and replaced with 4 separate options:  |
+|                                                                                                       |
+| ignoreFormFieldNames                                                                                  |
+| ignoreHeaderNames                                                                                     |
+| ignoreCookieNames                                                                                     |
+| ignoreServerVariableNames                                                                             |
+|                                                                                                       |
+| If you were once using the ignoreFormDataNames option to ignore headers, cookies or server variables, |
+| make sure to use the new correct configuration options to ignore the appropriate bit.                 |
+=========================================================================================================
+
 Where is my app API key?
 ====================
 When you create a new application on your Raygun.io dashboard, your app API key is displayed at the top of the instructions page.
@@ -9,6 +23,24 @@ You can also find the API key by clicking the "Application Settings" button in t
 Namespace
 ====================
 The main classes can be found in the Mindscape.Raygun4Net namespace.
+
+Supported platforms/frameworks
+====================
+
+Projects built with the following frameworks are supported:
+
+* .NET 2.0, 3.5, 4.0, 4.5
+* ASP.NET
+* MVC
+* Web Api
+* WinForms, WPF etc
+* Windows Store apps (universal) for Windows 8.1 and Windows Phone 8.1
+* Windows 8
+* Windows Phone 7.1 and 8
+* WinRT
+* Xamarin.iOS, Xamarin.Android and Xamarin.Mac
+
+The NuGet package will select the appropriate dll to use for your project.
 
 Usage
 ====================
@@ -65,25 +97,49 @@ Toggle this boolean and the HTTP module will not send errors to Raygun.io if the
 
 Remove sensitive request data
 
-If you have sensitive data in an HTTP request that you wish to prevent being transmitted to Raygun, you can provide a list of possible keys (Names) to remove:
+If you have sensitive data in an HTTP request that you wish to prevent being transmitted to Raygun, you can provide lists of possible keys (names) to remove.
+Keys to ignore can be specified on the RaygunSettings tag in web.config, (or you can use the equivalent methods on RaygunClient if you are setting things up in code).
+The available options are:
 
-raygunClient.IgnoreFormDataNames(new List<string>() { "SensitiveKey1", "SomeCreditCardData"});
+ignoreFormFieldNames
+ignoreHeaderNames
+ignoreCookieNames
+ignoreServerVariableNames
 
-When an error occurs and is passed in to Raygun4Net, if any of the keys specified are present in request.Form, they will not be transmitted to the Raygun API.
-
-Sensitive keys are removed from the following transmitted properties:
-
-  * HttpRequest.Headers
-  * HttpRequest.Form
-  * HttpRequest.ServerVariables
+These can be set to be a comma separated list of keys to ignore. Setting an option as * will indicate that all the keys will not be sent to Raygun.
+Placing * before, after or at both ends of a key will perform an ends-with, starts-with or contains operation respectively.
+For example, ignoreFormFieldNames="*password*" will cause Raygun to ignore all form fields that contain "password" anywhere in the name.
+These options are not case sensitive.
 
 Remove wrapper exceptions (available in all .NET Raygun providers)
 
-If you have common outer exceptions that wrap a valuable inner exception which you'd prefer to group by, you can specify these by providing a list:
+If you have common outer exceptions that wrap a valuable inner exception which you'd prefer to group by, you can specify these by using the multi-parameter method:
 
-raygunClient.AddWrapperExceptions(new List<Type>() { typeof(TargetInvocationException) });
+raygunClient.AddWrapperExceptions(typeof(TargetInvocationException));
 
-In this case, if a TargetInvocationException occurs, it will be removed and replaced with the actual InnerException that was the cause. Note that HttpUnhandledException and the above TargetInvocationException are already defined; you do not have to add these manually. This method is provided if you have your own common wrapper exceptions, or a framework is throwing exceptions using its own wrapper.
+In this case, if a TargetInvocationException occurs, it will be removed and replaced with the actual InnerException that was the cause. Note that HttpUnhandledException and the above TargetInvocationException are already defined; you do not have to add these manually. This method is useful if you have your own custom wrapper exceptions, or a framework is throwing exceptions using its own wrapper.
+
+MVC
+====================
+
+If you are installing manually, make sure you are using the Mindscape.Raygun4Net.dll that targets either .Net 4.0 or .Net 4.5. These can be located in the Net4 and Net45 folders if you downloaded the assemblies from GitHub.
+If you are installing via NuGet, the appropriate dll will be selected for you.
+
+Setting up Raygun4Net in an MVC project is exactly the same as with ASP.NET as described in the section above.
+
+Web Api
+====================
+
+If you are installing manually, make sure you are using the Mindscape.Raygun4Net.dll that targets .Net 4.5. This can be located in the Net45 folder if you downloaded the assemblies from GitHub.
+If you are installing via NuGet, the appropriate dll will be selected for you.
+
+Use RaygunSettings to provide your API key in the same way as with ASP.NET as described in the section above.
+
+Then, in the WebApiConfig.Register method of your project, simply call the static RaygunWebApiClient.Attach method:
+
+RaygunWebApiClient.Attach(config);
+
+This method takes an optional function that you can use to provide a custom instance of RaygunWebApiClient. This custom instance could be used to listen to the SendingMessage event, or set any of the various options.
 
 WPF
 ====================
@@ -125,6 +181,29 @@ static void Main()
 private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
 {
   _raygunClient.Send(e.Exception);
+}
+
+Windows Store Apps (Windows 8.1 and Windows Phone 8.1)
+====================
+
+In the App.xaml.cs constructor (or any central entry point in your application), call the static RaygunClient.Attach method using your API key. This will catch and send all unhandled exception to Raygun.io for you.
+
+public App()
+{
+  RaygunClient.Attach("YOUR_APP_API_KEY");
+}
+
+At any point after calling the Attach method, you can use RaygunClient.Current to get the static instance. This can be used for manually sending messages (via the Send methods) or changing options such as the User identity string.
+
+You can manually send exceptions with the SendAsync method. When manually sending, currently the compiler does not allow you to use `await` in a catch block. You can however call SendAsync in a blocking way:
+
+try
+{
+  throw new Exception("foo");
+}
+catch (Exception e)
+{
+  RaygunClient.Current.SendAsync(e);
 }
 
 WinRT
@@ -175,11 +254,27 @@ Xamarin for iOS
 In the main entry point of the application, use the static RaygunClient.Attach method using your app API key.
 There is also an overload for the Attach method that lets you pass in a user-identity string which is useful for tracking affected users in your Raygun.io dashboard.
 
-static void Main (string[] args)
+static void Main(string[] args)
 {
   RaygunClient.Attach("YOUR_APP_API_KEY");
 
-  UIApplication.Main (args, null, "AppDelegate");
+  UIApplication.Main(args, null, "AppDelegate");
+}
+
+At any point after calling the Attach method, you can use RaygunClient.Current to get the static instance. This can be used for manually sending messages or changing options such as the User identity string.
+
+Xamarin for Mac
+====================
+Xamarin for Mac support is not included in the NuGet package or the Raygun4Net Xamarin Component. Instead, download the .zip of assemblies from the latest release on GitHub: https://github.com/MindscapeHQ/raygun4net/releases (Click the green button). Then copy and reference the Mindscape.Raygun4Net.Xamarin.Mac.dll into your Xamarin.Mac project.
+
+In the main entry point of the application, use the static RaygunClient.Attach method using your app API key.
+
+static void Main(string[] args)
+{
+  RaygunClient.Attach("YOUR_APP_API_KEY");
+
+  NSApplication.Init();
+  NSApplication.Main(args);
 }
 
 At any point after calling the Attach method, you can use RaygunClient.Current to get the static instance. This can be used for manually sending messages or changing options such as the User identity string.

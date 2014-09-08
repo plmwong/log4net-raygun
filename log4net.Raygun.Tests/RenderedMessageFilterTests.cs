@@ -5,64 +5,63 @@ using System;
 
 namespace log4net.Raygun.Tests
 {
-	[TestFixture]
-	public class RenderedMessageFilterTests
-	{
-		private RaygunAppender _appender;
-		private UserCustomDataBuilder _userCustomDataBuilder;
-		private FakeRaygunClient _fakeRaygunClient;
-		private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
-		private FakeErrorHandler _fakeErrorHandler;
-	    private FakeHttpContext _fakeHttpContext;
+    [TestFixture]
+    public class RenderedMessageFilterTests
+    {
+        private RaygunAppender _appender;
+        private UserCustomDataBuilder _userCustomDataBuilder;
+        private FakeRaygunClient _fakeRaygunClient;
+        private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
+        private FakeErrorHandler _fakeErrorHandler;
+        private FakeHttpContext _fakeHttpContext;
 
-	    [SetUp]
-		public void SetUp()
+        [SetUp]
+        public void SetUp()
         {
             _fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
-			_userCustomDataBuilder = new UserCustomDataBuilder();
-			_fakeRaygunClient = new FakeRaygunClient();
-			_currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
+            _userCustomDataBuilder = new UserCustomDataBuilder();
+            _fakeRaygunClient = new FakeRaygunClient();
+            _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
             _appender = new RaygunAppender(() => _fakeHttpContext, _userCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
-			_fakeErrorHandler = new FakeErrorHandler();
+            _fakeErrorHandler = new FakeErrorHandler();
 
-			_appender.ErrorHandler = _fakeErrorHandler;
-		}
+            _appender.ErrorHandler = _fakeErrorHandler;
+        }
 
-		[Test]
-		public void WhenFilterIsSetThenRenderedMessageIsFirstPassedThroughRenderedMessageFilter()
-		{
-			_appender.RenderedMessageFilter = typeof(FakeMessageFilter).AssemblyQualifiedName;
+        [Test]
+        public void WhenFilterIsSetThenRenderedMessageIsFirstPassedThroughRenderedMessageFilter()
+        {
+            _appender.RenderedMessageFilter = typeof (FakeMessageFilter).AssemblyQualifiedName;
 
-			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
-			_appender.DoAppend(errorLoggingEvent);
+            var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
+            _appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage], Is.EqualTo(FakeMessageFilter.ReplacementMessage));
-		}
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage], Is.EqualTo(FakeMessageFilter.ReplacementMessage));
+        }
 
-		[Test]
-		public void WhenFilterIsSetToNonTypeThenExceptionsAreNotFilteredAtAll()
-		{
-			_appender.RenderedMessageFilter = "not a type";
+        [Test]
+        public void WhenFilterIsSetToNonTypeThenExceptionsAreNotFilteredAtAll()
+        {
+            _appender.RenderedMessageFilter = "not a type";
 
-			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
-			_appender.DoAppend(errorLoggingEvent);
+            var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
+            _appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage], 
-				Is.EqualTo("log4net.Raygun.Tests.TestException: Exception of type 'log4net.Raygun.Tests.TestException' was thrown."));
-		}
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage],
+                Is.EqualTo("log4net.Raygun.Tests.TestException: Exception of type 'log4net.Raygun.Tests.TestException' was thrown."));
+        }
 
 
-		[Test]
-		public void WhenFilterIsSetToNonFilterTypeThenExceptionsAreNotFilteredAtAll()
-		{
-			_appender.RenderedMessageFilter = typeof(Decimal).AssemblyQualifiedName;
+        [Test]
+        public void WhenFilterIsSetToNonFilterTypeThenExceptionsAreNotFilteredAtAll()
+        {
+            _appender.RenderedMessageFilter = typeof (Decimal).AssemblyQualifiedName;
 
-			var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
-			_appender.DoAppend(errorLoggingEvent);
+            var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
+            _appender.DoAppend(errorLoggingEvent);
 
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage], 
-				Is.EqualTo("log4net.Raygun.Tests.TestException: Exception of type 'log4net.Raygun.Tests.TestException' was thrown."));
-		}
-	}
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.UserCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage],
+                Is.EqualTo("log4net.Raygun.Tests.TestException: Exception of type 'log4net.Raygun.Tests.TestException' was thrown."));
+        }
+    }
 }
-
