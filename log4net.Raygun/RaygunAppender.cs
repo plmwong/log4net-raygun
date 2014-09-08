@@ -132,7 +132,13 @@ namespace log4net.Raygun
             if (httpContext != null && httpContext.Instance != null)
             {
                 LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
-                raygunMessageBuilder.SetHttpDetails(httpContext.Instance, string.IsNullOrEmpty(IgnoredFormNames) ? null : IgnoredFormNames.Split(',').ToList());
+                
+                var messageOptions = new RaygunRequestMessageOptions(string.IsNullOrEmpty(IgnoredFormNames) ? Enumerable.Empty<string>() : IgnoredFormNames.Split(',').ToList(),
+                    Enumerable.Empty<string>(),
+                    Enumerable.Empty<string>(),
+                    Enumerable.Empty<string>());
+
+                raygunMessageBuilder.SetHttpDetails(httpContext.Instance, messageOptions);
             }
 
             raygunMessageBuilder.SetExceptionDetails(exception)
