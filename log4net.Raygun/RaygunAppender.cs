@@ -12,7 +12,7 @@ namespace log4net.Raygun
 {
     public class RaygunAppender : AppenderSkeleton
     {
-        public static readonly Type DeclaringType = typeof (RaygunAppender);
+        public static readonly Type DeclaringType = typeof(RaygunAppender);
         public static readonly TimeSpan DefaultTimeBetweenRetries = TimeSpan.FromMilliseconds(5000);
         private TimeSpan _timeBetweenRetries;
 
@@ -126,7 +126,7 @@ namespace log4net.Raygun
             if (httpContext != null && httpContext.Instance != null)
             {
                 LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
-                
+
                 var messageOptions = new RaygunRequestMessageOptions(string.IsNullOrEmpty(IgnoredFormNames) ? Enumerable.Empty<string>() : IgnoredFormNames.Split(',').ToList(),
                                                                      Enumerable.Empty<string>(),
                                                                      Enumerable.Empty<string>(),
@@ -141,7 +141,7 @@ namespace log4net.Raygun
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
                 .SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
-                .SetUserCustomData(RenderedMessageFilter != null ? FilterRenderedMessage(userCustomData) : userCustomData);
+                .SetUserCustomData(RenderedMessageFilter != null ? FilterRenderedMessageInUserCustomData(userCustomData) : userCustomData);
 
             var raygunMessage = raygunMessageBuilder.Build();
 
@@ -149,68 +149,55 @@ namespace log4net.Raygun
             {
                 if (ExceptionFilter != null && raygunMessage.Details.Error != null)
                 {
-                    raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, FilterException(exception.Message));
+                    raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, ApplyFilter(exception.Message, ExceptionFilter));
                 }
             }
             else
             {
-                raygunMessage.Details.Error = new RaygunErrorMessage {Message = loggingEvent.RenderedMessage, ClassName = loggingEvent.LocationInformation.ClassName};
+                raygunMessage.Details.Error = new RaygunErrorMessage
+                {
+                    Message = RenderedMessageFilter != null ? ApplyFilter(loggingEvent.RenderedMessage, RenderedMessageFilter) : loggingEvent.RenderedMessage,
+                    ClassName = loggingEvent.LocationInformation.ClassName
+                };
             }
 
             return raygunMessage;
         }
-        
-        private string FilterException(string exceptionMessage)
+
+        private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData)
         {
-            var exceptionFilterType = Type.GetType(ExceptionFilter);
-
-            if (exceptionFilterType != null)
+            if (userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
             {
-                LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activating instance of exception filter for '{0}'", exceptionFilterType.AssemblyQualifiedName));
-                var exceptionFilter = Activator.CreateInstance(exceptionFilterType) as IMessageFilter;
-
-                if (exceptionFilter != null)
-                {
-                    LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Filtering through exception filter '{0}'", exceptionFilterType.AssemblyQualifiedName));
-                    return exceptionFilter.Filter(exceptionMessage);
-                }
-
-                ErrorHandler.Error(string.Format("RaygunAppender: Configured exception filter '{0}' is not an IExceptionFilter", ExceptionFilter));
-            }
-            else
-            {
-                ErrorHandler.Error(string.Format("RaygunAppender: Configured exception filter '{0}' is not a type", ExceptionFilter));
-            }
-
-            return exceptionMessage;
-        }
-
-        private Dictionary<string, string> FilterRenderedMessage(Dictionary<string, string> userCustomData)
-        {
-            var renderedMessageFilterType = Type.GetType(RenderedMessageFilter);
-
-            if (renderedMessageFilterType != null)
-            {
-                LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activating instance of rendered message filter for '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
-                var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IMessageFilter;
-
-                if (renderedMessageFilter != null && userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
-                {
-                    LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Filtering through rendered message filter '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
-                    var oldValue = userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage];
-                    userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = renderedMessageFilter.Filter(oldValue);
-                }
-                else
-                {
-                    ErrorHandler.Error(string.Format("RaygunAppender: Configured rendered message filter '{0}' is not an IRenderedMessageFilter", RenderedMessageFilter));
-                }
-            }
-            else
-            {
-                ErrorHandler.Error(string.Format("RaygunAppender: Configured rendered message filter '{0}' is not a type", RenderedMessageFilter));
+                var oldValue = userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage];
+                userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = ApplyFilter(oldValue, RenderedMessageFilter);
             }
 
             return userCustomData;
+        }
+
+        private string ApplyFilter(string message, string filter)
+        {
+            var renderedMessageFilterType = Type.GetType(filter);
+
+            if (renderedMessageFilterType != null)
+            {
+                LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activating instance of message filter for '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
+                var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IMessageFilter;
+
+                if (renderedMessageFilter != null)
+                {
+                    LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Filtering through message filter '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
+                    return renderedMessageFilter.Filter(message);
+                }
+
+                ErrorHandler.Error(string.Format("RaygunAppender: Configured message filter '{0}' is not a IMessageFilter", filter));
+            }
+            else
+            {
+                ErrorHandler.Error(string.Format("RaygunAppender: Configured message filter '{0}' is not a type", filter));
+            }
+
+            return message;
         }
     }
 }
