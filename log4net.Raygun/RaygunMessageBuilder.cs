@@ -59,6 +59,7 @@ namespace log4net.Raygun
             }
             else
             {
+                LogLog.Debug(DeclaringType, "RaygunAppender: No exception object found in error, creating raygun error message from the rendered message and calling class");
                 raygunMessage.Details.Error = new RaygunErrorMessage
                 {
                     Message = renderedMessageFilter.ApplyTo(loggingEvent.RenderedMessage),
@@ -73,6 +74,7 @@ namespace log4net.Raygun
         {
             if (loggingEventProperties.Contains(RaygunAppender.PropertyKeys.Tags))
             {
+                LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Found '{0}' property key in the logging event properties, extracting raygun tags", RaygunAppender.PropertyKeys.Tags));
                 var rawTags = loggingEventProperties[RaygunAppender.PropertyKeys.Tags] as string;
 
                 if (!string.IsNullOrEmpty(rawTags))
