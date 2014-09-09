@@ -161,7 +161,7 @@ namespace log4net.Raygun
             LogLog.Debug(DeclaringType, "RaygunAppender: Raygun message sent");
         }
 
-        protected internal static class PropertyKeys
+        public static class PropertyKeys
         {
             public const string Tags = "log4net.Raygun.Tags";
         }
