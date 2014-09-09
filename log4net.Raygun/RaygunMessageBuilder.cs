@@ -54,31 +54,21 @@ namespace log4net.Raygun
             {
                 if (raygunMessage.Details.Error != null)
                 {
-                    raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, ApplyFilter(exception.Message, exceptionFilter));
+                    raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, exceptionFilter.ApplyTo(exception.Message));
                 }
             }
             else
             {
                 raygunMessage.Details.Error = new RaygunErrorMessage
                 {
-                    Message = ApplyFilter(loggingEvent.RenderedMessage, renderedMessageFilter),
+                    Message = renderedMessageFilter.ApplyTo(loggingEvent.RenderedMessage),
                     ClassName = loggingEvent.LocationInformation.ClassName
                 };
             }
 
             return raygunMessage;
         }
-
-        private string ApplyFilter(string message, IMessageFilter exceptionFilter)
-        {
-            if (exceptionFilter != null)
-            {
-                return exceptionFilter.Filter(message);
-            }
-
-            return message;
-        }
-
+        
         private IList<string> ExtractTagsFromLoggingEventProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
         {
             if (loggingEventProperties.Contains(RaygunAppender.PropertyKeys.Tags))
@@ -99,7 +89,7 @@ namespace log4net.Raygun
             if (userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
             {
                 var oldValue = userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage];
-                userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = ApplyFilter(oldValue, renderedMessageFilter);
+                userCustomData[UserCustomDataBuilder.UserCustomDataKey.RenderedMessage] = renderedMessageFilter.ApplyTo(oldValue);
             }
 
             return userCustomData;
