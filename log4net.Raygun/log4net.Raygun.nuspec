@@ -11,8 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-		log4net.Raygun is a simple log4net appender which logs exceptions to the Raygun.io API.
-		* Updated to use version 3.* of raygun4net.
+		* Added support for sending error messages to raygun which do not contain any exception information.
+    * Added basic support for adding tags to raygun messages.
 	</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>log4net raygun appender</tags>
