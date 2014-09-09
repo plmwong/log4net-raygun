@@ -30,6 +30,8 @@ namespace log4net.Raygun
             _raygunMessageBuilder = raygunMessageBuilder;
             _raygunClientFactory = raygunClientFactory;
             _taskScheduler = taskScheduler;
+
+            RaygunSettings.Settings.ThrowOnError = true;
         }
 
         public virtual string ApiKey { get; set; }
@@ -49,7 +51,7 @@ namespace log4net.Raygun
         protected override void Append(LoggingEvent loggingEvent)
         {
             LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Received Logging Event with Logging Level '{0}'", loggingEvent.Level));
-            
+
             Exception exception = ResolveLoggedExceptionObject(loggingEvent);
 
             if (exception != null || !OnlySendExceptions)
@@ -106,17 +108,17 @@ namespace log4net.Raygun
         {
             LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Sending Raygun message in a background task. Retries: '{0}', TimeBetweenRetries: '{1}'", Retries, TimeBetweenRetries));
             new TaskFactory(_taskScheduler)
-                .StartNew(() => Retry.Action(() =>
+                .StartNew(() =>
                 {
                     try
                     {
-                        SendErrorToRaygun(raygunMessage);
+                        Retry.Action(() => SendErrorToRaygun(raygunMessage), Retries, TimeBetweenRetries);
                     }
                     catch (Exception ex)
                     {
                         ErrorHandler.Error(string.Format("RaygunAppender: Could not send error to the Raygun API, retried {0} times", Retries), ex);
                     }
-                }, Retries, TimeBetweenRetries));
+                });
         }
 
         private IMessageFilter ActivateInstanceOfMessageFilter(string filter)
