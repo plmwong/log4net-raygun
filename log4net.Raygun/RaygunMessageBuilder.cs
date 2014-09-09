@@ -42,7 +42,7 @@ namespace log4net.Raygun
             raygunMessageBuilder
                 .SetExceptionDetails(exception)
                 .SetClientDetails()
-                .SetTags(ExtractTagsFromLoggingEventProperties(loggingEvent.Properties))
+                .SetTags(ExtractTags(loggingEvent.Properties))
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
                 .SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
@@ -69,21 +69,24 @@ namespace log4net.Raygun
 
             return raygunMessage;
         }
-        
-        private IList<string> ExtractTagsFromLoggingEventProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
-        {
-            if (loggingEventProperties.Contains(RaygunAppender.PropertyKeys.Tags))
-            {
-                LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Found '{0}' property key in the logging event properties, extracting raygun tags", RaygunAppender.PropertyKeys.Tags));
-                var rawTags = loggingEventProperties[RaygunAppender.PropertyKeys.Tags] as string;
 
-                if (!string.IsNullOrEmpty(rawTags))
-                {
-                    return rawTags.Split('|').ToList();
-                }
+        private IList<string> ExtractTags(ReadOnlyPropertiesDictionary loggingEventProperties)
+        {
+            var rawTags = ResolveTagsFromLog4NetProperties(loggingEventProperties);
+
+            if (!string.IsNullOrEmpty(rawTags))
+            {
+                LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Found '{0}' property key, extracting raygun tags from '{1}'", RaygunAppender.PropertyKeys.Tags, rawTags));
+
+                return rawTags.Split('|').ToList();
             }
 
             return null;
+        }
+
+        private string ResolveTagsFromLog4NetProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
+        {
+            return (loggingEventProperties[RaygunAppender.PropertyKeys.Tags] ?? ThreadContext.Properties[RaygunAppender.PropertyKeys.Tags] ?? GlobalContext.Properties[RaygunAppender.PropertyKeys.Tags]) as string;
         }
 
         private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData, IMessageFilter renderedMessageFilter)
