@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyResolver.cs" />
+    <Compile Include="DoNothingMessageFilter.cs" />
     <Compile Include="IMessageFilter.cs" />
     <Compile Include="IRaygunMessageBuilder.cs" />
     <Compile Include="RaygunAppender.cs" />

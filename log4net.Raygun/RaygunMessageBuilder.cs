@@ -19,12 +19,11 @@ namespace log4net.Raygun
             _httpContextFactory = httpContextFactory;
         }
 
-        public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData, string exceptionFilter = null, string renderedMessageFilter = null, string ignoredFormNames = null)
+        public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData, IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, string ignoredFormNames)
         {
             LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
             var assemblyResolver = new AssemblyResolver();
             var applicationAssembly = assemblyResolver.GetApplicationAssembly();
-
             var raygunMessageBuilder = Mindscape.Raygun4Net.RaygunMessageBuilder.New;
 
             var httpContext = _httpContextFactory();
@@ -47,13 +46,13 @@ namespace log4net.Raygun
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
                 .SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
-                .SetUserCustomData(renderedMessageFilter != null ? FilterRenderedMessageInUserCustomData(userCustomData, renderedMessageFilter) : userCustomData);
+                .SetUserCustomData(FilterRenderedMessageInUserCustomData(userCustomData, renderedMessageFilter));
 
             var raygunMessage = raygunMessageBuilder.Build();
 
             if (exception != null)
             {
-                if (exceptionFilter != null && raygunMessage.Details.Error != null)
+                if (raygunMessage.Details.Error != null)
                 {
                     raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, ApplyFilter(exception.Message, exceptionFilter));
                 }
@@ -62,12 +61,22 @@ namespace log4net.Raygun
             {
                 raygunMessage.Details.Error = new RaygunErrorMessage
                 {
-                    Message = renderedMessageFilter != null ? ApplyFilter(loggingEvent.RenderedMessage, renderedMessageFilter) : loggingEvent.RenderedMessage,
+                    Message = ApplyFilter(loggingEvent.RenderedMessage, renderedMessageFilter),
                     ClassName = loggingEvent.LocationInformation.ClassName
                 };
             }
 
             return raygunMessage;
+        }
+
+        private string ApplyFilter(string message, IMessageFilter exceptionFilter)
+        {
+            if (exceptionFilter != null)
+            {
+                return exceptionFilter.Filter(message);
+            }
+
+            return message;
         }
 
         private IList<string> ExtractTagsFromLoggingEventProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
@@ -85,7 +94,7 @@ namespace log4net.Raygun
             return null;
         }
 
-        private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData, string renderedMessageFilter)
+        private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData, IMessageFilter renderedMessageFilter)
         {
             if (userCustomData.ContainsKey(UserCustomDataBuilder.UserCustomDataKey.RenderedMessage))
             {
@@ -94,31 +103,6 @@ namespace log4net.Raygun
             }
 
             return userCustomData;
-        }
-
-        private string ApplyFilter(string message, string filter)
-        {
-            var renderedMessageFilterType = Type.GetType(filter);
-
-            if (renderedMessageFilterType != null)
-            {
-                LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activating instance of message filter for '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
-                var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IMessageFilter;
-
-                if (renderedMessageFilter != null)
-                {
-                    LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Filtering through message filter '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
-                    return renderedMessageFilter.Filter(message);
-                }
-
-                LogLog.Error(DeclaringType, string.Format("RaygunAppender: Configured message filter '{0}' is not a IMessageFilter", filter));
-            }
-            else
-            {
-                LogLog.Error(DeclaringType, string.Format("RaygunAppender: Configured message filter '{0}' is not a type", filter));
-            }
-
-            return message;
         }
     }
 }
