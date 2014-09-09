@@ -9,20 +9,20 @@ namespace log4net.Raygun.Tests
     public class RenderedMessageFilterTests
     {
         private RaygunAppender _appender;
+        private RaygunMessageBuilder _raygunMessageBuilder;
         private UserCustomDataBuilder _userCustomDataBuilder;
         private FakeRaygunClient _fakeRaygunClient;
         private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
         private FakeErrorHandler _fakeErrorHandler;
-        private FakeHttpContext _fakeHttpContext;
 
         [SetUp]
         public void SetUp()
         {
-            _fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
+            _raygunMessageBuilder = new RaygunMessageBuilder(() => FakeHttpContext.For(new FakeHttpApplication()));
             _userCustomDataBuilder = new UserCustomDataBuilder();
             _fakeRaygunClient = new FakeRaygunClient();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new RaygunAppender(() => _fakeHttpContext, _userCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new RaygunAppender(_userCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
             _fakeErrorHandler = new FakeErrorHandler();
 
             _appender.ErrorHandler = _fakeErrorHandler;

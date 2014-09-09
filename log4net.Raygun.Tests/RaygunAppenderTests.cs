@@ -9,7 +9,7 @@ namespace log4net.Raygun.Tests
     public class RaygunAppenderTests
     {
         private RaygunAppender _appender;
-        private FakeHttpContext _fakeHttpContext;
+        private RaygunMessageBuilder _raygunMessageBuilder;
         private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
         private FakeRaygunClient _fakeRaygunClient;
         private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
@@ -19,11 +19,11 @@ namespace log4net.Raygun.Tests
         [SetUp]
         public void SetUp()
         {
-            _fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
+            _raygunMessageBuilder = new RaygunMessageBuilder(() => FakeHttpContext.For(new FakeHttpApplication()));
             _fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
             _fakeRaygunClient = new FakeRaygunClient();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new RaygunAppender(() => _fakeHttpContext, _fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new RaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
         }
 
         [Test]
