@@ -72,6 +72,19 @@ namespace log4net.Raygun.Tests
         }
 
         [Test]
+        [TestCaseSource("LoggingLevels")]
+        public void WhenLoggingEventWithoutExceptionDataAndAppenderIsConfiguredToOnlySendExceptionsThenNothingIsSent(Level loggingLevel)
+        {
+            const string loggedMessage = "Logged Message";
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, loggedMessage, null);
+
+            _appender.OnlySendExceptions = true;
+            _appender.DoAppend(loggingEvent);
+
+            Assert.That(_fakeRaygunClient.LastMessageSent, Is.Null);
+        }
+
+        [Test]
         public void WhenBuildingRaygunMessageToSendThenSetTheHttpDetailsFromHttpContext()
         {
             var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);

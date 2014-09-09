@@ -41,6 +41,7 @@ namespace log4net.Raygun
             set { _timeBetweenRetries = value; }
         }
 
+        public virtual bool OnlySendExceptions { get; set; }
         public virtual string IgnoredFormNames { get; set; }
         public virtual string ExceptionFilter { get; set; }
         public virtual string RenderedMessageFilter { get; set; }
@@ -50,9 +51,13 @@ namespace log4net.Raygun
             LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Received Logging Event with Logging Level '{0}'", loggingEvent.Level));
             
             Exception exception = ResolveLoggedExceptionObject(loggingEvent);
-            RaygunMessage raygunMessage = BuildRaygunMessageToSend(exception, loggingEvent);
-            
-            SendErrorToRaygunInBackground(raygunMessage);
+
+            if (exception != null || !OnlySendExceptions)
+            {
+                RaygunMessage raygunMessage = BuildRaygunMessageToSend(exception, loggingEvent);
+
+                SendErrorToRaygunInBackground(raygunMessage);
+            }
         }
 
         private static Exception ResolveLoggedExceptionObject(LoggingEvent loggingEvent)
