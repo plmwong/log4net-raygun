@@ -23,6 +23,7 @@ Configuration
 * `apiKey` (required) : The API key for accessing your application in raygun.io. The API key can be found under 'Application Settings' of your Raygun app.
 * `retries` (optional) : The number of times to try and send the exception raygun message to the raygun.io API before giving up and discarding the message. If this setting is not specified, then retries are *disabled* and the appender will only try to log to raygun once, and discard the message if unsuccessful.
 * `timeBetweenRetries` (optional) : A `TimeSpan` of the time to wait between retry attempts. If this setting is not specified, then a default of '00:00:05' (5 seconds) is used.
+* `onlySendExceptions` (optional) : Toggle whether to send both exceptions and messages logged to ERROR to raygun, or whether to only send logged events which contain exceptions. If this setting is not specified, then by defauly *both* exceptions and error messages will be sent to raygun.
 * `exceptionFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from an `Exception.Message`.
 * `renderedMessageFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from the RenderedMessage in UserCustomData.
 
@@ -47,6 +48,8 @@ Configuration Example
       <retries value="15" />
       <!-- Wait 1 minute between retry attempts -->
       <timeBetweenRetries value="00:01:00" />
+	  <!-- Toggles whether to only send exceptions to raygun, or to also send messages logged to ERROR -->
+	  <onlySendExceptions value="true" />
       <!-- Optional filters for filtering exceptions and messages before sending to raygun -->
       <exceptionFilter value="SomeOtherAssembly.SensitiveInformationMessageFilter, SomeOtherAssembly" />
       <renderedMessageFilter value="SomeOtherAssembly.SensitiveInformationMessageFilter, SomeOtherAssembly" />
@@ -80,6 +83,18 @@ public class SensitiveInformationFilter : IMessageFilter
 	}
 }
 ```
+
+*What about tags?*
+
+As of version 2.1, log4net.Raygun provides a basic mechanism for populating tags in a raygun message.
+Tags can be stored as custom data in a pipe-delimited format (e.g. tag1|tag2|tag3) on the `log4net.LogicalThreadContext` or `log4net.GlobalContext` collections, prior to calling a log4net logging method..
+
+```
+log4net.LogicalThreadContext.Properties[RaygunAppender.PropertyKeys.Tags] = "important|squirrel-related";
+log.Error("Something bad happened to your squirrel!"); 
+```
+
+When constructing the raygun message to send to raygun.io, log4net.Raygun will use the tags stored in this collection to populate the raygun message tags.
 
 *I have to use version X of log4net, because of reasons*
 

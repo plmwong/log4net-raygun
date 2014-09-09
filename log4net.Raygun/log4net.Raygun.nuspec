@@ -11,8 +11,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-		NOTE: This package uses the last version of log4net which used the old strong name key (1.2.10).
-		* Updated to use version 3.* of raygun4net.
+    NOTE: This package uses the last version of log4net which used the old strong name key (1.2.10).
+    * Added support for sending error messages to raygun which do not contain any exception information. By default, this is enabled.
+    * Added basic support for adding tags to raygun messages.
+    * Fixed an issue where exceptions from RaygunClient.Send were being trapped and ignored, so the retry mechanism would not function.
     </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>log4net raygun appender</tags>

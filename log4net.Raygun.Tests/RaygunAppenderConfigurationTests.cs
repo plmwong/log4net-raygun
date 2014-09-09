@@ -34,6 +34,12 @@ namespace log4net.Raygun.Tests
         }
 
         [Test]
+        public void ThenOnlySendExceptionsIsSet()
+        {
+            Assert.That(_raygunAppender.OnlySendExceptions, Is.EqualTo(true));
+        }
+
+        [Test]
         public void ThenIgnoredFormNamesIsSet()
         {
             Assert.That(_raygunAppender.IgnoredFormNames, Is.EqualTo("foo,bar"));
@@ -83,6 +89,12 @@ namespace log4net.Raygun.Tests
         public void ThenRetriesIsSet()
         {
             Assert.That(_raygunAppender.Retries, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ThenOnlySendExceptionsIsFalse()
+        {
+            Assert.That(_raygunAppender.OnlySendExceptions, Is.EqualTo(false));
         }
 
         [Test]

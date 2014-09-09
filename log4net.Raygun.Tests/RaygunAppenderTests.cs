@@ -9,7 +9,7 @@ namespace log4net.Raygun.Tests
     public class RaygunAppenderTests
     {
         private RaygunAppender _appender;
-        private FakeHttpContext _fakeHttpContext;
+        private RaygunMessageBuilder _raygunMessageBuilder;
         private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
         private FakeRaygunClient _fakeRaygunClient;
         private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
@@ -19,11 +19,11 @@ namespace log4net.Raygun.Tests
         [SetUp]
         public void SetUp()
         {
-            _fakeHttpContext = FakeHttpContext.For(new FakeHttpApplication());
+            _raygunMessageBuilder = new RaygunMessageBuilder(() => FakeHttpContext.For(new FakeHttpApplication()));
             _fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
             _fakeRaygunClient = new FakeRaygunClient();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new RaygunAppender(() => _fakeHttpContext, _fakeUserCustomDataBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new RaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
         }
 
         [Test]
@@ -38,10 +38,47 @@ namespace log4net.Raygun.Tests
 
         [Test]
         [TestCaseSource("LoggingLevels")]
-        public void WhenLoggingEventWithoutExceptionDataThenDoNothing(Level loggingLevel)
+        public void WhenLoggingEventWithoutExceptionDataThenSendRaygunMessage(Level loggingLevel)
         {
             var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, null, null);
 
+            _appender.DoAppend(loggingEvent);
+
+            Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
+        }
+
+        [Test]
+        [TestCaseSource("LoggingLevels")]
+        public void WhenLoggingEventWithoutExceptionDataThenRaygunMessageContainsLoggedMessage(Level loggingLevel)
+        {
+            const string loggedMessage = "Logged Message";
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, loggedMessage, null);
+
+            _appender.DoAppend(loggingEvent);
+
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo(loggedMessage));
+        }
+
+        [Test]
+        [TestCaseSource("LoggingLevels")]
+        public void WhenLoggingEventWithoutExceptionDataThenRaygunMessageContainsCallerClass(Level loggingLevel)
+        {
+            const string loggedMessage = "Logged Message";
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, loggedMessage, null);
+
+            _appender.DoAppend(loggingEvent);
+
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo(loggingEvent.LocationInformation.ClassName));
+        }
+
+        [Test]
+        [TestCaseSource("LoggingLevels")]
+        public void WhenLoggingEventWithoutExceptionDataAndAppenderIsConfiguredToOnlySendExceptionsThenNothingIsSent(Level loggingLevel)
+        {
+            const string loggedMessage = "Logged Message";
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, loggingLevel, loggedMessage, null);
+
+            _appender.OnlySendExceptions = true;
             _appender.DoAppend(loggingEvent);
 
             Assert.That(_fakeRaygunClient.LastMessageSent, Is.Null);
