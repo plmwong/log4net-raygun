@@ -27,7 +27,7 @@ Configuration
 * `exceptionFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from an `Exception.Message`.
 * `renderedMessageFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from the RenderedMessage in UserCustomData.
 
-A log4net `threshold` should be used to filter out logging levels. By default, all levels of logging which contain an `Exception` will be sent to Raygun.
+A log4net `threshold` should be used to filter out logging levels (e.g. everything below ERROR level). By default, all levels of logging will be sent to Raygun.
 
 Configuration Example
 ---------------------
@@ -62,11 +62,11 @@ Configuration Example
 Questions
 ---------
 
-*My application uses the older 1.2.10 version of log4net, before they went and changed the public key*
+***My application uses the older 1.2.10 version of log4net, before they went and changed the public key***
 
 You need to use the https://www.nuget.org/packages/log4net.1.2.10.Raygun version built against that version of log4net. The source for this is located in the `log4net-1.2.10` branch.
 
-*My application logs sensitive information which we would rather not send to a third-party*
+***My application logs sensitive information which we would rather not send to a third-party***
 
 log4net.Raygun now allows you to implement an `IMessageFilter`, and then configure the RaygunAppender to use filters in the appender configuration.
 The filters allow for exceptions and/or the rendered log4net message to be sanitized before it is sent to raygun.
@@ -84,7 +84,7 @@ public class SensitiveInformationFilter : IMessageFilter
 }
 ```
 
-*What about tags?*
+***What about tags?***
 
 As of version 2.1, log4net.Raygun provides a basic mechanism for populating tags in a raygun message.
 Tags can be stored as custom data in a pipe-delimited format (e.g. tag1|tag2|tag3) on the `log4net.LogicalThreadContext` or `log4net.GlobalContext` collections, prior to calling a log4net logging method..
@@ -96,7 +96,7 @@ log.Error("Something bad happened to your squirrel!");
 
 When constructing the raygun message to send to raygun.io, log4net.Raygun will use the tags stored in this collection to populate the raygun message tags.
 
-*I have to use version X of log4net, because of reasons*
+***I have to use version X of log4net, because of reasons***
 
 You might need to add a binding redirection to your application configuration file, redirecting to the version of log4net you are using.
 
