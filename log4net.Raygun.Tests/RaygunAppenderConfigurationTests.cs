@@ -46,6 +46,12 @@ namespace log4net.Raygun.Tests
         }
 
         [Test]
+        public void ThenIgnoredCookieNamesIsSet()
+        {
+            Assert.That(_raygunAppender.IgnoredCookieNames, Is.EqualTo("me,eat,cookie"));
+        }
+
+        [Test]
         public void ThenExceptionFilterIsSet()
         {
             Assert.That(_raygunAppender.ExceptionFilter, Is.EqualTo("exceptionFilter"));
