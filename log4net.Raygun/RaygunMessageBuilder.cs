@@ -19,7 +19,8 @@ namespace log4net.Raygun
             _httpContextFactory = httpContextFactory;
         }
 
-        public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData, IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, string ignoredFormNames, string ignoredCookieNames)
+        public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData, 
+			IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings)
         {
             LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
             var assemblyResolver = new AssemblyResolver();
@@ -31,10 +32,8 @@ namespace log4net.Raygun
             {
                 LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
 
-                var messageOptions = new RaygunRequestMessageOptions(string.IsNullOrEmpty(ignoredFormNames) ? Enumerable.Empty<string>() : ignoredFormNames.Split(',').ToList(),
-                                                                     Enumerable.Empty<string>(),
-                                                                     string.IsNullOrEmpty(ignoredCookieNames) ? Enumerable.Empty<string>() : ignoredCookieNames.Split(',').ToList(),
-                                                                     Enumerable.Empty<string>());
+				var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
+					ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
 
                 raygunMessageBuilder.SetHttpDetails(httpContext.Instance, messageOptions);
             }

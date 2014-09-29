@@ -45,11 +45,23 @@ namespace log4net.Raygun.Tests
             Assert.That(_raygunAppender.IgnoredFormNames, Is.EqualTo("foo,bar"));
         }
 
+		[Test]
+		public void ThenIgnoredHeaderNamesIsSet()
+		{
+			Assert.That(_raygunAppender.IgnoredHeaderNames, Is.EqualTo("baz,qux"));
+		}
+
         [Test]
         public void ThenIgnoredCookieNamesIsSet()
         {
             Assert.That(_raygunAppender.IgnoredCookieNames, Is.EqualTo("me,eat,cookie"));
-        }
+		}
+
+		[Test]
+		public void ThenIgnoredServerVariableNamesIsSet()
+		{
+			Assert.That(_raygunAppender.IgnoredServerVariableNames, Is.EqualTo("om,nom,nom,nom"));
+		}
 
         [Test]
         public void ThenExceptionFilterIsSet()
