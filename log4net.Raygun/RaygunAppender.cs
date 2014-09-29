@@ -44,7 +44,12 @@ namespace log4net.Raygun
         }
 
         public virtual bool OnlySendExceptions { get; set; }
-        public virtual string IgnoredFormNames { get; set; }
+
+		public virtual string IgnoredFormNames { get; set; }
+		public virtual string IgnoredHeaderNames { get; set; }
+		public virtual string IgnoredCookieNames { get; set; }
+		public virtual string IgnoredServerVariableNames { get; set; }
+
         public virtual string ExceptionFilter { get; set; }
         public virtual string RenderedMessageFilter { get; set; }
 
@@ -98,8 +103,10 @@ namespace log4net.Raygun
 
             var exceptionFilter = ActivateInstanceOfMessageFilter(ExceptionFilter);
             var renderedMessageFilter = ActivateInstanceOfMessageFilter(RenderedMessageFilter);
+			var ignoredFieldSettings = new IgnoredFieldSettings(IgnoredFormNames, IgnoredHeaderNames, IgnoredCookieNames, IgnoredServerVariableNames);
 
-            RaygunMessage raygunMessage = _raygunMessageBuilder.BuildMessage(exception, loggingEvent, userCustomData, exceptionFilter, renderedMessageFilter, IgnoredFormNames);
+            RaygunMessage raygunMessage = _raygunMessageBuilder.BuildMessage(exception, loggingEvent, userCustomData,
+				exceptionFilter, renderedMessageFilter, ignoredFieldSettings);
 
             return raygunMessage;
         }

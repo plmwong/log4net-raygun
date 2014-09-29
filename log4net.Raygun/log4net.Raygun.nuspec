@@ -11,10 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-		* Added support for sending error messages to raygun which do not contain any exception information. By default, this is enabled.
-    * Added basic support for adding tags to raygun messages.
-    * Fixed an issue where exceptions from RaygunClient.Send were being trapped and ignored, so the retry mechanism would not function.
-	</releaseNotes>
+      * Added configuration properties for ignoredFormNames, ignoredHeaderNames, ignoredCookieNames, and ignoredServerVariableNames.
+    </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>log4net raygun appender</tags>
     <dependencies>
