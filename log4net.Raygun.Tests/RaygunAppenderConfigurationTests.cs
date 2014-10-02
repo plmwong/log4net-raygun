@@ -32,11 +32,17 @@ namespace log4net.Raygun.Tests
         {
             Assert.That(_raygunAppender.Retries, Is.EqualTo(11));
         }
-
+        
         [Test]
         public void ThenOnlySendExceptionsIsSet()
         {
             Assert.That(_raygunAppender.OnlySendExceptions, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void ThenSendInBackgroundIsSet()
+        {
+            Assert.That(_raygunAppender.SendInBackground, Is.EqualTo(false));
         }
 
         [Test]
@@ -113,6 +119,12 @@ namespace log4net.Raygun.Tests
         public void ThenOnlySendExceptionsIsFalse()
         {
             Assert.That(_raygunAppender.OnlySendExceptions, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void ThenSendInBackgroundIsSet()
+        {
+            Assert.That(_raygunAppender.SendInBackground, Is.EqualTo(true));
         }
 
         [Test]
