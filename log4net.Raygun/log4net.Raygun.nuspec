@@ -11,6 +11,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+      2.3.0 -
+      * Added configuration property: sendInBackground, which controls whether the raygun message will be sent in a background task. By default this is true.
+      2.2.0 -
       * Added configuration properties for ignoredFormNames, ignoredHeaderNames, ignoredCookieNames, and ignoredServerVariableNames.
     </releaseNotes>
     <copyright>Copyright 2014</copyright>
