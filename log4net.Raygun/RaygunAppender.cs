@@ -18,6 +18,7 @@ namespace log4net.Raygun
         private readonly IRaygunMessageBuilder _raygunMessageBuilder;
         private readonly Func<string, IRaygunClient> _raygunClientFactory;
         private readonly TaskScheduler _taskScheduler;
+        private bool _sendInBackground;
 
         public RaygunAppender()
             : this(new UserCustomDataBuilder(), new RaygunMessageBuilder(() => new HttpContextAdapter()), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), TaskScheduler.Default)
@@ -31,6 +32,7 @@ namespace log4net.Raygun
             _raygunClientFactory = raygunClientFactory;
             _taskScheduler = taskScheduler;
 
+            _sendInBackground = true;
             RaygunSettings.Settings.ThrowOnError = true;
         }
 
@@ -44,8 +46,13 @@ namespace log4net.Raygun
         }
 
         public virtual bool OnlySendExceptions { get; set; }
+        public virtual bool SendInBackground
+        {
+            get { return _sendInBackground; }
+            set { _sendInBackground = value; }
+        }
 
-		public virtual string IgnoredFormNames { get; set; }
+        public virtual string IgnoredFormNames { get; set; }
 		public virtual string IgnoredHeaderNames { get; set; }
 		public virtual string IgnoredCookieNames { get; set; }
 		public virtual string IgnoredServerVariableNames { get; set; }
@@ -63,7 +70,14 @@ namespace log4net.Raygun
             {
                 RaygunMessage raygunMessage = BuildRaygunMessageToSend(exception, loggingEvent);
 
-                SendErrorToRaygunInBackground(raygunMessage);
+                if (SendInBackground)
+                {
+                    SendErrorToRaygunInBackground(raygunMessage);
+                }
+                else
+                {
+                    SendErrorToRaygun(raygunMessage);
+                }
             }
         }
 
@@ -115,17 +129,7 @@ namespace log4net.Raygun
         {
             LogLog.Debug(string.Format("RaygunAppender: Sending Raygun message in a background task. Retries: '{0}', TimeBetweenRetries: '{1}'", Retries, TimeBetweenRetries));
             new TaskFactory(_taskScheduler)
-                .StartNew(() =>
-                {
-                    try
-                    {
-                        Retry.Action(() => SendErrorToRaygun(raygunMessage), Retries, TimeBetweenRetries);
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorHandler.Error(string.Format("RaygunAppender: Could not send error to the Raygun API, retried {0} times", Retries), ex);
-                    }
-                });
+                .StartNew(() => SendErrorToRaygun(raygunMessage));
         }
 
         private IMessageFilter ActivateInstanceOfMessageFilter(string filter)
@@ -158,16 +162,26 @@ namespace log4net.Raygun
 
         private void SendErrorToRaygun(RaygunMessage raygunMessage)
         {
-            if (string.IsNullOrEmpty(ApiKey))
+            try
             {
-                ErrorHandler.Error("RaygunAppender: API Key is empty");
+                Retry.Action(() =>
+                {
+                    if (string.IsNullOrEmpty(ApiKey))
+                    {
+                        ErrorHandler.Error("RaygunAppender: API Key is empty");
+                    }
+
+                    var raygunClient = _raygunClientFactory(ApiKey);
+
+                    raygunClient.Send(raygunMessage);
+
+            		LogLog.Debug("RaygunAppender: Raygun message sent");
+                }, Retries, TimeBetweenRetries);
             }
-
-            var raygunClient = _raygunClientFactory(ApiKey);
-
-            raygunClient.Send(raygunMessage);
-
-            LogLog.Debug("RaygunAppender: Raygun message sent");
+            catch (Exception ex)
+            {
+                ErrorHandler.Error(string.Format("RaygunAppender: Could not send error to the Raygun API, retried {0} times", Retries), ex);
+            }
         }
 
         public static class PropertyKeys
