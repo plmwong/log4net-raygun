@@ -5,6 +5,7 @@ using log4net.Core;
 using log4net.Util;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
+using System.Configuration;
 
 namespace log4net.Raygun
 {
@@ -162,6 +163,10 @@ namespace log4net.Raygun
 
         private void SendErrorToRaygun(RaygunMessage raygunMessage)
         {
+			if (Retries > 0) {
+				RaygunThrowOnErrorsMustBeEnabled();
+			}
+
             try
             {
                 Retry.Action(() =>
@@ -183,6 +188,21 @@ namespace log4net.Raygun
                 ErrorHandler.Error(string.Format("RaygunAppender: Could not send error to the Raygun API, retried {0} times", Retries), ex);
             }
         }
+
+		private void RaygunThrowOnErrorsMustBeEnabled()
+		{
+			var throwOnErrorEnabled = RaygunSettings.Settings.ThrowOnError;
+
+			if (!throwOnErrorEnabled)
+			{
+				if (RaygunSettings.Settings.IsReadOnly()) 
+				{
+					throw new ConfigurationErrorsException("ThrowOnError in RaygunSettings must be enabled in order to support retries, please add throwOnError=\"true\" to your RaygunSettings configuration section");
+				}
+
+				RaygunSettings.Settings.ThrowOnError = true;
+			}
+		}
 
         public static class PropertyKeys
         {
