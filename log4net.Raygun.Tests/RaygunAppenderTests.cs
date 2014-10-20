@@ -118,45 +118,6 @@ namespace log4net.Raygun.Tests
     }
 
     [TestFixture]
-    public class WhenRaygunSettingsHaveThrowOnErrorDisabledInXmlConfigurationAndRetriesEnabled
-    {
-        private RaygunAppender _appender;
-        private RaygunMessageBuilder _raygunMessageBuilder;
-        private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
-        private FakeRaygunClient _fakeRaygunClient;
-        private FakeRaygunSettings _fakeRaygunSettings;
-        private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
-        private FakeErrorHandler _fakeErrorHandler;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _raygunMessageBuilder = new RaygunMessageBuilder(() => FakeHttpContext.For(new FakeHttpApplication()));
-            _fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
-            _fakeRaygunClient = new FakeRaygunClient();
-            _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-
-            _fakeRaygunSettings = new FakeRaygunSettings(configuredFromXml: true) { ThrowOnError = false };
-            _fakeErrorHandler = new FakeErrorHandler();
-            _appender = new RaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _fakeRaygunSettings, _currentThreadTaskScheduler)
-                                    {
-                                        Retries = 5,
-                                        ErrorHandler = _fakeErrorHandler
-                                    };
-        }
-
-        [Test]
-        public void ThenAConfigurationErrorIsRaised()
-        {
-            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Debug, null, new TestException());
-
-            _appender.DoAppend(loggingEvent);
-
-            Assert.That(_fakeErrorHandler.Errors, Has.Exactly(1).EqualTo("Failed in DoAppend|System.Configuration.ConfigurationErrorsException: ThrowOnError in RaygunSettings must be enabled in order to support retries, please add throwOnError=\"true\" to your RaygunSettings configuration section\r\n   at log4net.Raygun.RaygunAppender.RaygunThrowOnErrorsMustBeEnabled() in c:\\Users\\pwong\\Dev\\log4net.Raygun\\log4net.Raygun\\RaygunAppender.cs:line 205\r\n   at log4net.Raygun.RaygunAppender.Append(LoggingEvent loggingEvent) in c:\\Users\\pwong\\Dev\\log4net.Raygun\\log4net.Raygun\\RaygunAppender.cs:line 76\r\n   at log4net.Appender.AppenderSkeleton.DoAppend(LoggingEvent loggingEvent)"));
-        }
-    }
-
-    [TestFixture]
     public class RaygunAppenderThrowOnErrorMustBeEnabledForRetriesTests
     {
         private RaygunAppender _appender;
