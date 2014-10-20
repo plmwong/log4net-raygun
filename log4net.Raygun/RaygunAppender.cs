@@ -5,6 +5,7 @@ using log4net.Core;
 using log4net.Util;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
+using System.Configuration;
 
 namespace log4net.Raygun
 {
@@ -17,23 +18,25 @@ namespace log4net.Raygun
         private readonly IUserCustomDataBuilder _userCustomDataBuilder;
         private readonly IRaygunMessageBuilder _raygunMessageBuilder;
         private readonly Func<string, IRaygunClient> _raygunClientFactory;
+        private readonly IRaygunSettings _raygunSettings;
         private readonly TaskScheduler _taskScheduler;
+
         private bool _sendInBackground;
 
         public RaygunAppender()
-            : this(new UserCustomDataBuilder(), new RaygunMessageBuilder(() => new HttpContextAdapter()), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), TaskScheduler.Default)
+            : this(new UserCustomDataBuilder(), new RaygunMessageBuilder(() => new HttpContextAdapter()), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), new RaygunSettings(), TaskScheduler.Default)
         {
         }
 
-        internal RaygunAppender(IUserCustomDataBuilder userCustomDataBuilder, IRaygunMessageBuilder raygunMessageBuilder, Func<string, IRaygunClient> raygunClientFactory, TaskScheduler taskScheduler)
+        internal RaygunAppender(IUserCustomDataBuilder userCustomDataBuilder, IRaygunMessageBuilder raygunMessageBuilder, Func<string, IRaygunClient> raygunClientFactory, IRaygunSettings raygunSettings, TaskScheduler taskScheduler)
         {
             _userCustomDataBuilder = userCustomDataBuilder;
             _raygunMessageBuilder = raygunMessageBuilder;
             _raygunClientFactory = raygunClientFactory;
+            _raygunSettings = raygunSettings;
             _taskScheduler = taskScheduler;
 
             _sendInBackground = true;
-            RaygunSettings.Settings.ThrowOnError = true;
         }
 
         public virtual string ApiKey { get; set; }
@@ -68,6 +71,12 @@ namespace log4net.Raygun
 
             if (exception != null || !OnlySendExceptions)
             {
+                if (Retries > 0)
+                {
+                    LogLog.Debug(DeclaringType, "RaygunAppender: Retries are enabled, checking that throw on errors has been enabled, or can be overridden");
+                    RaygunThrowOnErrorsMustBeEnabled();
+                }
+
                 RaygunMessage raygunMessage = BuildRaygunMessageToSend(exception, loggingEvent);
 
                 if (SendInBackground)
@@ -183,6 +192,20 @@ namespace log4net.Raygun
                 ErrorHandler.Error(string.Format("RaygunAppender: Could not send error to the Raygun API, retried {0} times", Retries), ex);
             }
         }
+
+		private void RaygunThrowOnErrorsMustBeEnabled()
+		{
+            if (!_raygunSettings.ThrowOnError)
+			{
+                if (_raygunSettings.ConfiguredFromXml)
+				{
+					throw new ConfigurationErrorsException("ThrowOnError in RaygunSettings must be enabled in order to support retries, please add throwOnError=\"true\" to your RaygunSettings configuration section");
+				}
+
+                LogLog.Warn(DeclaringType, "RaygunAppender: ThrowOnError was found to be disabled, setting to 'true'");
+                _raygunSettings.ThrowOnError = true;
+			}
+		}
 
         public static class PropertyKeys
         {
