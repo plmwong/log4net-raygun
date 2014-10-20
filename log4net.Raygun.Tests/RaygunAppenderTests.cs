@@ -12,9 +12,10 @@ namespace log4net.Raygun.Tests
         private RaygunMessageBuilder _raygunMessageBuilder;
         private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
         private FakeRaygunClient _fakeRaygunClient;
+        private FakeRaygunSettings _fakeRaygunSettings;
         private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
 
-        protected Level[] LoggingLevels = {Level.Debug, Level.Info, Level.Warn, Level.Error, Level.Fatal};
+        protected Level[] LoggingLevels = { Level.Debug, Level.Info, Level.Warn, Level.Error, Level.Fatal };
 
         [SetUp]
         public void SetUp()
@@ -22,8 +23,9 @@ namespace log4net.Raygun.Tests
             _raygunMessageBuilder = new RaygunMessageBuilder(() => FakeHttpContext.For(new FakeHttpApplication()));
             _fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
             _fakeRaygunClient = new FakeRaygunClient();
+            _fakeRaygunSettings = new FakeRaygunSettings();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new RaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new RaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _fakeRaygunSettings, _currentThreadTaskScheduler);
         }
 
         [Test]
@@ -112,6 +114,74 @@ namespace log4net.Raygun.Tests
             _appender.DoAppend(errorLoggingEvent);
 
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.MachineName, Is.EqualTo(Environment.MachineName));
+        }
+    }
+
+    [TestFixture]
+    public class RaygunAppenderThrowOnErrorMustBeEnabledForRetriesTests
+    {
+        private RaygunAppender _appender;
+        private RaygunMessageBuilder _raygunMessageBuilder;
+        private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
+        private FakeRaygunClient _fakeRaygunClient;
+        private FakeRaygunSettings _fakeRaygunSettings;
+        private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
+        private FakeErrorHandler _fakeErrorHandler;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _raygunMessageBuilder = new RaygunMessageBuilder(() => FakeHttpContext.For(new FakeHttpApplication()));
+            _fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
+            _fakeRaygunClient = new FakeRaygunClient();
+            _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
+        }
+
+        [Test]
+        public void WhenConfiguredFromXmlAndThrowOnErrorIsEnabledThenSendRaygunMessage()
+        {
+            ConfigureAppenderUsingSettings(configuredFromXml: true, throwOnError: true);
+
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Debug, null, new TestException());
+
+            _appender.DoAppend(loggingEvent);
+
+            Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
+        }
+
+        [Test]
+        public void WhenConfiguredFromXmlAndThrowOnErrorIsDisabledThenAConfigurationErrorOccurs()
+        {
+            ConfigureAppenderUsingSettings(configuredFromXml: true, throwOnError: false);
+
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Debug, null, new TestException());
+
+            _appender.DoAppend(loggingEvent);
+
+            Assert.That(_fakeErrorHandler.Errors, Has.Exactly(1).StartsWith("Failed in DoAppend|System.Configuration.ConfigurationErrorsException: ThrowOnError in RaygunSettings must be enabled in order to support retries, please add throwOnError=\"true\" to your RaygunSettings configuration section"));
+        }
+
+        [Test]
+        public void WhenNotConfiguredFromXmlThenSendRaygunMessage()
+        {
+            ConfigureAppenderUsingSettings(configuredFromXml: false, throwOnError: false);
+
+            var loggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Debug, null, new TestException());
+
+            _appender.DoAppend(loggingEvent);
+
+            Assert.That(_fakeRaygunClient.LastMessageSent, Is.Not.Null);
+        }
+
+        private void ConfigureAppenderUsingSettings(bool configuredFromXml, bool throwOnError)
+        {
+            _fakeRaygunSettings = new FakeRaygunSettings(configuredFromXml: configuredFromXml) { ThrowOnError = throwOnError };
+            _fakeErrorHandler = new FakeErrorHandler();
+            _appender = new RaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _fakeRaygunSettings, _currentThreadTaskScheduler)
+            {
+                Retries = 5,
+                ErrorHandler = _fakeErrorHandler
+            };
         }
     }
 }

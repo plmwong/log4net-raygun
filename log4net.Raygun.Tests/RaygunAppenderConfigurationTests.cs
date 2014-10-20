@@ -32,7 +32,7 @@ namespace log4net.Raygun.Tests
         {
             Assert.That(_raygunAppender.Retries, Is.EqualTo(11));
         }
-        
+
         [Test]
         public void ThenOnlySendExceptionsIsSet()
         {
