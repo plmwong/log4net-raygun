@@ -73,6 +73,7 @@ namespace log4net.Raygun
             {
                 if (Retries > 0)
                 {
+                    LogLog.Debug(DeclaringType, "RaygunAppender: Retries are enabled, checking that throw on errors has been enabled, or can be overridden");
                     RaygunThrowOnErrorsMustBeEnabled();
                 }
 
@@ -135,10 +136,6 @@ namespace log4net.Raygun
 
         private void SendErrorToRaygunInBackground(RaygunMessage raygunMessage)
         {
-			if (Retries > 0) {
-				RaygunThrowOnErrorsMustBeEnabled();
-			}
-
             LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Sending Raygun message in a background task. Retries: '{0}', TimeBetweenRetries: '{1}'", Retries, TimeBetweenRetries));
             new TaskFactory(_taskScheduler)
                 .StartNew(() => SendErrorToRaygun(raygunMessage));
@@ -205,6 +202,7 @@ namespace log4net.Raygun
 					throw new ConfigurationErrorsException("ThrowOnError in RaygunSettings must be enabled in order to support retries, please add throwOnError=\"true\" to your RaygunSettings configuration section");
 				}
 
+                LogLog.Warn(DeclaringType, "RaygunAppender: ThrowOnError was found to be disabled, setting to 'true'");
                 _raygunSettings.ThrowOnError = true;
 			}
 		}
