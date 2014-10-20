@@ -197,7 +197,7 @@ namespace log4net.Raygun.Tests
 
             _appender.DoAppend(loggingEvent);
 
-            Assert.That(_fakeErrorHandler.Errors, Has.Exactly(1).EqualTo("Failed in DoAppend|System.Configuration.ConfigurationErrorsException: ThrowOnError in RaygunSettings must be enabled in order to support retries, please add throwOnError=\"true\" to your RaygunSettings configuration section\r\n   at log4net.Raygun.RaygunAppender.RaygunThrowOnErrorsMustBeEnabled() in c:\\Users\\pwong\\Dev\\log4net.Raygun\\log4net.Raygun\\RaygunAppender.cs:line 205\r\n   at log4net.Raygun.RaygunAppender.Append(LoggingEvent loggingEvent) in c:\\Users\\pwong\\Dev\\log4net.Raygun\\log4net.Raygun\\RaygunAppender.cs:line 76\r\n   at log4net.Appender.AppenderSkeleton.DoAppend(LoggingEvent loggingEvent)"));
+            Assert.That(_fakeErrorHandler.Errors, Has.Exactly(1).StartsWith("Failed in DoAppend|System.Configuration.ConfigurationErrorsException: ThrowOnError in RaygunSettings must be enabled in order to support retries, please add throwOnError=\"true\" to your RaygunSettings configuration section"));
         }
 
         [Test]
