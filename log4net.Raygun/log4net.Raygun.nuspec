@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      
+      NOTE: This package uses the last version of log4net which used the old strong name key (1.2.10).
       2.4.0 -
       * ThrowOnError is now only required in RaygunSettings when retries are enabled in the log4net.Raygun appender. When using the RaygunSettings configuration section, then throwOnError must be set to true.
       2.3.0 -
