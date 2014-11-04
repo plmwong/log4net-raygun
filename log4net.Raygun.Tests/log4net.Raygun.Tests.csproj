@@ -79,7 +79,6 @@
     <Compile Include="CurrentThreadTaskScheduler.cs" />
     <Compile Include="Fakes\FakeBrokenRaygunClient.cs" />
     <Compile Include="Fakes\FakeErrorHandler.cs" />
-    <Compile Include="Fakes\FakeRaygunSettings.cs" />
     <Compile Include="RaygunAppenderConfigurationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaygunAppenderLoggingTests.cs" />

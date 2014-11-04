@@ -77,11 +77,9 @@
     <Compile Include="DoNothingMessageFilter.cs" />
     <Compile Include="IMessageFilter.cs" />
     <Compile Include="IRaygunMessageBuilder.cs" />
-    <Compile Include="IRaygunSettings.cs" />
     <Compile Include="RaygunAppender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaygunMessageBuilder.cs" />
-    <Compile Include="RaygunSettings.cs" />
     <Compile Include="Retry.cs" />
     <Compile Include="UserCustomDataBuilder.cs" />
     <Compile Include="IUserCustomDataBuilder.cs" />

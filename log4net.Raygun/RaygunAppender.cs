@@ -18,22 +18,20 @@ namespace log4net.Raygun
         private readonly IUserCustomDataBuilder _userCustomDataBuilder;
         private readonly IRaygunMessageBuilder _raygunMessageBuilder;
         private readonly Func<string, IRaygunClient> _raygunClientFactory;
-        private readonly IRaygunSettings _raygunSettings;
         private readonly TaskScheduler _taskScheduler;
 
         private bool _sendInBackground;
 
         public RaygunAppender()
-            : this(new UserCustomDataBuilder(), new RaygunMessageBuilder(() => new HttpContextAdapter()), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), new RaygunSettings(), TaskScheduler.Default)
+            : this(new UserCustomDataBuilder(), new RaygunMessageBuilder(() => new HttpContextAdapter()), apiKey => new RaygunClientAdapter(new RaygunClient(apiKey)), TaskScheduler.Default)
         {
         }
 
-        internal RaygunAppender(IUserCustomDataBuilder userCustomDataBuilder, IRaygunMessageBuilder raygunMessageBuilder, Func<string, IRaygunClient> raygunClientFactory, IRaygunSettings raygunSettings, TaskScheduler taskScheduler)
+        internal RaygunAppender(IUserCustomDataBuilder userCustomDataBuilder, IRaygunMessageBuilder raygunMessageBuilder, Func<string, IRaygunClient> raygunClientFactory, TaskScheduler taskScheduler)
         {
             _userCustomDataBuilder = userCustomDataBuilder;
             _raygunMessageBuilder = raygunMessageBuilder;
             _raygunClientFactory = raygunClientFactory;
-            _raygunSettings = raygunSettings;
             _taskScheduler = taskScheduler;
 
             _sendInBackground = true;
@@ -195,15 +193,10 @@ namespace log4net.Raygun
 
 		private void RaygunThrowOnErrorsMustBeEnabled()
 		{
-            if (!_raygunSettings.ThrowOnError)
+            if (!RaygunSettings.Settings.ThrowOnError)
 			{
-                if (_raygunSettings.ConfiguredFromXml)
-				{
-					throw new ConfigurationErrorsException("ThrowOnError in RaygunSettings must be enabled in order to support retries, please add throwOnError=\"true\" to your RaygunSettings configuration section");
-				}
-
                 LogLog.Warn(DeclaringType, "RaygunAppender: ThrowOnError was found to be disabled, setting to 'true'");
-                _raygunSettings.ThrowOnError = true;
+                RaygunSettings.Settings.ThrowOnError = true;
 			}
 		}
 
