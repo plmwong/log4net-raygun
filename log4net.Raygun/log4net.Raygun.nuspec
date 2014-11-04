@@ -12,6 +12,9 @@
     <description>$description$</description>
     <releaseNotes>
       NOTE: This package uses the last version of log4net which used the old strong name key (1.2.10).
+      3.0.0 -
+      * Updated Raygun4Net version to 4.0.1.
+      * ThrowOnError will now be automatically set to true (as of 4.0.1, RaygunSettings is no longer read-only).
       2.4.0 -
       * ThrowOnError is now only required in RaygunSettings when retries are enabled in the log4net.Raygun appender. When using the RaygunSettings configuration section, then throwOnError must be set to true.
       2.3.0 -
@@ -25,7 +28,7 @@
       <group>
         <dependency id="System.Threading.Tasks" version="[3.0.1,)" />
         <dependency id="log4net" version="[1.2.10]" />
-        <dependency id="Mindscape.Raygun4Net" version="[3.2.0,)" />
+        <dependency id="Mindscape.Raygun4Net" version="[4.0.1,)" />
       </group>
     </dependencies>
   </metadata>
