@@ -25,7 +25,8 @@ namespace log4net.Raygun
                 {UserCustomDataKey.ThreadName, loggingEvent.ThreadName.NotSuppliedIfNullOrEmpty()},
                 {UserCustomDataKey.RenderedMessage, loggingEvent.RenderedMessage.NotSuppliedIfNullOrEmpty()},
                 {UserCustomDataKey.TimeStamp, loggingEvent.TimeStamp.ToString("O")},
-                {UserCustomDataKey.UserName, loggingEvent.UserName.NotSuppliedIfNullOrEmpty()}
+                {UserCustomDataKey.UserName, loggingEvent.UserName.NotSuppliedIfNullOrEmpty()},
+                {UserCustomDataKey.Log4NetRaygunVersion, typeof(RaygunAppender).Assembly.GetName().Version.ToString() }
             };
 
             AddCustomProperties(loggingEvent, userCustomData);
@@ -56,8 +57,8 @@ namespace log4net.Raygun
             public const string ThreadName = "Thread Name";
             public const string TimeStamp = "Time Stamp";
             public const string UserName = "User Name";
-
             public const string PropertiesPrefix = "Properties";
+            public const string Log4NetRaygunVersion = "log4net.Raygun Version";
         }
     }
 }

@@ -12,6 +12,9 @@
     <description>$description$</description>
     <releaseNotes>
       Changes:
+      3.1.0 -
+      * Updated the version of System.Threading.Tasks used for .NET 3.5 compatibility to the new (unofficial) NuGet package.
+      * The version of log4net.Raygun is now added to the UserCustomData under the 'log4net.Raygun Version' key.
       3.0.0 -
       * Updated Raygun4Net version to 4.0.1.
       * ThrowOnError will now be automatically set to true (as of 4.0.1, RaygunSettings is no longer read-only).
@@ -26,7 +29,7 @@
     <tags>log4net raygun appender</tags>
     <dependencies>
       <group>
-        <dependency id="System.Threading.Tasks" version="[3.0.1,)" />
+        <dependency id="System.Threading.Tasks.Unofficial" version="[3.1.0,)" />
         <dependency id="log4net" version="[2.0.2,)" />
         <dependency id="Mindscape.Raygun4Net" version="[4.0.1,)" />
       </group>
