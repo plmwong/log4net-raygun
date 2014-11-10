@@ -5,7 +5,6 @@ using log4net.Core;
 using log4net.Util;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
-using System.Configuration;
 
 namespace log4net.Raygun
 {

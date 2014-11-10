@@ -66,5 +66,16 @@ namespace log4net.Raygun.Tests
 
             Assert.That(userCustomData, Has.Exactly(1).EqualTo(new KeyValuePair<string, string>("Properties.TestPropertyKey", "TestPropertyValue")));
         }
+
+        [Test]
+        public void Log4NetRaygunAssemblyVersionIsAddedToUserCustomData()
+        {
+            var loggingEventWithProperties = new LoggingEvent(new LoggingEventData { Properties = new PropertiesDictionary() });
+            loggingEventWithProperties.Properties["TestPropertyKey"] = "TestPropertyValue";
+
+            var userCustomData = _userCustomDataBuilder.Build(loggingEventWithProperties);
+
+            Assert.That(userCustomData, Has.Exactly(1).EqualTo(new KeyValuePair<string, string>(UserCustomDataBuilder.UserCustomDataKey.Log4NetRaygunVersion, typeof(RaygunAppender).Assembly.GetName().Version.ToString())));
+        }
     }
 }
