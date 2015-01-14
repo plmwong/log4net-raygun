@@ -12,6 +12,8 @@
     <description>$description$</description>
     <releaseNotes>
       Changes:
+	  3.2.0 -
+	  * Fixed incorrect behaviour where log4net.Raygun would only log the base exception to Raygun, instead of the entire exception chain.
       3.1.0 -
       * Updated the version of System.Threading.Tasks used for .NET 3.5 compatibility to the new (unofficial) NuGet package.
       * The version of log4net.Raygun is now added to the UserCustomData under the 'log4net.Raygun Version' key.
