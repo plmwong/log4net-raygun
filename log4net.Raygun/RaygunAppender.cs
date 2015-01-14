@@ -89,14 +89,7 @@ namespace log4net.Raygun
 
         private static Exception ResolveLoggedExceptionObject(LoggingEvent loggingEvent)
         {
-            Exception exception = null;
-
-            var exceptionObject = loggingEvent.ExceptionObject;
-            if (exceptionObject != null)
-            {
-                exception = exceptionObject.GetBaseException();
-                LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Setting Exception to BaseException of LoggingEvent.ExceptionObject"));
-            }
+            var exception = loggingEvent.ExceptionObject;
 
             if (exception == null)
             {
