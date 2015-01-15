@@ -53,7 +53,7 @@ namespace log4net.Raygun
             {
                 if (raygunMessage.Details.Error != null)
                 {
-                    raygunMessage.Details.Error.Message = string.Format("{0}: {1}", exception.GetType().Name, exceptionFilter.ApplyTo(exception.Message));
+                    raygunMessage.Details.Error.Message = exceptionFilter.ApplyTo(exception.Message);
                 }
             }
             else
