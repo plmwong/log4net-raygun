@@ -12,10 +12,10 @@
     <description>$description$</description>
     <releaseNotes>
       Changes:
-	    3.2.1 -
+      3.2.1 -
       * Fixed duplication of exception class name when logging messages through the new version of raygun4net.
       3.2.0 -
-	    * Fixed incorrect behaviour where log4net.Raygun would only log the base exception to Raygun, instead of the entire exception chain.
+      * Fixed incorrect behaviour where log4net.Raygun would only log the base exception to Raygun, instead of the entire exception chain.
       3.1.0 -
       * Updated the version of System.Threading.Tasks used for .NET 3.5 compatibility to the new (unofficial) NuGet package.
       * The version of log4net.Raygun is now added to the UserCustomData under the 'log4net.Raygun Version' key.
@@ -42,9 +42,9 @@
   <files>
     <file src="bin\Release\net35\log4net.Raygun.dll" target="lib\net35\log4net.Raygun.dll" />
     <file src="bin\Release\net35\log4net.Raygun.pdb" target="lib\net35\log4net.Raygun.pdb" />
-  	<file src="bin\Release\net40\log4net.Raygun.dll" target="lib\net40\log4net.Raygun.dll" />
-  	<file src="bin\Release\net40\log4net.Raygun.pdb" target="lib\net40\log4net.Raygun.pdb" />
-  	<file src="bin\Release\net45\log4net.Raygun.dll" target="lib\net45\log4net.Raygun.dll" />
-  	<file src="bin\Release\net45\log4net.Raygun.pdb" target="lib\net45\log4net.Raygun.pdb" />
+    <file src="bin\Release\net40\log4net.Raygun.dll" target="lib\net40\log4net.Raygun.dll" />
+    <file src="bin\Release\net40\log4net.Raygun.pdb" target="lib\net40\log4net.Raygun.pdb" />
+    <file src="bin\Release\net45\log4net.Raygun.dll" target="lib\net45\log4net.Raygun.dll" />
+    <file src="bin\Release\net45\log4net.Raygun.pdb" target="lib\net45\log4net.Raygun.pdb" />
   </files>
 </package>
