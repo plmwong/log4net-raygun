@@ -53,6 +53,9 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebAssemblyResolver.cs" />
+    <Compile Include="HttpContextAdapter.cs" />
+    <Compile Include="IHttpContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaygunAppender.cs" />
     <Compile Include="RaygunClientAdapter.cs" />

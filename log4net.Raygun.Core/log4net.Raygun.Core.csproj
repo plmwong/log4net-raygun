@@ -46,7 +46,6 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -65,8 +64,6 @@
     <Compile Include="UserCustomDataBuilder.cs" />
     <Compile Include="IUserCustomDataBuilder.cs" />
     <Compile Include="IRaygunClient.cs" />
-    <Compile Include="IHttpContext.cs" />
-    <Compile Include="HttpContextAdapter.cs" />
     <Compile Include="AssemblyAdapter.cs" />
     <Compile Include="IAssembly.cs" />
     <Compile Include="UserCustomDataBuilderExtensions.cs" />

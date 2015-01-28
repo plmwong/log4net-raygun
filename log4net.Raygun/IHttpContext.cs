@@ -1,6 +1,6 @@
 ﻿using System.Web;
 
-namespace log4net.Raygun.Core
+namespace log4net.Raygun
 {
     public interface IHttpContext
     {

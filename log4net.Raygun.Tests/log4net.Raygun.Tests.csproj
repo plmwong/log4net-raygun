@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyResolverTests.cs" />
     <Compile Include="CurrentThreadTaskScheduler.cs" />
     <Compile Include="Fakes\FakeBrokenRaygunClient.cs" />
     <Compile Include="Fakes\FakeErrorHandler.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="TestException.cs" />
     <Compile Include="TestRaygunAppender.cs" />
     <Compile Include="UserCustomDataBuilderTests.cs" />
-    <Compile Include="AssemblyResolverTests.cs" />
+    <Compile Include="WebAssemblyResolverTests.cs" />
     <Compile Include="Fakes\FakeHttpContext.cs" />
     <Compile Include="Fakes\FakeRaygunClient.cs" />
     <Compile Include="Fakes\FakeUserCustomDataBuilder.cs" />
