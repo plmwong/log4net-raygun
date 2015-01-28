@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using log4net.Core;
+using log4net.Raygun.Core;
 using NUnit.Framework;
 using System;
 

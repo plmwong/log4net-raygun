@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using log4net.Raygun.Core;
 
 namespace log4net.Raygun.Tests.Fakes
 {
