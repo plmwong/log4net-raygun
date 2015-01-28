@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Raygun", "log4net.Raygun\log4net.Raygun.csproj", "{87B658A1-F37B-4821-A25E-15C2C3C0F11E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Raygun.WebApi", "log4net.Raygun.WebApi\log4net.Raygun.WebApi.csproj", "{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Raygun.Mvc", "log4net.Raygun.Mvc\log4net.Raygun.Mvc.csproj", "{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +57,22 @@ Global
 		{87B658A1-F37B-4821-A25E-15C2C3C0F11E}.Release 4.5|Any CPU.Build.0 = Release 4.5|Any CPU
 		{87B658A1-F37B-4821-A25E-15C2C3C0F11E}.Release|Any CPU.ActiveCfg = Release 4.5|Any CPU
 		{87B658A1-F37B-4821-A25E-15C2C3C0F11E}.Release|Any CPU.Build.0 = Release 4.5|Any CPU
+		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release 4.0|Any CPU.ActiveCfg = Release|Any CPU
+		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release 4.0|Any CPU.Build.0 = Release|Any CPU
+		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release 4.5|Any CPU.ActiveCfg = Release|Any CPU
+		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release 4.5|Any CPU.Build.0 = Release|Any CPU
+		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}.Release 4.0|Any CPU.ActiveCfg = Release|Any CPU
+		{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}.Release 4.0|Any CPU.Build.0 = Release|Any CPU
+		{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}.Release 4.5|Any CPU.ActiveCfg = Release|Any CPU
+		{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}.Release 4.5|Any CPU.Build.0 = Release|Any CPU
+		{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F7884B8-36A5-4AA3-90F3-D39790BD1BEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
