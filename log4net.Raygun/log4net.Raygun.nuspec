@@ -12,6 +12,9 @@
     <description>$description$</description>
     <releaseNotes>
       Changes:
+      4.0.0 -
+      * Restructured log4net.Raygun into multiple assemblies: log4net.Raygun and log4net.Raygun.Core. The log4net.Raygun.Core assembly only takes a dependency on Mindscape.Raygun4Net.Core, so the classes involved can be used in an MVC or WebApi context.
+      * Removed: .NET Framework 3.5 is no longer supported. This is due to Mindscape.Raygun4Net.Core only being packaged with a net40 assembly.
       3.2.1 -
       * Fixed duplication of exception class name when logging messages through the new version of raygun4net.
       3.2.0 -
@@ -33,18 +36,19 @@
     <tags>log4net raygun appender</tags>
     <dependencies>
       <group>
-        <dependency id="System.Threading.Tasks.Unofficial" version="[3.1.0,)" />
         <dependency id="log4net" version="[2.0.2,)" />
-        <dependency id="Mindscape.Raygun4Net" version="[4.0.1,)" />
+        <dependency id="Mindscape.Raygun4Net" version="[4.2.0,)" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\net35\log4net.Raygun.dll" target="lib\net35\log4net.Raygun.dll" />
-    <file src="bin\Release\net35\log4net.Raygun.pdb" target="lib\net35\log4net.Raygun.pdb" />
     <file src="bin\Release\net40\log4net.Raygun.dll" target="lib\net40\log4net.Raygun.dll" />
     <file src="bin\Release\net40\log4net.Raygun.pdb" target="lib\net40\log4net.Raygun.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.dll" target="lib\net45\log4net.Raygun.dll" />
     <file src="bin\Release\net45\log4net.Raygun.pdb" target="lib\net45\log4net.Raygun.pdb" />
+    <file src="bin\Release\net40\log4net.Raygun.Core.dll" target="lib\net40\log4net.Raygun.dll" />
+    <file src="bin\Release\net40\log4net.Raygun.Core.pdb" target="lib\net40\log4net.Raygun.pdb" />
+    <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.dll" />
+    <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.pdb" />
   </files>
 </package>
