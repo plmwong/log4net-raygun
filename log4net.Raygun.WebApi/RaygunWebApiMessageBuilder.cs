@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using log4net.Core;
 using log4net.Raygun.Core;
 using log4net.Util;
+using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
 using IRaygunMessageBuilder = log4net.Raygun.Core.IRaygunMessageBuilder;
 
@@ -13,13 +15,6 @@ namespace log4net.Raygun.WebApi
     {
         public static readonly Type DeclaringType = typeof(RaygunAppenderBase);
 
-        //private readonly Func<IHttpContext> _httpContextFactory;
-
-        //public RaygunWebApiMessageBuilder(Func<IHttpContext> httpContextFactory)
-        //{
-        //    _httpContextFactory = httpContextFactory;
-        //}
-
         public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
             IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings)
         {
@@ -28,16 +23,16 @@ namespace log4net.Raygun.WebApi
             var applicationAssembly = assemblyResolver.GetApplicationAssembly();
             var raygunMessageBuilder = Mindscape.Raygun4Net.WebApi.RaygunWebApiMessageBuilder.New;
 
-            //var httpContext = _httpContextFactory();
-            //if (httpContext != null && httpContext.Instance != null)
-            //{
-            //    LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
+            var httpRequestMessage = ResolveHttpRequestMessageFromLog4NetProperties(loggingEvent.Properties);
+            if (httpRequestMessage != null)
+            {
+                LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
 
-            //    var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
-            //        ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
+                var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
+                    ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
 
-            //    raygunMessageBuilder.SetHttpDetails(httpContext.Instance, messageOptions);
-            //}
+                raygunMessageBuilder.SetHttpDetails(httpRequestMessage, messageOptions);
+            }
 
             raygunMessageBuilder
                 .SetExceptionDetails(exception)
@@ -86,7 +81,19 @@ namespace log4net.Raygun.WebApi
 
         private string ResolveTagsFromLog4NetProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
         {
-            return (loggingEventProperties[RaygunAppenderBase.PropertyKeys.Tags] ?? ThreadContext.Properties[RaygunAppenderBase.PropertyKeys.Tags] ?? GlobalContext.Properties[RaygunAppenderBase.PropertyKeys.Tags]) as string;
+            return ResolveFromLog4NetProperties<string>(loggingEventProperties, RaygunAppenderBase.PropertyKeys.Tags);
+        }
+
+        private HttpRequestMessage ResolveHttpRequestMessageFromLog4NetProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
+        {
+            return ResolveFromLog4NetProperties<HttpRequestMessage>(loggingEventProperties, PropertyKeys.HttpRequestMessage);
+        }
+
+        private T ResolveFromLog4NetProperties<T>(ReadOnlyPropertiesDictionary loggingEventProperties, string key)
+            where T : class
+        {
+            return (loggingEventProperties[key] ?? LogicalThreadContext.Properties[key]
+                ?? ThreadContext.Properties[key] ?? GlobalContext.Properties[key]) as T;
         }
 
         private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData, IMessageFilter renderedMessageFilter)
@@ -98,6 +105,11 @@ namespace log4net.Raygun.WebApi
             }
 
             return userCustomData;
+        }
+
+        internal static class PropertyKeys
+        {
+            public const string HttpRequestMessage = "log4net.Raygun.WebApi.HttpRequestMessage";
         }
     }
 }
