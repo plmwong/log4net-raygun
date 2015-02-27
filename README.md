@@ -1,7 +1,7 @@
 Raygun Appender for log4net
 ===========================
 
-[![Build status](https://ci.appveyor.com/api/projects/status/l1vkoo634ylqnvep)](https://ci.appveyor.com/project/plmw/log4net-raygun)
+[![Build status](https://ci.appveyor.com/api/projects/status/72mst5et9y15w1mc/branch/master?svg=true)](https://ci.appveyor.com/project/plmw/log4net-raygun-rb4sk/branch/master)
 
 Intro
 -----
