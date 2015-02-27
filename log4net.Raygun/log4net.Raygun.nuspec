@@ -6,7 +6,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <projectUrl>https://bitbucket.org/plmw/log4net.raygun</projectUrl>
+    <projectUrl>https://github.com/plmwong/log4net-raygun</projectUrl>
     <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
@@ -29,7 +29,7 @@
       2.2.0 -
       * Added configuration properties for ignoredFormNames, ignoredHeaderNames, ignoredCookieNames, and ignoredServerVariableNames.
     </releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <copyright>Copyright 2014-2015</copyright>
     <tags>log4net raygun appender</tags>
     <dependencies>
       <group>
