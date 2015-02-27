@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using log4net.Appender;
 using log4net.Core;
@@ -89,14 +89,7 @@ namespace log4net.Raygun
 
         private static Exception ResolveLoggedExceptionObject(LoggingEvent loggingEvent)
         {
-            Exception exception = null;
-
-            var exceptionObject = loggingEvent.ExceptionObject;
-            if (exceptionObject != null)
-            {
-                exception = exceptionObject.GetBaseException();
-                LogLog.Debug(string.Format("RaygunAppender: Setting Exception to BaseException of LoggingEvent.ExceptionObject"));
-            }
+            var exception = loggingEvent.ExceptionObject;
 
             if (exception == null)
             {

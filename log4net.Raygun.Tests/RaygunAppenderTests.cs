@@ -113,5 +113,15 @@ namespace log4net.Raygun.Tests
 
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.MachineName, Is.EqualTo(Environment.MachineName));
         }
+
+        [Test]
+        public void WhenBuildingRaygunMessageWithAnExceptionContainingAnInnerExceptionThenBothExceptionsInTheChainAreLogged()
+        {
+            var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(new TestException()), null);
+
+            _appender.DoAppend(errorLoggingEvent);
+
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.InnerError, Is.Not.Null);
+        }
     }
 }
