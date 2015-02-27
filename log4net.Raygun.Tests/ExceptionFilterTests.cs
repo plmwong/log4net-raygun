@@ -37,7 +37,7 @@ namespace log4net.Raygun.Tests
             _appender.DoAppend(errorLoggingEvent);
 
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
-            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: I changed your message!"));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("I changed your message!"));
         }
 
         [Test]
@@ -50,9 +50,9 @@ namespace log4net.Raygun.Tests
 
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
 #if __MonoCS__
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: A null value was found where an object instance was required."));
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("A null value was found where an object instance was required."));
 #else
-            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: Object reference not set to an instance of an object."));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("Object reference not set to an instance of an object."));
 #endif
         }
 
@@ -66,9 +66,9 @@ namespace log4net.Raygun.Tests
 
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.ClassName, Is.EqualTo("System.NullReferenceException"));
 #if __MonoCS__
-			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: A null value was found where an object instance was required."));
+			Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("A null value was found where an object instance was required."));
 #else
-            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("NullReferenceException: Object reference not set to an instance of an object."));
+            Assert.That(_fakeRaygunClient.LastMessageSent.Details.Error.Message, Is.EqualTo("Object reference not set to an instance of an object."));
 #endif
         }
     }
