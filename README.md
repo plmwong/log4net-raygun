@@ -120,3 +120,23 @@ E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
   </assemblyBinding>
 </runtime>
 ```
+
+***I use Mindscape.Raygun4Net.WebApi in my WebApi project***
+
+I have included a WebApi version of the log4net.Raygun package as of 4.0.0, it is included in the same log4net.Raygun NuGet package, but is not added as a project reference when adding the package.
+If you wish to use the WebApi version (which uses the `RaygunWebApiClient` instead of the standard RaygunClient), then remove the log4net.Raygun.dll references and replace it with the log4net.Raygun.WebApi.dll.
+
+Additionally, in WebApi, the details of the http request are available through the HttpRequestMessage, and use of the HttpContext is stringly discouraged. Hence, in order for the log4net.Raygun appender to be able
+to record the request details you will have to store the HttpRequestMessage at some stage in the WebApi pipeline:
+
+```
+public class SomeController : ApiController
+{
+    public IEnumerable<Thing> GetSomeThings()
+    {
+        log4net.LogicalThreadContext.Properties["log4net.Raygun.WebApi.HttpRequestMessage"] = Request;
+    }
+}
+```
+
+The above is directly in the controller, but you can use a `DelegatingHandler` instead to process all requests.
