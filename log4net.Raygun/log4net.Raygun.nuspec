@@ -56,8 +56,6 @@
     <file src="bin\Release\net40\log4net.Raygun.Core.pdb" target="lib\net40\log4net.Raygun.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.dll" />
     <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.pdb" />
-    <file src="bin\Release\net40\log4net.Raygun.WebApi.dll" target="lib\net40\log4net.Raygun.WebApi.dll" />
-    <file src="bin\Release\net40\log4net.Raygun.WebApi.pdb" target="lib\net40\log4net.Raygun.WebApi.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.WebApi.dll" target="lib\net45\log4net.Raygun.WebApi.dll" />
     <file src="bin\Release\net45\log4net.Raygun.WebApi.pdb" target="lib\net45\log4net.Raygun.WebApi.pdb" />
   </files>
