@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Phillip Wong")]
 [assembly: AssemblyProduct("log4net.Raygun.Core")]
-[assembly: AssemblyCopyright("Copyright © 2015")]
+[assembly: AssemblyCopyright("Copyright © Phillip Wong 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -37,6 +37,6 @@ using System.Runtime.CompilerServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("3.3.0.*")]
-[assembly: AssemblyFileVersion("3.3.0.0")]
+[assembly: AssemblyVersion("4.0.0.*")]
+[assembly: AssemblyFileVersion("4.0.0.0")]
 [assembly: InternalsVisibleTo("log4net.Raygun.Tests")]
