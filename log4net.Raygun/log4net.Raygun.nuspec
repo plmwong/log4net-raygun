@@ -14,9 +14,9 @@
       Changes:
       4.0.0 -
       * Now using Mindscape.Raygun4Net version 5.0 assemblies.
-      * Added in log4net.Raygun.WebApi assembly. Can be used in the place of log4net.Raygun when using the appender in a WebApi project. This is not added as a project reference by default when installing the NuGet package.
-      * Restructured log4net.Raygun into multiple assemblies: log4net.Raygun and log4net.Raygun.Core. The log4net.Raygun.Core assembly only takes a dependency on Mindscape.Raygun4Net.Core, so the classes involved can be used in an MVC or WebApi context.
-      * Removed: .NET Framework 3.5 is no longer supported, please use an older version of log4net.Raygun to continue using with .NET 3.5. This is due to Mindscape.Raygun4Net.Core only being packaged with a net40 assembly.
+      * Added in log4net.Raygun.WebApi assembly. This may be used in the place of log4net.Raygun when using the appender in a project already using Mindscape.Raygun4Net.WebApi. Note: This is not added as a project reference by default when installing this NuGet package.
+      * Restructured log4net.Raygun into multiple assemblies: log4net.Raygun and log4net.Raygun.Core. The log4net.Raygun.Core assembly only takes a dependency on Mindscape.Raygun4Net.Core, which is shared amongst the three available Raygun4Net packages.
+      * Removed: .NET Framework 3.5 is no longer supported, please use an older version of log4net.Raygun to continue using within .NET 3.5. This is due to Mindscape.Raygun4Net.Core only being packaged with a net40 assembly.
       3.2.1 -
       * Fixed duplication of exception class name when logging messages through the new version of raygun4net.
       3.2.0 -
