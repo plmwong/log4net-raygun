@@ -39,7 +39,7 @@
     <dependencies>
       <group>
         <dependency id="log4net" version="[2.0.2,)" />
-        <dependency id="Mindscape.Raygun4Net" version="[4.2.0,)" />
+        <dependency id="Mindscape.Raygun4Net" version="[5.0.0,)" />
       </group>
     </dependencies>
     <references>
@@ -52,11 +52,11 @@
     <file src="bin\Release\net40\log4net.Raygun.pdb" target="lib\net40\log4net.Raygun.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.dll" target="lib\net45\log4net.Raygun.dll" />
     <file src="bin\Release\net45\log4net.Raygun.pdb" target="lib\net45\log4net.Raygun.pdb" />
-    <file src="bin\Release\net40\log4net.Raygun.Core.dll" target="lib\net40\log4net.Raygun.dll" />
-    <file src="bin\Release\net40\log4net.Raygun.Core.pdb" target="lib\net40\log4net.Raygun.pdb" />
-    <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.dll" />
-    <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.pdb" />
-    <file src="bin\Release\net45\log4net.Raygun.WebApi.dll" target="lib\net45\log4net.Raygun.WebApi.dll" />
-    <file src="bin\Release\net45\log4net.Raygun.WebApi.pdb" target="lib\net45\log4net.Raygun.WebApi.pdb" />
+    <file src="bin\Release\net40\log4net.Raygun.Core.dll" target="lib\net40\log4net.Raygun.Core.dll" />
+    <file src="bin\Release\net40\log4net.Raygun.Core.pdb" target="lib\net40\log4net.Raygun.Core.pdb" />
+    <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.Core.dll" />
+    <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.Core.pdb" />
+    <file src="..\log4net.Raygun.WebApi\bin\Release\net45\log4net.Raygun.WebApi.dll" target="lib\net45\log4net.Raygun.WebApi.dll" />
+    <file src="..\log4net.Raygun.WebApi\bin\Release\net45\log4net.Raygun.WebApi.pdb" target="lib\net45\log4net.Raygun.WebApi.pdb" />
   </files>
 </package>
