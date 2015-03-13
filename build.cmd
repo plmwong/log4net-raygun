@@ -1,4 +1,5 @@
 .\.nuget\nuget.exe restore log4net.Raygun.sln
+msbuild log4net.Raygun.sln /t:Clean
 
 cd log4net.Raygun.WebApi
 

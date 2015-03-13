@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaygunAppender.cs" />
+    <Compile Include="RaygunHttpRequestHandler.cs" />
     <Compile Include="RaygunWebApiClientAdapter.cs" />
     <Compile Include="RaygunWebApiMessageBuilder.cs" />
   </ItemGroup>
