@@ -124,10 +124,10 @@ E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
 ***I use Mindscape.Raygun4Net.WebApi in my WebApi project***
 
 I have included a WebApi version of the log4net.Raygun package as of 4.0.0, it is included in the same log4net.Raygun NuGet package, but is not added as a project reference when adding the package via NuGet.
-If you wish to use the WebApi version (which uses the `RaygunWebApiClient` instead of the standard RaygunClient), then remove the log4net.Raygun.dll and Mindscape.Raygun4Net4.dll references and replace them with the log4net.Raygun.WebApi.dll.
+If you wish to use the WebApi version (which uses the `RaygunWebApiClient` instead of the standard `RaygunClient`), then remove the `log4net.Raygun.dll` and `Mindscape.Raygun4Net4.dll` references and replace them with the log4net.Raygun.WebApi.dll.
 
-Additionally, you will need to store the WebApi HttpRequestMessage so that log4net.Raygun appender will be able to record the request details. This can either be done directly in individual Controllers, or
-by adding the provided `RaygunHttpRequestHandler` to the WebApi MessageHandlers.
+Additionally, you will need to store the WebApi `HttpRequestMessage` so that log4net.Raygun appender will be able to record the request details. This can either be done directly in individual Controllers, or
+by adding the provided `RaygunHttpRequestHandler` to the WebApi `MessageHandlers`.
 
 ```
 public class SomeController : ApiController
@@ -138,7 +138,6 @@ public class SomeController : ApiController
     }
 }
 ```
-
 ```
 public static class WebApiConfig
 {
