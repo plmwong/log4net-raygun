@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using log4net.Core;
+using log4net.Raygun.Core;
 using log4net.Raygun.Tests.Fakes;
 using log4net.Util;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ namespace log4net.Raygun.Tests
     [TestFixture]
     public class TagsTests
     {
-        private RaygunAppender _appender;
+        private RaygunAppenderBase _appender;
         private RaygunMessageBuilder _raygunMessageBuilder;
         private FakeUserCustomDataBuilder _fakeUserCustomDataBuilder;
         private FakeRaygunClient _fakeRaygunClient;
@@ -22,7 +23,7 @@ namespace log4net.Raygun.Tests
             _fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
             _fakeRaygunClient = new FakeRaygunClient();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new RaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new TestRaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
         }
 
         [Test]
@@ -30,7 +31,7 @@ namespace log4net.Raygun.Tests
         {
             var loggingEventWithProperties = new LoggingEvent(new LoggingEventData { Properties = new PropertiesDictionary() });
             const string tags = "tag1|tag2|tag3";
-            loggingEventWithProperties.Properties[RaygunAppender.PropertyKeys.Tags] = tags;
+            loggingEventWithProperties.Properties[RaygunAppenderBase.PropertyKeys.Tags] = tags;
 
             _appender.DoAppend(loggingEventWithProperties);
 
@@ -42,7 +43,7 @@ namespace log4net.Raygun.Tests
         {
             var loggingEventWithProperties = new LoggingEvent(new LoggingEventData { Properties = new PropertiesDictionary() });
             const string tags = "tag1";
-            loggingEventWithProperties.Properties[RaygunAppender.PropertyKeys.Tags] = tags;
+            loggingEventWithProperties.Properties[RaygunAppenderBase.PropertyKeys.Tags] = tags;
 
             _appender.DoAppend(loggingEventWithProperties);
 
@@ -53,7 +54,7 @@ namespace log4net.Raygun.Tests
         public void WhenLoggingEventContainsEmptyTagsThenRaygunMessageHasNoTags()
         {
             var loggingEventWithProperties = new LoggingEvent(new LoggingEventData { Properties = new PropertiesDictionary() });
-            loggingEventWithProperties.Properties[RaygunAppender.PropertyKeys.Tags] = string.Empty;
+            loggingEventWithProperties.Properties[RaygunAppenderBase.PropertyKeys.Tags] = string.Empty;
 
             _appender.DoAppend(loggingEventWithProperties);
 

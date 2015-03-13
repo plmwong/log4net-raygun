@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using log4net.Raygun.Core;
+using NUnit.Framework;
 using log4net.Raygun.Tests.Fakes;
 using log4net.Core;
 using System;
@@ -8,7 +9,7 @@ namespace log4net.Raygun.Tests
     [TestFixture]
     public class RenderedMessageFilterTests
     {
-        private RaygunAppender _appender;
+        private RaygunAppenderBase _appender;
         private RaygunMessageBuilder _raygunMessageBuilder;
         private UserCustomDataBuilder _userCustomDataBuilder;
         private FakeRaygunClient _fakeRaygunClient;
@@ -22,7 +23,7 @@ namespace log4net.Raygun.Tests
             _userCustomDataBuilder = new UserCustomDataBuilder();
             _fakeRaygunClient = new FakeRaygunClient();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new RaygunAppender(_userCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new TestRaygunAppender(_userCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
             _fakeErrorHandler = new FakeErrorHandler();
 
             _appender.ErrorHandler = _fakeErrorHandler;

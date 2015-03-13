@@ -42,21 +42,10 @@
     <OutputPath>bin\Release\net40\</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release 3.5|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <OutputPath>bin\Release\net35\</OutputPath>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mindscape.Raygun4Net, Version=4.0.1.0, Culture=neutral, PublicKeyToken=null" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Release 4.5|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Release 4.0|AnyCPU'">
-      <HintPath>..\packages\Mindscape.Raygun4Net.4.0.1\lib\net40\Mindscape.Raygun4Net.dll</HintPath>
-    </Reference>
-    <Reference Include="Mindscape.Raygun4Net, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL" Condition=" '$(Configuration)|$(Platform)' == 'Release 3.5|AnyCPU'">
-      <HintPath>..\packages\Mindscape.Raygun4Net.4.0.1\lib\net35\Mindscape.Raygun4Net.dll</HintPath>
+    <Reference Include="Mindscape.Raygun4Net, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mindscape.Raygun4Net.5.0.0\lib\net40\Mindscape.Raygun4Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -65,17 +54,12 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="log4net" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Release 4.0|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Release 4.5|AnyCPU'">
+    <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net" Condition=" '$(Configuration)|$(Platform)' == 'Release 3.5|AnyCPU' ">
-      <HintPath>..\packages\log4net.2.0.2\lib\net35-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.NET35" Condition=" '$(Configuration)|$(Platform)' == 'Release 3.5|AnyCPU' ">
-      <HintPath>..\packages\System.Threading.Tasks.Unofficial.3.1\lib\net35\System.Threading.Tasks.NET35.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyResolverTests.cs" />
     <Compile Include="CurrentThreadTaskScheduler.cs" />
     <Compile Include="Fakes\FakeBrokenRaygunClient.cs" />
     <Compile Include="Fakes\FakeErrorHandler.cs" />
@@ -85,8 +69,9 @@
     <Compile Include="RaygunAppenderTests.cs" />
     <Compile Include="TagsTests.cs" />
     <Compile Include="TestException.cs" />
+    <Compile Include="TestRaygunAppender.cs" />
     <Compile Include="UserCustomDataBuilderTests.cs" />
-    <Compile Include="AssemblyResolverTests.cs" />
+    <Compile Include="WebAssemblyResolverTests.cs" />
     <Compile Include="Fakes\FakeHttpContext.cs" />
     <Compile Include="Fakes\FakeRaygunClient.cs" />
     <Compile Include="Fakes\FakeUserCustomDataBuilder.cs" />
@@ -111,8 +96,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\log4net.Raygun\log4net.Raygun.csproj">
+    <ProjectReference Include="..\log4net.Raygun.Core\log4net.Raygun.Core.csproj">
       <Project>{B6740AB5-A00F-475F-9EAC-4C84595888E1}</Project>
+      <Name>log4net.Raygun.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\log4net.Raygun\log4net.Raygun.csproj">
+      <Project>{87b658a1-f37b-4821-a25e-15c2c3c0f11e}</Project>
       <Name>log4net.Raygun</Name>
     </ProjectReference>
   </ItemGroup>

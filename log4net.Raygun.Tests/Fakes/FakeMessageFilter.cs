@@ -1,4 +1,6 @@
-﻿namespace log4net.Raygun.Tests.Fakes
+﻿using log4net.Raygun.Core;
+
+namespace log4net.Raygun.Tests.Fakes
 {
     public class FakeMessageFilter : IMessageFilter
     {

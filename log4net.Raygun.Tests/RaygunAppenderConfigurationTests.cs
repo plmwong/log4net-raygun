@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using log4net.Config;
+using log4net.Raygun.Core;
 using NUnit.Framework;
 
 namespace log4net.Raygun.Tests
@@ -9,7 +10,7 @@ namespace log4net.Raygun.Tests
     [TestFixture]
     public class GivenRaygunAppenderPropertiesAreSetInXmlConfiguration
     {
-        private RaygunAppender _raygunAppender;
+        private RaygunAppenderBase _raygunAppender;
 
         [SetUp]
         public void WhenRaygunAppenderIsConfiguredFromXml()
@@ -18,7 +19,7 @@ namespace log4net.Raygun.Tests
             XmlConfigurator.Configure(fileInfo);
 
             var appenders = LogManager.GetRepository().GetAppenders();
-            _raygunAppender = appenders.Cast<RaygunAppender>().Single();
+            _raygunAppender = appenders.Cast<RaygunAppenderBase>().Single();
         }
 
         [Test]
@@ -91,7 +92,7 @@ namespace log4net.Raygun.Tests
     [TestFixture]
     public class GivenRaygunAppenderPropertiesAreNotSetInXmlConfiguration
     {
-        private RaygunAppender _raygunAppender;
+        private RaygunAppenderBase _raygunAppender;
 
         [SetUp]
         public void WhenRaygunAppenderIsConfiguredFromXml()
@@ -100,7 +101,7 @@ namespace log4net.Raygun.Tests
             XmlConfigurator.Configure(fileInfo);
 
             var appenders = LogManager.GetRepository().GetAppenders();
-            _raygunAppender = appenders.Cast<RaygunAppender>().Single();
+            _raygunAppender = appenders.Cast<RaygunAppenderBase>().Single();
         }
 
         [Test]
@@ -142,7 +143,7 @@ namespace log4net.Raygun.Tests
         [Test]
         public void ThenTimeBetweenRetriesIsSet()
         {
-            Assert.That(_raygunAppender.TimeBetweenRetries, Is.EqualTo(RaygunAppender.DefaultTimeBetweenRetries));
+            Assert.That(_raygunAppender.TimeBetweenRetries, Is.EqualTo(RaygunAppenderBase.DefaultTimeBetweenRetries));
         }
     }
 }

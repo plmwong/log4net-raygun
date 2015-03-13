@@ -1,18 +1,13 @@
 ﻿using System.Reflection;
-using System.Runtime.InteropServices;
-
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
 using System.Runtime.CompilerServices;
-
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("log4net.Raygun")]
 [assembly: AssemblyDescription("Simple log4net appender which logs to the raygun.io API.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Phillip Wong")]
 [assembly: AssemblyProduct("log4net.Raygun")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © Phillip Wong 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -23,8 +18,7 @@ using System.Runtime.CompilerServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-
-[assembly: Guid("93604374-d920-44e2-8bac-32283d0b4ad4")]
+[assembly: Guid("00015691-0d08-4936-9d54-20058c034c99")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -37,6 +31,6 @@ using System.Runtime.CompilerServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("3.2.1.*")]
-[assembly: AssemblyFileVersion("3.2.1.0")]
+[assembly: AssemblyVersion("4.0.0.*")]
+[assembly: AssemblyFileVersion("4.0.0.0")]
 [assembly: InternalsVisibleTo("log4net.Raygun.Tests")]
