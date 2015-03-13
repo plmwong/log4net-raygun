@@ -1,9 +1,10 @@
 .\.nuget\nuget.exe restore log4net.Raygun.sln
-msbuild log4net.Raygun.sln /t:Clean
+msbuild log4net.Raygun.sln /t:Clean /p:Configuration="Release 4.0"
+msbuild log4net.Raygun.sln /t:Clean /p:Configuration="Release 4.5"
 
 cd log4net.Raygun.WebApi
 
-msbuild log4net.Raygun.WebApicsproj /t:Build /p:Configuration="Release 4.5"
+msbuild log4net.Raygun.WebApi.csproj /t:Build /p:Configuration="Release 4.5"
 
 cd ..
 
