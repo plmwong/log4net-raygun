@@ -4,7 +4,7 @@ msbuild log4net.Raygun.sln /t:Clean /p:Configuration="Release 4.5"
 
 cd log4net.Raygun.WebApi
 
-msbuild log4net.Raygun.WebApi.csproj /t:Build /p:Configuration="Release 4.5"
+msbuild log4net.Raygun.WebApi.csproj /t:Build;Package /p:Configuration="Release 4.5"
 
 cd ..
 

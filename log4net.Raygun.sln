@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Raygun", "log4net.R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Raygun.WebApi", "log4net.Raygun.WebApi\log4net.Raygun.WebApi.csproj", "{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Raygun.WebApi.Tests", "log4net.Raygun.WebApi.Tests\log4net.Raygun.WebApi.Tests.csproj", "{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,14 @@ Global
 		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release 4.5|Any CPU.Build.0 = Release 4.5|Any CPU
 		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release|Any CPU.ActiveCfg = Release 4.5|Any CPU
 		{FB35B389-56DA-4FBA-BE91-A1EF62FEBDD2}.Release|Any CPU.Build.0 = Release 4.5|Any CPU
+		{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}.Release 4.0|Any CPU.ActiveCfg = Release|Any CPU
+		{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}.Release 4.0|Any CPU.Build.0 = Release|Any CPU
+		{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}.Release 4.5|Any CPU.ActiveCfg = Release|Any CPU
+		{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}.Release 4.5|Any CPU.Build.0 = Release|Any CPU
+		{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A84395C-3A31-40C1-B14C-15E0D49AD2B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
