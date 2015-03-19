@@ -46,10 +46,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NoOpHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaygunHttpRequestHandlerTests.cs" />
+    <Compile Include="RaygunHttpRequestHandlerWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
