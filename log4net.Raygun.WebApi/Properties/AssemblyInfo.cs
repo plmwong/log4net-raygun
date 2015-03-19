@@ -1,12 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-
 [assembly: AssemblyTitle("log4net.Raygun.WebApi")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Simple log4net appender which logs to the raygun.io API from your WebApi application.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Phillip Wong")]
 [assembly: AssemblyProduct("log4net.Raygun.WebApi")]
