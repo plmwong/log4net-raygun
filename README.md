@@ -7,7 +7,7 @@ Intro
 -----
 A log4net appender which can be used to send logged errors and exceptions to raygun.io. It will also map most of the log4net LoggingEvent fields to the UserCustomData dictionary in the Raygun message sent.
 
-Currently log4net.Raygun supports .NET Target Frameworks 3.5, 4.0 and 4.5 (Note that .NET 3.5 requires an additional NuGet dependency on System.Threading.Tasks.Unofficial).
+Currently log4net.Raygun supports .NET Target Frameworks 4.0 and 4.5. Releases of log4net.Raygun older than 4.0.0 also support .NET 3.5, which requires an additional NuGet dependency on System.Threading.Tasks.Unofficial.
 
 NuGet
 -----
