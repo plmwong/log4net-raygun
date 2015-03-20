@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>log4net.Raygun.WebApi</id>
+    <id>log4net.1.2.10.Raygun.WebApi</id>
     <version>$version$</version>
-    <title>log4net.Raygun.WebApi</title>
+    <title>log4net.Raygun.WebApi [1.2.10]</title>
     <authors>Phillip Wong</authors>
     <owners>Phillip Wong</owners>
     <projectUrl>https://github.com/plmwong/log4net-raygun</projectUrl>
@@ -11,6 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple log4net appender which logs to the raygun.io API from your WebApi application.</description>
     <releaseNotes>
+      NOTE: This package uses the last version of log4net which used the old strong name key (1.2.10).
       Changes:
       4.0.0 -
       * First release. Provides a WebApi compatible version of the RaygunAppender which will work alongside the Mindscape.Raygun.WebApi package.
