@@ -31,7 +31,9 @@
   <files>
     <file src="bin\Release\net45\log4net.Raygun.WebApi.dll" target="lib\net45\log4net.Raygun.WebApi.dll" />
     <file src="bin\Release\net45\log4net.Raygun.WebApi.pdb" target="lib\net45\log4net.Raygun.WebApi.pdb" />
+    <file src="**\*.cs" target="src\log4net.Raygun.WebApi" />
     <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.Core.dll" />
     <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.Core.pdb" />
+    <file src="..\log4net.Raygun.Core\**\*.cs" target="src\log4net.Raygun.Core" />
   </files>
 </package>

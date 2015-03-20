@@ -7,6 +7,7 @@ cd ..
 
 echo Cleaning all build files...
 .\.nuget\nuget.exe restore log4net.Raygun.sln
+msbuild log4net.Raygun.sln /t:Clean /p:Configuration="Debug"
 msbuild log4net.Raygun.sln /t:Clean /p:Configuration="Release 4.0"
 msbuild log4net.Raygun.sln /t:Clean /p:Configuration="Release 4.5"
 
