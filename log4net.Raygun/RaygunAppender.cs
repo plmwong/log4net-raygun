@@ -1,4 +1,4 @@
-﻿using log4net.Raygun.Core;
+using log4net.Raygun.Core;
 using Mindscape.Raygun4Net;
 
 namespace log4net.Raygun
