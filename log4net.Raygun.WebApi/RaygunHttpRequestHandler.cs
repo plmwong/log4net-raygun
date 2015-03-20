@@ -6,7 +6,7 @@ namespace log4net.Raygun.WebApi
 {
     public class RaygunHttpRequestHandler : DelegatingHandler
     {
-        public RaygunHttpRequestHandler() : this(null)
+        public RaygunHttpRequestHandler()
         {
         }
 
