@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
-    <version>$version$-pre</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <id>log4net.Raygun</id>
+    <version>$version$</version>
+    <title>log4net.Raygun</title>
+    <authors>Phillip Wong</authors>
+    <owners>Phillip Wong</owners>
     <projectUrl>https://bitbucket.org/plmw/log4net.raygun</projectUrl>
     <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Simple log4net appender which logs to the raygun.io API.</description>
     <releaseNotes>
       Changes:
       4.0.0 -
@@ -35,7 +35,7 @@
       * Added configuration properties for ignoredFormNames, ignoredHeaderNames, ignoredCookieNames, and ignoredServerVariableNames.
     </releaseNotes>
     <copyright>Copyright Phillip Wong 2014-2015</copyright>
-    <tags>log4net raygun appender</tags>
+    <tags>log4net raygun appender logging</tags>
     <dependencies>
       <group>
         <dependency id="log4net" version="[2.0.2,)" />
@@ -56,7 +56,5 @@
     <file src="bin\Release\net40\log4net.Raygun.Core.pdb" target="lib\net40\log4net.Raygun.Core.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.Core.dll" />
     <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.Core.pdb" />
-    <file src="..\log4net.Raygun.WebApi\bin\Release\net45\log4net.Raygun.WebApi.dll" target="lib\net45\log4net.Raygun.WebApi.dll" />
-    <file src="..\log4net.Raygun.WebApi\bin\Release\net45\log4net.Raygun.WebApi.pdb" target="lib\net45\log4net.Raygun.WebApi.pdb" />
   </files>
 </package>
