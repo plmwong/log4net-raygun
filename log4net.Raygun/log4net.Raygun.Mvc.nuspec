@@ -14,7 +14,7 @@
       NOTE: This package uses the last version of log4net which used the old strong name key (1.2.10).
       Changes:
       4.0.0 -
-      * First release. Provides a Mvc compatible version of the RaygunAppender which will work alongside the Mindscape.Raygun.Mvc package.
+      * First release. Provides an MVC compatible version of the RaygunAppender which will work alongside the Mindscape.Raygun.Mvc package.
     </releaseNotes>
     <copyright>Copyright Phillip Wong 2015</copyright>
     <tags>log4net raygun appender mvc logging</tags>
