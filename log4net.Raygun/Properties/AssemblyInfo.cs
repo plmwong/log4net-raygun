@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Phillip Wong")]
 [assembly: AssemblyProduct("log4net.Raygun")]
-[assembly: AssemblyCopyright("Copyright © Phillip Wong 2015")]
+[assembly: AssemblyCopyright("Copyright © Phillip Wong 2014-2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

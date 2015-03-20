@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
+    <id>log4net.Raygun</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <title>log4net.Raygun</title>
+    <authors>Phillip Wong</authors>
+    <owners>Phillip Wong</owners>
     <projectUrl>https://github.com/plmwong/log4net-raygun</projectUrl>
     <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Simple log4net appender which logs to the raygun.io API.</description>
     <releaseNotes>
       Changes:
       4.0.0 -
       * Now using Mindscape.Raygun4Net version 5.0 assemblies.
-      * Added in log4net.Raygun.WebApi assembly. This may be used in the place of log4net.Raygun when using the appender in a project already using Mindscape.Raygun4Net.WebApi. Note: This is not added as a project reference by default when installing this NuGet package.
-      * Restructured log4net.Raygun into multiple assemblies: log4net.Raygun and log4net.Raygun.Core. The log4net.Raygun.Core assembly only takes a dependency on Mindscape.Raygun4Net.Core, which is shared amongst the three available Raygun4Net packages.
+      * Restructured log4net.Raygun into multiple assemblies: log4net.Raygun and log4net.Raygun.Core.
+      * log4net.Raygun.WebApi is available in its own package for integrating with applications which use Mindscape.Raygun.WebApi.
       * Removed: .NET Framework 3.5 is no longer supported, please use an older version of log4net.Raygun to continue using within .NET 3.5. This is due to Mindscape.Raygun4Net.Core only being packaged with a net40 assembly.
       3.2.1 -
       * Fixed duplication of exception class name when logging messages through the new version of raygun4net.
@@ -35,7 +35,7 @@
       * Added configuration properties for ignoredFormNames, ignoredHeaderNames, ignoredCookieNames, and ignoredServerVariableNames.
     </releaseNotes>
     <copyright>Copyright Phillip Wong 2014-2015</copyright>
-    <tags>log4net raygun appender</tags>
+    <tags>log4net raygun appender logging</tags>
     <dependencies>
       <group>
         <dependency id="log4net" version="[2.0.2,)" />
@@ -56,7 +56,5 @@
     <file src="bin\Release\net40\log4net.Raygun.Core.pdb" target="lib\net40\log4net.Raygun.Core.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.Core.dll" />
     <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.Core.pdb" />
-    <file src="..\log4net.Raygun.WebApi\bin\Release\net45\log4net.Raygun.WebApi.dll" target="lib\net45\log4net.Raygun.WebApi.dll" />
-    <file src="..\log4net.Raygun.WebApi\bin\Release\net45\log4net.Raygun.WebApi.pdb" target="lib\net45\log4net.Raygun.WebApi.pdb" />
   </files>
 </package>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>log4net.Raygun.Mvc</id>
+    <version>$version$</version>
+    <title>log4net.Raygun.Mvc</title>
+    <authors>Phillip Wong</authors>
+    <owners>Phillip Wong</owners>
+    <projectUrl>https://bitbucket.org/plmw/log4net.raygun</projectUrl>
+    <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple log4net appender which logs to the raygun.io API from your MVC application.</description>
+    <releaseNotes>
+      Changes:
+      4.0.0 -
+      * First release. Provides a Mvc compatible version of the RaygunAppender which will work alongside the Mindscape.Raygun.Mvc package.
+    </releaseNotes>
+    <copyright>Copyright Phillip Wong 2015</copyright>
+    <tags>log4net raygun appender mvc logging</tags>
+    <dependencies>
+      <group>
+        <dependency id="log4net" version="[2.0.2,)" />
+        <dependency id="Mindscape.Raygun4Net.Mvc" version="[5.0.0,)" />
+      </group>
+    </dependencies>
+    <references>
+      <reference file="log4net.Raygun.dll" />
+      <reference file="log4net.Raygun.Core.dll" />
+    </references>
+  </metadata>
+  <files>
+    <file src="bin\Release\net40\log4net.Raygun.dll" target="lib\net40\log4net.Raygun.dll" />
+    <file src="bin\Release\net40\log4net.Raygun.pdb" target="lib\net40\log4net.Raygun.pdb" />
+    <file src="bin\Release\net45\log4net.Raygun.dll" target="lib\net45\log4net.Raygun.dll" />
+    <file src="bin\Release\net45\log4net.Raygun.pdb" target="lib\net45\log4net.Raygun.pdb" />
+    <file src="bin\Release\net40\log4net.Raygun.Core.dll" target="lib\net40\log4net.Raygun.Core.dll" />
+    <file src="bin\Release\net40\log4net.Raygun.Core.pdb" target="lib\net40\log4net.Raygun.Core.pdb" />
+    <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.Core.dll" />
+    <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.Core.pdb" />
+  </files>
+</package>
