@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace log4net.Raygun.WebApi.Tests
 {
-    public class NoOpHandler : HttpMessageHandler
+    public class DoNothingMessageHandler : HttpMessageHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

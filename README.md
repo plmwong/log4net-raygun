@@ -17,6 +17,11 @@ or for the log4net 1.2.10 compatible version:
 
 https://www.nuget.org/packages/log4net.1.2.10.Raygun
 
+If you use either Mindscape.Raygun4Net.Mvc or Mindscape.Raygun4Net.WebApi, you can use:
+
+https://www.nuget.org/packages/log4net.Raygun.Mvc/
+https://www.nuget.org/packages/log4net.Raygun.WebApi/
+
 Configuration
 -------------
 
@@ -72,7 +77,7 @@ Questions
 
 ***My application uses the older 1.2.10 version of log4net, before they went and changed the public key***
 
-You need to use the https://www.nuget.org/packages/log4net.1.2.10.Raygun version built against that version of log4net. The source for this is located in the `log4net-1.2.10` branch.
+You can use the https://www.nuget.org/packages/log4net.1.2.10.Raygun version built against that version of log4net. The source for this is located in the `log4net-1.2.10` branch.
 
 ***My application logs sensitive information which we would rather not send to a third-party***
 
@@ -104,9 +109,9 @@ log.Error("Something bad happened to your squirrel!");
 
 When constructing the raygun message to send to raygun.io, log4net.Raygun will use the tags stored in this collection to populate the raygun message tags.
 
-***I have to use version X of log4net, because of reasons***
+***I have to use version X of log4net, because of reasons, and it is newer/older than the one log4net.Raygun is built against***
 
-You might need to add a binding redirection to your application configuration file, redirecting to the version of log4net you are using.
+You may need to add a binding redirection to your application configuration file, redirecting to the version of log4net you are using.
 
 E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
 
@@ -120,6 +125,12 @@ E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
   </assemblyBinding>
 </runtime>
 ```
+
+***I use Mindscape.Raygun4Net.Mvc in my Mvc project***
+
+log4net.Raygun is assembly compatible with Mindscape.Raygun4Net.Mvc and should work normally.
+
+If you would rather not have the Mindscape.Raygun4Net package added into your assembly though, you can instead use the log4net.Raygun.Mvc package.
 
 ***I use Mindscape.Raygun4Net.WebApi in my WebApi project***
 
@@ -137,6 +148,7 @@ public class SomeController : ApiController
     }
 }
 ```
+
 ```
 public static class WebApiConfig
 {

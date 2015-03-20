@@ -60,7 +60,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NoOpHandler.cs" />
+    <Compile Include="DoNothingMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaygunHttpRequestHandlerTests.cs" />
     <Compile Include="RaygunHttpRequestHandlerWrapper.cs" />

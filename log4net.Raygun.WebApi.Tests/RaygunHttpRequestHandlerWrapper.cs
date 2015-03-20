@@ -6,7 +6,7 @@ namespace log4net.Raygun.WebApi.Tests
 {
     public class RaygunHttpRequestHandlerWrapper : RaygunHttpRequestHandler
     {
-        public RaygunHttpRequestHandlerWrapper() : base(new NoOpHandler())
+        public RaygunHttpRequestHandlerWrapper() : base(new DoNothingMessageHandler())
         {
         }
 
