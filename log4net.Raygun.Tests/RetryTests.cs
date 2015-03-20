@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using log4net.Raygun.Core;
+using NUnit.Framework;
 using System;
 
 namespace log4net.Raygun.Tests

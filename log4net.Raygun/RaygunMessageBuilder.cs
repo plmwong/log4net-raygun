@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using log4net.Core;
+using log4net.Raygun.Core;
 using log4net.Util;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
+using IRaygunMessageBuilder = log4net.Raygun.Core.IRaygunMessageBuilder;
 
 namespace log4net.Raygun
 {
     public class RaygunMessageBuilder : IRaygunMessageBuilder
     {
-        public static readonly Type DeclaringType = typeof(RaygunAppender);
+        public static readonly Type DeclaringType = typeof(RaygunAppenderBase);
 
         private readonly Func<IHttpContext> _httpContextFactory;
 
@@ -19,8 +21,8 @@ namespace log4net.Raygun
             _httpContextFactory = httpContextFactory;
         }
 
-        public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData, 
-			IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings)
+        public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
+            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings)
         {
             LogLog.Debug("RaygunAppender: Resolving application assembly");
             var assemblyResolver = new AssemblyResolver();
@@ -32,8 +34,8 @@ namespace log4net.Raygun
             {
                 LogLog.Debug("RaygunAppender: Setting http details on the raygun message from http context");
 
-				var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
-					ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
+                var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
+                    ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
 
                 raygunMessageBuilder.SetHttpDetails(httpContext.Instance, messageOptions);
             }
@@ -85,7 +87,7 @@ namespace log4net.Raygun
 
         private string ResolveTagsFromLog4NetProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
         {
-            return (loggingEventProperties[RaygunAppender.PropertyKeys.Tags] ?? ThreadContext.Properties[RaygunAppender.PropertyKeys.Tags] ?? GlobalContext.Properties[RaygunAppender.PropertyKeys.Tags]) as string;
+            return (loggingEventProperties[RaygunAppenderBase.PropertyKeys.Tags] ?? ThreadContext.Properties[RaygunAppenderBase.PropertyKeys.Tags] ?? GlobalContext.Properties[RaygunAppenderBase.PropertyKeys.Tags]) as string;
         }
 
         private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData, IMessageFilter renderedMessageFilter)

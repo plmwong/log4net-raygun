@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using log4net.Core;
+using log4net.Raygun.Core;
 using log4net.Util;
 using NUnit.Framework;
 
@@ -75,7 +76,7 @@ namespace log4net.Raygun.Tests
 
             var userCustomData = _userCustomDataBuilder.Build(loggingEventWithProperties);
 
-            Assert.That(userCustomData, Has.Exactly(1).EqualTo(new KeyValuePair<string, string>(UserCustomDataBuilder.UserCustomDataKey.Log4NetRaygunVersion, typeof(RaygunAppender).Assembly.GetName().Version.ToString())));
+            Assert.That(userCustomData, Has.Exactly(1).EqualTo(new KeyValuePair<string, string>(UserCustomDataBuilder.UserCustomDataKey.Log4NetRaygunVersion, typeof(RaygunAppenderBase).Assembly.GetName().Version.ToString())));
         }
     }
 }

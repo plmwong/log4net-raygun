@@ -1,7 +1,7 @@
 Raygun Appender for log4net
 ===========================
 
-[![Build status](https://ci.appveyor.com/api/projects/status/l1vkoo634ylqnvep)](https://ci.appveyor.com/project/plmw/log4net-raygun)
+[![Build status](https://ci.appveyor.com/api/projects/status/72mst5et9y15w1mc/branch/master?svg=true)](https://ci.appveyor.com/project/plmw/log4net-raygun-rb4sk/branch/master)
 
 Intro
 -----
@@ -120,3 +120,30 @@ E.g. to redirect all versions of log4net older than 1.2.12.0 to use 1.2.12.0:
   </assemblyBinding>
 </runtime>
 ```
+
+***I use Mindscape.Raygun4Net.WebApi in my WebApi project***
+
+Use log4net.Raygun.Webapi instead.
+
+Note that you will need to store the WebApi `HttpRequestMessage` so that log4net.Raygun appender will be able to record the request details. This can either be done directly in individual Controllers, or
+by adding the provided `RaygunHttpRequestHandler` to the WebApi `MessageHandlers`. E.g.
+
+```
+public class SomeController : ApiController
+{
+    public IEnumerable<Thing> GetSomeThings()
+    {
+        log4net.LogicalThreadContext.Properties["log4net.Raygun.WebApi.HttpRequestMessage"] = Request;
+    }
+}
+```
+```
+public static class WebApiConfig
+{
+    public static void Register(HttpConfiguration config)
+    {
+        config.MessageHandlers.Add(new RaygunHttpRequestHandler());
+    }
+}
+```
+

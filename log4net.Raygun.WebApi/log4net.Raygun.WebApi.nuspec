@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>log4net.Raygun.WebApi</id>
+    <version>$version$</version>
+    <title>log4net.Raygun.WebApi</title>
+    <authors>Phillip Wong</authors>
+    <owners>Phillip Wong</owners>
+    <projectUrl>https://github.com/plmwong/log4net-raygun</projectUrl>
+    <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple log4net appender which logs to the raygun.io API from your WebApi application.</description>
+    <releaseNotes>
+      Changes:
+      4.0.0 -
+      * First release. Provides a WebApi compatible version of the RaygunAppender which will work alongside the Mindscape.Raygun.WebApi package.
+    </releaseNotes>
+    <copyright>Copyright Phillip Wong 2014-2015</copyright>
+    <tags>log4net raygun appender webapi logging</tags>
+    <dependencies>
+      <group>
+        <dependency id="log4net" version="[2.0.2,)" />
+        <dependency id="Mindscape.Raygun4Net.WebApi" version="[5.0.0,)" />
+      </group>
+    </dependencies>
+    <references>
+      <reference file="log4net.Raygun.WebApi.dll" />
+      <reference file="log4net.Raygun.Core.dll" />
+    </references>
+  </metadata>
+  <files>
+    <file src="bin\Release\net45\log4net.Raygun.WebApi.dll" target="lib\net45\log4net.Raygun.WebApi.dll" />
+    <file src="bin\Release\net45\log4net.Raygun.WebApi.pdb" target="lib\net45\log4net.Raygun.WebApi.pdb" />
+    <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.Core.dll" />
+    <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.Core.pdb" />
+  </files>
+</package>
