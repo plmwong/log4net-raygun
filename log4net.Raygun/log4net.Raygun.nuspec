@@ -53,9 +53,11 @@
     <file src="bin\Release\net40\log4net.Raygun.pdb" target="lib\net40\log4net.Raygun.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.dll" target="lib\net45\log4net.Raygun.dll" />
     <file src="bin\Release\net45\log4net.Raygun.pdb" target="lib\net45\log4net.Raygun.pdb" />
+    <file src="**\*.cs" target="src\log4net.Raygun" />
     <file src="bin\Release\net40\log4net.Raygun.Core.dll" target="lib\net40\log4net.Raygun.Core.dll" />
     <file src="bin\Release\net40\log4net.Raygun.Core.pdb" target="lib\net40\log4net.Raygun.Core.pdb" />
     <file src="bin\Release\net45\log4net.Raygun.Core.dll" target="lib\net45\log4net.Raygun.Core.dll" />
     <file src="bin\Release\net45\log4net.Raygun.Core.pdb" target="lib\net45\log4net.Raygun.Core.pdb" />
+    <file src="..\log4net.Raygun.Core\**\*.cs" target="src\log4net.Raygun.Core" />
   </files>
 </package>
