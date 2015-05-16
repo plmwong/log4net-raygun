@@ -16,7 +16,7 @@ namespace log4net.Raygun.WebApi
         public static readonly Type DeclaringType = typeof(RaygunAppenderBase);
 
         public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
-            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings)
+            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredDataSettings ignoredFieldSettings)
         {
             LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
             var assemblyResolver = new AssemblyResolver();
@@ -30,6 +30,8 @@ namespace log4net.Raygun.WebApi
 
                 var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
                     ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
+
+                messageOptions.IsRawDataIgnored = ignoredFieldSettings.IsRawDataIgnored;
 
                 raygunMessageBuilder.SetHttpDetails(httpRequestMessage, messageOptions);
             }
