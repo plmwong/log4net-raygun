@@ -16,7 +16,7 @@ namespace log4net.Raygun.WebApi
         public static readonly Type DeclaringType = typeof(RaygunAppenderBase);
 
         public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
-            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings)
+            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredDataSettings ignoredFieldSettings, string customApplicationVersion)
         {
             LogLog.Debug("RaygunAppender: Resolving application assembly");
             var assemblyResolver = new AssemblyResolver();
@@ -31,6 +31,8 @@ namespace log4net.Raygun.WebApi
                 var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
                     ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
 
+                messageOptions.IsRawDataIgnored = ignoredFieldSettings.IsRawDataIgnored;
+
                 raygunMessageBuilder.SetHttpDetails(httpRequestMessage, messageOptions);
             }
 
@@ -40,7 +42,7 @@ namespace log4net.Raygun.WebApi
                 .SetTags(ExtractTags(loggingEvent.Properties))
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
-                .SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
+                .SetVersion(GetApplicationVersion(customApplicationVersion))
                 .SetUserCustomData(FilterRenderedMessageInUserCustomData(userCustomData, renderedMessageFilter));
 
             var raygunMessage = raygunMessageBuilder.Build();
@@ -63,6 +65,20 @@ namespace log4net.Raygun.WebApi
             }
 
             return raygunMessage;
+        }
+
+        private string GetApplicationVersion(string customApplicationVersion)
+        {
+            if (!string.IsNullOrEmpty(customApplicationVersion))
+            {
+                LogLog.Debug(DeclaringType, "RaygunAppender: Using custom application version " + customApplicationVersion);
+                return customApplicationVersion;
+            }
+
+            LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
+            var assemblyResolver = new AssemblyResolver();
+            var applicationAssembly = assemblyResolver.GetApplicationAssembly();
+            return applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null;
         }
 
         private IList<string> ExtractTags(ReadOnlyPropertiesDictionary loggingEventProperties)

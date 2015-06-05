@@ -68,7 +68,7 @@
     <Compile Include="AssemblyAdapter.cs" />
     <Compile Include="IAssembly.cs" />
     <Compile Include="UserCustomDataBuilderExtensions.cs" />
-    <Compile Include="IgnoredFieldSettings.cs" />
+    <Compile Include="IgnoredDataSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

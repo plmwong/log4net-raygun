@@ -46,6 +46,7 @@ namespace log4net.Raygun.Core
         }
 
         public virtual bool OnlySendExceptions { get; set; }
+        // Analysis disable once ConvertToAutoProperty
         public virtual bool SendInBackground
         {
             get { return _sendInBackground; }
@@ -56,9 +57,12 @@ namespace log4net.Raygun.Core
 		public virtual string IgnoredHeaderNames { get; set; }
 		public virtual string IgnoredCookieNames { get; set; }
 		public virtual string IgnoredServerVariableNames { get; set; }
+        public virtual bool IsRawDataIgnored { get; set; }
 
         public virtual string ExceptionFilter { get; set; }
         public virtual string RenderedMessageFilter { get; set; }
+
+        public virtual string ApplicationVersion { get; set; }
 
         protected override void Append(LoggingEvent loggingEvent)
         {
@@ -116,10 +120,11 @@ namespace log4net.Raygun.Core
 
             var exceptionFilter = ActivateInstanceOfMessageFilter(ExceptionFilter);
             var renderedMessageFilter = ActivateInstanceOfMessageFilter(RenderedMessageFilter);
-			var ignoredFieldSettings = new IgnoredFieldSettings(IgnoredFormNames, IgnoredHeaderNames, IgnoredCookieNames, IgnoredServerVariableNames);
+            var ignoredFieldSettings = new IgnoredDataSettings(IgnoredFormNames, IgnoredHeaderNames,
+                IgnoredCookieNames, IgnoredServerVariableNames, IsRawDataIgnored);
 
             RaygunMessage raygunMessage = _raygunMessageBuilder.BuildMessage(exception, loggingEvent, userCustomData,
-				exceptionFilter, renderedMessageFilter, ignoredFieldSettings);
+				exceptionFilter, renderedMessageFilter, ignoredFieldSettings, ApplicationVersion);
 
             return raygunMessage;
         }

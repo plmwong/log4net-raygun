@@ -13,6 +13,8 @@
     <releaseNotes>
       NOTE: This package uses the last version of log4net which used the old strong name key (1.2.10).
       Changes:
+      4.1.0 -
+      * Added more configuration options: 'applicationVersion' for specifying the version, and 'isRawDataIgnored' for controlling whether the full request data will be forwarded to raygun.io.
       4.0.0 -
       * First release. Provides a WebApi compatible version of the RaygunAppender which will work alongside the Mindscape.Raygun.WebApi package.
     </releaseNotes>
