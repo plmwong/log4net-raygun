@@ -32,8 +32,9 @@ Configuration
 * `sendInBackground` (optional) : Toggle whether to send messages to raygun in a background task. If set to false then raygun messages will be sent synchronously. By default this is set to true.
 * `exceptionFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from an `Exception.Message`.
 * `renderedMessageFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from the RenderedMessage in UserCustomData.
+* `applicationVersion` (optional) : Sets the application version which the raygun messages will use to identify the application. If this is not specified, then the assembly version will be used.
 
-The following configuration properties can be used to omit sensitive data from being sent to raygun (as introduced in raygun4net 3.0):
+The following configuration properties can be used to omit sensitive data from being sent to raygun:
 
 * `ignoredFormNames` (optional) : Comma delimited list of form field names to omit when logging details of an Http Request.
 * `ignoredHeaderNames` (optional) : Comma delimited list of header field names to omit when logging details of an Http Request.

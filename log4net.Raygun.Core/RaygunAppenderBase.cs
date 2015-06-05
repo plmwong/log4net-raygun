@@ -120,7 +120,7 @@ namespace log4net.Raygun.Core
 
             var exceptionFilter = ActivateInstanceOfMessageFilter(ExceptionFilter);
             var renderedMessageFilter = ActivateInstanceOfMessageFilter(RenderedMessageFilter);
-            var ignoredFieldSettings = new IgnoredDataSettings(IgnoredFormNames, IgnoredHeaderNames, 
+            var ignoredFieldSettings = new IgnoredDataSettings(IgnoredFormNames, IgnoredHeaderNames,
                 IgnoredCookieNames, IgnoredServerVariableNames, IsRawDataIgnored);
 
             RaygunMessage raygunMessage = _raygunMessageBuilder.BuildMessage(exception, loggingEvent, userCustomData,

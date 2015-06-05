@@ -12,6 +12,8 @@
     <description>Simple log4net appender which logs to the raygun.io API from your WebApi application.</description>
     <releaseNotes>
       Changes:
+      4.1.0 -
+      * Added more configuration options: 'applicationVersion' for specifying the version, and 'isRawDataIgnored' for controlling whether the full request data will be forwarded to raygun.io.
       4.0.0 -
       * First release. Provides a WebApi compatible version of the RaygunAppender which will work alongside the Mindscape.Raygun.WebApi package.
     </releaseNotes>
