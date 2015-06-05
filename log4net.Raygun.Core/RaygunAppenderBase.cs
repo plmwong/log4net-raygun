@@ -62,6 +62,8 @@ namespace log4net.Raygun.Core
         public virtual string ExceptionFilter { get; set; }
         public virtual string RenderedMessageFilter { get; set; }
 
+        public virtual string ApplicationVersion { get; set; }
+
         protected override void Append(LoggingEvent loggingEvent)
         {
             LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Received Logging Event with Logging Level '{0}'", loggingEvent.Level));
@@ -122,7 +124,7 @@ namespace log4net.Raygun.Core
                 IgnoredCookieNames, IgnoredServerVariableNames, IsRawDataIgnored);
 
             RaygunMessage raygunMessage = _raygunMessageBuilder.BuildMessage(exception, loggingEvent, userCustomData,
-				exceptionFilter, renderedMessageFilter, ignoredFieldSettings);
+				exceptionFilter, renderedMessageFilter, ignoredFieldSettings, ApplicationVersion);
 
             return raygunMessage;
         }
