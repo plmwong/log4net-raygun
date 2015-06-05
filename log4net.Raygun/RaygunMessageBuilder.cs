@@ -22,11 +22,9 @@ namespace log4net.Raygun
         }
 
         public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
-            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings)
+            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings, 
+            string customApplicationVersion)
         {
-            LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
-            var assemblyResolver = new AssemblyResolver();
-            var applicationAssembly = assemblyResolver.GetApplicationAssembly();
             var raygunMessageBuilder = Mindscape.Raygun4Net.RaygunMessageBuilder.New;
 
             var httpContext = _httpContextFactory();
@@ -46,7 +44,7 @@ namespace log4net.Raygun
                 .SetTags(ExtractTags(loggingEvent.Properties))
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
-                .SetVersion(applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null)
+                .SetVersion(GetApplicationVersion(customApplicationVersion))
                 .SetUserCustomData(FilterRenderedMessageInUserCustomData(userCustomData, renderedMessageFilter));
 
             var raygunMessage = raygunMessageBuilder.Build();
@@ -69,6 +67,20 @@ namespace log4net.Raygun
             }
 
             return raygunMessage;
+        }
+
+        private string GetApplicationVersion(string customApplicationVersion)
+        {
+            if (!string.IsNullOrEmpty(customApplicationVersion))
+            {
+                LogLog.Debug(DeclaringType, "RaygunAppender: Using custom applicationversion " + customApplicationVersion);
+                return customApplicationVersion;
+            }
+
+            LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
+            var assemblyResolver = new AssemblyResolver();
+            var applicationAssembly = assemblyResolver.GetApplicationAssembly();
+            return applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null;
         }
 
         private IList<string> ExtractTags(ReadOnlyPropertiesDictionary loggingEventProperties)
