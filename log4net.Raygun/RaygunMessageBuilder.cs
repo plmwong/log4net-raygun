@@ -24,9 +24,6 @@ namespace log4net.Raygun
         public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
             IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredDataSettings ignoredFieldSettings, string customApplicationVersion)
         {
-            LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
-            var assemblyResolver = new AssemblyResolver();
-            var applicationAssembly = assemblyResolver.GetApplicationAssembly();
             var raygunMessageBuilder = Mindscape.Raygun4Net.RaygunMessageBuilder.New;
 
             var httpContext = _httpContextFactory();
