@@ -24,9 +24,6 @@ namespace log4net.Raygun
         public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
             IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredDataSettings ignoredFieldSettings, string customApplicationVersion)
         {
-            LogLog.Debug("RaygunAppender: Resolving application assembly");
-            var assemblyResolver = new AssemblyResolver();
-            var applicationAssembly = assemblyResolver.GetApplicationAssembly();
             var raygunMessageBuilder = Mindscape.Raygun4Net.RaygunMessageBuilder.New;
 
             var httpContext = _httpContextFactory();
@@ -77,11 +74,11 @@ namespace log4net.Raygun
         {
             if (!string.IsNullOrEmpty(customApplicationVersion))
             {
-                LogLog.Debug(DeclaringType, "RaygunAppender: Using custom application version " + customApplicationVersion);
+                LogLog.Debug("RaygunAppender: Using custom application version " + customApplicationVersion);
                 return customApplicationVersion;
             }
 
-            LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
+            LogLog.Debug("RaygunAppender: Resolving application assembly");
             var assemblyResolver = new AssemblyResolver();
             var applicationAssembly = assemblyResolver.GetApplicationAssembly();
             return applicationAssembly != null ? applicationAssembly.GetName().Version.ToString() : null;
