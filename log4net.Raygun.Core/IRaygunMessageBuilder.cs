@@ -8,7 +8,6 @@ namespace log4net.Raygun.Core
     public interface IRaygunMessageBuilder
     {
 		RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
-			IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings, 
-            string customApplicationVersion);
+			IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredDataSettings ignoredFieldSettings, string customApplicationVersion);
     }
 }

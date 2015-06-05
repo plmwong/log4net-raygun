@@ -3,14 +3,16 @@ using System.Linq;
 
 namespace log4net.Raygun.Core
 {
-	public sealed class IgnoredFieldSettings
+	public sealed class IgnoredDataSettings
 	{
-		public IgnoredFieldSettings(string ignoredFormNames = null, string ignoredHeaderNames = null, string ignoredCookieNames = null, string ignoredServerVariableNames = null)
+		public IgnoredDataSettings(string ignoredFormNames = null, string ignoredHeaderNames = null,
+            string ignoredCookieNames = null, string ignoredServerVariableNames = null, bool isRawDataIgnored = false)
 		{
 			IgnoredFormNames = SplitIgnoredSetting(ignoredFormNames);
 			IgnoredHeaderNames = SplitIgnoredSetting(ignoredHeaderNames);
 			IgnoredCookieNames = SplitIgnoredSetting(ignoredCookieNames);
 			IgnoredServerVariableNames = SplitIgnoredSetting(ignoredServerVariableNames);
+            IsRawDataIgnored = isRawDataIgnored;
 		}
 
 		private IEnumerable<string> SplitIgnoredSetting(string setting) 
@@ -25,6 +27,8 @@ namespace log4net.Raygun.Core
 		public IEnumerable<string> IgnoredCookieNames { get; private set; }
 
 		public IEnumerable<string> IgnoredServerVariableNames { get; private set; }
+
+        public bool IsRawDataIgnored { get; private set; }
 	}
 }
 

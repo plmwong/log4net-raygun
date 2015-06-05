@@ -39,6 +39,7 @@ The following configuration properties can be used to omit sensitive data from b
 * `ignoredHeaderNames` (optional) : Comma delimited list of header field names to omit when logging details of an Http Request.
 * `ignoredCookieNames` (optional) : Comma delimited list of cookie field names to omit when logging details of an Http Request.
 * `ignoredServerVariableNames` (optional) : Comma delimited list of server variable field names to omit when logging details of an Http Request.
+* `isRawDataIgnored` (optional) : Set to true if you do not want the raw request content to be included in the message sent to Raygun.
 
 A log4net `threshold` should be used to filter out logging levels (e.g. everything below ERROR level). By default, all levels of logging will be sent to Raygun.
 

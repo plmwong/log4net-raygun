@@ -16,9 +16,11 @@ namespace log4net.Raygun.WebApi
         public static readonly Type DeclaringType = typeof(RaygunAppenderBase);
 
         public RaygunMessage BuildMessage(Exception exception, LoggingEvent loggingEvent, Dictionary<string, string> userCustomData,
-            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredFieldSettings ignoredFieldSettings,
-            string customApplicationVersion)
+            IMessageFilter exceptionFilter, IMessageFilter renderedMessageFilter, IgnoredDataSettings ignoredFieldSettings, string customApplicationVersion)
         {
+            LogLog.Debug(DeclaringType, "RaygunAppender: Resolving application assembly");
+            var assemblyResolver = new AssemblyResolver();
+            var applicationAssembly = assemblyResolver.GetApplicationAssembly();
             var raygunMessageBuilder = Mindscape.Raygun4Net.WebApi.RaygunWebApiMessageBuilder.New;
 
             var httpRequestMessage = ResolveHttpRequestMessageFromLog4NetProperties(loggingEvent.Properties);
@@ -28,6 +30,8 @@ namespace log4net.Raygun.WebApi
 
                 var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
                     ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
+
+                messageOptions.IsRawDataIgnored = ignoredFieldSettings.IsRawDataIgnored;
 
                 raygunMessageBuilder.SetHttpDetails(httpRequestMessage, messageOptions);
             }
@@ -67,7 +71,7 @@ namespace log4net.Raygun.WebApi
         {
             if (!string.IsNullOrEmpty(customApplicationVersion))
             {
-                LogLog.Debug(DeclaringType, "RaygunAppender: Using custom applicationversion " + customApplicationVersion);
+                LogLog.Debug(DeclaringType, "RaygunAppender: Using custom application version " + customApplicationVersion);
                 return customApplicationVersion;
             }
 
