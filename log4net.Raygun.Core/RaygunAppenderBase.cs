@@ -54,9 +54,9 @@ namespace log4net.Raygun.Core
         }
 
         public virtual string IgnoredFormNames { get; set; }
-		public virtual string IgnoredHeaderNames { get; set; }
-		public virtual string IgnoredCookieNames { get; set; }
-		public virtual string IgnoredServerVariableNames { get; set; }
+        public virtual string IgnoredHeaderNames { get; set; }
+        public virtual string IgnoredCookieNames { get; set; }
+        public virtual string IgnoredServerVariableNames { get; set; }
         public virtual bool IsRawDataIgnored { get; set; }
 
         public virtual string ExceptionFilter { get; set; }
@@ -98,14 +98,11 @@ namespace log4net.Raygun.Core
             if (exception == null)
             {
                 var messageObject = loggingEvent.MessageObject;
-                if (messageObject != null)
+                var messageObjectAsException = messageObject as Exception;
+                if (messageObjectAsException != null)
                 {
-                    var messageObjectAsException = messageObject as Exception;
-                    if (messageObjectAsException != null)
-                    {
-                        exception = messageObjectAsException;
-                        LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Setting Exception to MessageObject"));
-                    }
+                    exception = messageObjectAsException;
+                    LogLog.Debug(DeclaringType, "RaygunAppender: Setting Exception to MessageObject");
                 }
             }
 
@@ -124,7 +121,7 @@ namespace log4net.Raygun.Core
                 IgnoredCookieNames, IgnoredServerVariableNames, IsRawDataIgnored);
 
             RaygunMessage raygunMessage = _raygunMessageBuilder.BuildMessage(exception, loggingEvent, userCustomData,
-				exceptionFilter, renderedMessageFilter, ignoredFieldSettings, ApplicationVersion);
+                exceptionFilter, renderedMessageFilter, ignoredFieldSettings, ApplicationVersion);
 
             return raygunMessage;
         }
@@ -188,18 +185,19 @@ namespace log4net.Raygun.Core
             }
         }
 
-		private void RaygunThrowOnErrorsMustBeEnabled()
-		{
+        private void RaygunThrowOnErrorsMustBeEnabled()
+        {
             if (!RaygunSettings.Settings.ThrowOnError)
-			{
+            {
                 LogLog.Warn(DeclaringType, "RaygunAppender: ThrowOnError was found to be disabled, setting to 'true'");
                 RaygunSettings.Settings.ThrowOnError = true;
-			}
-		}
+            }
+        }
 
         public static class PropertyKeys
         {
             public const string Tags = "log4net.Raygun.Tags";
+            public const string AffectedUser = "log4net.Raygun.AffectedUser";
         }
     }
 }
