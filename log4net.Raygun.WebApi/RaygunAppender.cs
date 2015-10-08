@@ -5,7 +5,7 @@ namespace log4net.Raygun.WebApi
 {
     public class RaygunAppender : RaygunAppenderBase
     {
-        public RaygunAppender() : base(new RaygunWebApiMessageBuilder(), apiKey => new RaygunWebApiClientAdapter(new RaygunWebApiClient(apiKey)))
+        public RaygunAppender() : base(new RaygunWebApiMessageBuilder(), RaygunClientFactoryMethod.From(apiKey => new RaygunWebApiClientAdapter(new RaygunWebApiClient(apiKey))))
         {
         }
     }

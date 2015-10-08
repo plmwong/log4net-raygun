@@ -16,17 +16,17 @@ namespace log4net.Raygun.Core
 
         private readonly IUserCustomDataBuilder _userCustomDataBuilder;
         private readonly IRaygunMessageBuilder _raygunMessageBuilder;
-        private readonly Func<string, IRaygunClient> _raygunClientFactory;
+        private readonly IRaygunClientFactory _raygunClientFactory;
         private readonly TaskScheduler _taskScheduler;
 
         private bool _sendInBackground;
 
-        protected RaygunAppenderBase(IRaygunMessageBuilder raygunMessageBuilder, Func<string, IRaygunClient> raygunClientFactory)
+        protected RaygunAppenderBase(IRaygunMessageBuilder raygunMessageBuilder, IRaygunClientFactory raygunClientFactory)
             : this(new UserCustomDataBuilder(), raygunMessageBuilder, raygunClientFactory, TaskScheduler.Default)
         {
         }
 
-        protected RaygunAppenderBase(IUserCustomDataBuilder userCustomDataBuilder, IRaygunMessageBuilder raygunMessageBuilder, Func<string, IRaygunClient> raygunClientFactory, TaskScheduler taskScheduler)
+        protected RaygunAppenderBase(IUserCustomDataBuilder userCustomDataBuilder, IRaygunMessageBuilder raygunMessageBuilder, IRaygunClientFactory raygunClientFactory, TaskScheduler taskScheduler)
         {
             _userCustomDataBuilder = userCustomDataBuilder;
             _raygunMessageBuilder = raygunMessageBuilder;
@@ -172,7 +172,7 @@ namespace log4net.Raygun.Core
                         ErrorHandler.Error("RaygunAppender: API Key is empty");
                     }
 
-                    var raygunClient = _raygunClientFactory(ApiKey);
+                    var raygunClient = _raygunClientFactory.Create(ApiKey);
 
                     raygunClient.Send(raygunMessage);
 
