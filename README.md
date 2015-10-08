@@ -99,17 +99,23 @@ public class SensitiveInformationFilter : IMessageFilter
 }
 ```
 
-***What about tags?***
+***What about tags? Or the affected user?***
 
 As of version 2.1, log4net.Raygun provides a basic mechanism for populating tags in a raygun message.
 Tags can be stored as custom data in a pipe-delimited format (e.g. tag1|tag2|tag3) on the `log4net.LogicalThreadContext` or `log4net.GlobalContext` collections, prior to calling a log4net logging method..
 
 ```
 log4net.LogicalThreadContext.Properties[RaygunAppender.PropertyKeys.Tags] = "important|squirrel-related";
-log.Error("Something bad happened to your squirrel!"); 
+log.Error("Something bad happened to your squirrel!");
 ```
 
 When constructing the raygun message to send to raygun.io, log4net.Raygun will use the tags stored in this collection to populate the raygun message tags.
+
+Similarly, you can construct a `RaygunIdentifierMessage` and populate that into the context as well, and this will populate the user information on the raygun message.
+
+```
+log4net.LogicalThreadContext.Properties[RaygunAppender.PropertyKeys.AffectedUser] = new RaygunIdentifierMessage("I was affected");
+```
 
 ***I have to use version X of log4net, because of reasons, and it is newer/older than the one log4net.Raygun is built against***
 

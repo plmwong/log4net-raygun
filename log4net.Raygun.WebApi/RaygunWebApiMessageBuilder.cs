@@ -24,10 +24,14 @@ namespace log4net.Raygun.WebApi
             {
                 LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
 
-                var messageOptions = new RaygunRequestMessageOptions(ignoredFieldSettings.IgnoredFormNames, ignoredFieldSettings.IgnoredHeaderNames,
-                    ignoredFieldSettings.IgnoredCookieNames, ignoredFieldSettings.IgnoredServerVariableNames);
-
-                messageOptions.IsRawDataIgnored = ignoredFieldSettings.IsRawDataIgnored;
+                var messageOptions = new RaygunRequestMessageOptions(
+                    ignoredFieldSettings.IgnoredFormNames,
+                    ignoredFieldSettings.IgnoredHeaderNames,
+                    ignoredFieldSettings.IgnoredCookieNames,
+                    ignoredFieldSettings.IgnoredServerVariableNames)
+                {
+                    IsRawDataIgnored = ignoredFieldSettings.IsRawDataIgnored
+                };
 
                 raygunMessageBuilder.SetHttpDetails(httpRequestMessage, messageOptions);
             }
