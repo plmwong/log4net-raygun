@@ -43,6 +43,7 @@ namespace log4net.Raygun
                 .SetExceptionDetails(exception)
                 .SetClientDetails()
                 .SetTags(ExtractTags(loggingEvent.Properties))
+                .SetUser(ExtractAffectedUser(loggingEvent.Properties))
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
                 .SetVersion(GetApplicationVersion(customApplicationVersion))
@@ -112,6 +113,11 @@ namespace log4net.Raygun
             }
 
             return userCustomData;
+        }
+
+        private RaygunIdentifierMessage ExtractAffectedUser(ReadOnlyPropertiesDictionary loggingEventProperties)
+        {
+            return (loggingEventProperties[RaygunAppenderBase.PropertyKeys.AffectedUser] ?? ThreadContext.Properties[RaygunAppenderBase.PropertyKeys.AffectedUser] ?? GlobalContext.Properties[RaygunAppenderBase.PropertyKeys.AffectedUser]) as RaygunIdentifierMessage;
         }
     }
 }

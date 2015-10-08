@@ -7,11 +7,10 @@ using log4net.Raygun.Core;
 using log4net.Util;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.Messages;
-using IRaygunMessageBuilder = log4net.Raygun.Core.IRaygunMessageBuilder;
 
 namespace log4net.Raygun.WebApi
 {
-    public class RaygunWebApiMessageBuilder : IRaygunMessageBuilder
+    public class RaygunWebApiMessageBuilder : Core.IRaygunMessageBuilder
     {
         public static readonly Type DeclaringType = typeof(RaygunAppenderBase);
 
@@ -37,6 +36,7 @@ namespace log4net.Raygun.WebApi
                 .SetExceptionDetails(exception)
                 .SetClientDetails()
                 .SetTags(ExtractTags(loggingEvent.Properties))
+                .SetUser(ExtractAffectedUser(loggingEvent.Properties))
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
                 .SetVersion(GetApplicationVersion(customApplicationVersion))
@@ -118,6 +118,11 @@ namespace log4net.Raygun.WebApi
             }
 
             return userCustomData;
+        }
+
+        private RaygunIdentifierMessage ExtractAffectedUser(ReadOnlyPropertiesDictionary loggingEventProperties)
+        {
+            return ResolveFromLog4NetProperties<RaygunIdentifierMessage>(loggingEventProperties, RaygunAppenderBase.PropertyKeys.AffectedUser);
         }
 
         internal static class PropertyKeys

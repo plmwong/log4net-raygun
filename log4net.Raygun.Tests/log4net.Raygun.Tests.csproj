@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyResolverTests.cs" />
+    <Compile Include="AffectedUsersTests.cs" />
     <Compile Include="CurrentThreadTaskScheduler.cs" />
     <Compile Include="Fakes\FakeBrokenRaygunClient.cs" />
     <Compile Include="Fakes\FakeErrorHandler.cs" />
