@@ -70,6 +70,8 @@
     <Compile Include="IAssembly.cs" />
     <Compile Include="UserCustomDataBuilderExtensions.cs" />
     <Compile Include="IgnoredDataSettings.cs" />
+    <Compile Include="TypeActivator.cs" />
+    <Compile Include="ITypeActivator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

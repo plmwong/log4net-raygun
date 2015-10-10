@@ -43,10 +43,6 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mindscape.Raygun4Net, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mindscape.Raygun4Net.5.0.0\lib\net40\Mindscape.Raygun4Net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
@@ -56,6 +52,9 @@
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mindscape.Raygun4Net">
+      <HintPath>..\packages\Mindscape.Raygun4Net.5.0.0\lib\net40\Mindscape.Raygun4Net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +84,8 @@
     <Compile Include="ExceptionFilterTests.cs" />
     <Compile Include="RenderedMessageFilterTests.cs" />
     <Compile Include="Fakes\FakeMessageFilter.cs" />
+    <Compile Include="CustomRaygunClientFactoryTests.cs" />
+    <Compile Include="FakeRaygunClientFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AllPropertiesSet.config">
@@ -102,7 +103,7 @@
       <Name>log4net.Raygun.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\log4net.Raygun\log4net.Raygun.csproj">
-      <Project>{87b658a1-f37b-4821-a25e-15c2c3c0f11e}</Project>
+      <Project>{87B658A1-F37B-4821-A25E-15C2C3C0F11E}</Project>
       <Name>log4net.Raygun</Name>
     </ProjectReference>
   </ItemGroup>

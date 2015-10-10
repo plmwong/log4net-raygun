@@ -17,23 +17,35 @@ namespace log4net.Raygun.Core
         private readonly IUserCustomDataBuilder _userCustomDataBuilder;
         private readonly IRaygunMessageBuilder _raygunMessageBuilder;
         private readonly IRaygunClientFactory _raygunClientFactory;
+        private readonly ITypeActivator _typeActivator;
         private readonly TaskScheduler _taskScheduler;
 
         private bool _sendInBackground;
 
         protected RaygunAppenderBase(IRaygunMessageBuilder raygunMessageBuilder, IRaygunClientFactory raygunClientFactory)
-            : this(new UserCustomDataBuilder(), raygunMessageBuilder, raygunClientFactory, TaskScheduler.Default)
+            : this(new UserCustomDataBuilder(), raygunMessageBuilder, raygunClientFactory,
+                new TypeActivator(l => LogLog.Debug(DeclaringType, l)), TaskScheduler.Default)
         {
         }
 
-        protected RaygunAppenderBase(IUserCustomDataBuilder userCustomDataBuilder, IRaygunMessageBuilder raygunMessageBuilder, IRaygunClientFactory raygunClientFactory, TaskScheduler taskScheduler)
+        protected RaygunAppenderBase(IUserCustomDataBuilder userCustomDataBuilder, IRaygunMessageBuilder raygunMessageBuilder,
+            IRaygunClientFactory raygunClientFactory, ITypeActivator typeActivator, TaskScheduler taskScheduler)
         {
             _userCustomDataBuilder = userCustomDataBuilder;
             _raygunMessageBuilder = raygunMessageBuilder;
             _raygunClientFactory = raygunClientFactory;
+            _typeActivator = typeActivator;
             _taskScheduler = taskScheduler;
 
             _sendInBackground = true;
+        }
+
+        private IRaygunClientFactory RaygunClientFactory
+        {
+            get
+            {
+                return _typeActivator.Activate<IRaygunClientFactory>(CustomRaygunClientFactory, e => ErrorHandler.Error(e), _raygunClientFactory);
+            }
         }
 
         public virtual string ApiKey { get; set; }
@@ -58,11 +70,12 @@ namespace log4net.Raygun.Core
         public virtual string IgnoredCookieNames { get; set; }
         public virtual string IgnoredServerVariableNames { get; set; }
         public virtual bool IsRawDataIgnored { get; set; }
+        public virtual string ApplicationVersion { get; set; }
 
         public virtual string ExceptionFilter { get; set; }
         public virtual string RenderedMessageFilter { get; set; }
 
-        public virtual string ApplicationVersion { get; set; }
+        public virtual string CustomRaygunClientFactory { get; set; }
 
         protected override void Append(LoggingEvent loggingEvent)
         {
@@ -135,30 +148,7 @@ namespace log4net.Raygun.Core
 
         private IMessageFilter ActivateInstanceOfMessageFilter(string filter)
         {
-            if (filter != null)
-            {
-                var renderedMessageFilterType = Type.GetType(filter);
-
-                if (renderedMessageFilterType != null)
-                {
-                    LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activating instance of message filter for '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
-                    var renderedMessageFilter = Activator.CreateInstance(renderedMessageFilterType) as IMessageFilter;
-
-                    if (renderedMessageFilter != null)
-                    {
-                        LogLog.Debug(DeclaringType, string.Format("RaygunAppender: Activated instance of message filter '{0}'", renderedMessageFilterType.AssemblyQualifiedName));
-                        return renderedMessageFilter;
-                    }
-
-                    ErrorHandler.Error(string.Format("RaygunAppender: Configured message filter '{0}' is not a IMessageFilter", filter));
-                }
-                else
-                {
-                    ErrorHandler.Error(string.Format("RaygunAppender: Configured message filter '{0}' is not a type", filter));
-                }
-            }
-
-            return new DoNothingMessageFilter();
+            return _typeActivator.Activate<IMessageFilter>(filter, e => ErrorHandler.Error(e), new DoNothingMessageFilter());
         }
 
         private void SendErrorToRaygun(RaygunMessage raygunMessage)
@@ -172,7 +162,7 @@ namespace log4net.Raygun.Core
                         ErrorHandler.Error("RaygunAppender: API Key is empty");
                     }
 
-                    var raygunClient = _raygunClientFactory.Create(ApiKey);
+                    var raygunClient = RaygunClientFactory.Create(ApiKey);
 
                     raygunClient.Send(raygunMessage);
 

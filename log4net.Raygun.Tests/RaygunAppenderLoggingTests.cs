@@ -22,7 +22,11 @@ namespace log4net.Raygun.Tests
             _raygunMessageBuilder = new RaygunMessageBuilder(() => FakeHttpContext.For(new FakeHttpApplication()));
             _fakeRaygunClient = new FakeRaygunClient();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new TestRaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, RaygunClientFactoryMethod.From(apiKey => _fakeRaygunClient), _currentThreadTaskScheduler);
+            _appender = new TestRaygunAppender(_fakeUserCustomDataBuilder,
+                                               _raygunMessageBuilder,
+                                               RaygunClientFactoryMethod.From(apiKey => _fakeRaygunClient),
+                                               new TypeActivator(l => { }),
+                                               _currentThreadTaskScheduler);
             _fakeErrorHandler = new FakeErrorHandler();
 
             _appender.ErrorHandler = _fakeErrorHandler;
@@ -40,7 +44,11 @@ namespace log4net.Raygun.Tests
         [Test]
         public void WhenSendingErrorToRaygunFailsThenThatIsLogged()
         {
-            var appender = new TestRaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, RaygunClientFactoryMethod.From(apiKey => new FakeBrokenRaygunClient()), _currentThreadTaskScheduler);
+            var appender = new TestRaygunAppender(_fakeUserCustomDataBuilder, 
+                                                  _raygunMessageBuilder,
+                                                  RaygunClientFactoryMethod.From(apiKey => new FakeBrokenRaygunClient()),
+                                                  new TypeActivator(l => { }),
+                                                  _currentThreadTaskScheduler);
             var fakeErrorHandler = new FakeErrorHandler();
 
             appender.ErrorHandler = fakeErrorHandler;
