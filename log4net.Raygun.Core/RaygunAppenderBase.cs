@@ -44,7 +44,8 @@ namespace log4net.Raygun.Core
         {
             get
             {
-                return _typeActivator.Activate<IRaygunClientFactory>(CustomRaygunClientFactory, e => ErrorHandler.Error(e), _raygunClientFactory);
+                var clientFactory = _typeActivator.Activate<IRaygunClientFactory>(CustomRaygunClientFactory, e => ErrorHandler.Error(e), _raygunClientFactory);
+                return clientFactory;
             }
         }
 

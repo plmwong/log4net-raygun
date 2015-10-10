@@ -1,8 +1,8 @@
-﻿using log4net.Raygun.Core;
-using NUnit.Framework;
-using log4net.Raygun.Tests.Fakes;
+﻿using System.Collections.Generic;
 using log4net.Core;
-using System;
+using log4net.Raygun.Core;
+using log4net.Raygun.Tests.Fakes;
+using NUnit.Framework;
 
 namespace log4net.Raygun.Tests
 {
@@ -14,6 +14,7 @@ namespace log4net.Raygun.Tests
         private UserCustomDataBuilder _userCustomDataBuilder;
         private FakeRaygunClient _fakeRaygunClient;
         private CurrentThreadTaskScheduler _currentThreadTaskScheduler;
+        private InterceptingTypeActivator _fakeTypeActivator;
         private FakeErrorHandler _fakeErrorHandler;
 
         [SetUp]
@@ -22,11 +23,12 @@ namespace log4net.Raygun.Tests
             _raygunMessageBuilder = new RaygunMessageBuilder(() => FakeHttpContext.For(new FakeHttpApplication()));
             _userCustomDataBuilder = new UserCustomDataBuilder();
             _fakeRaygunClient = new FakeRaygunClient();
+            _fakeTypeActivator = new InterceptingTypeActivator();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
             _appender = new TestRaygunAppender(_userCustomDataBuilder,
                                                _raygunMessageBuilder,
                                                RaygunClientFactoryMethod.From(apiKey => _fakeRaygunClient),
-                                               new TypeActivator(l => { }),
+                                               _fakeTypeActivator,
                                                _currentThreadTaskScheduler);
             _fakeErrorHandler = new FakeErrorHandler();
 
@@ -36,12 +38,16 @@ namespace log4net.Raygun.Tests
         [Test]
         public void WhenCustomRaygunClientFactoryIsSetThenCustomRaygunClientIsUsed()
         {
-            _appender.CustomRaygunClientFactory = typeof (FakeRaygunClientFactory).AssemblyQualifiedName;
+            const string customRaygunFactoryType = "fakeClientFactoryType";
+            var otherFakeRaygunClient = new FakeRaygunClient();
+            _fakeTypeActivator.RegisteredInstance = new KeyValuePair<string, object>(customRaygunFactoryType, RaygunClientFactoryMethod.From(apiKey => otherFakeRaygunClient));
+            _appender.CustomRaygunClientFactory = customRaygunFactoryType;
 
             var errorLoggingEvent = new LoggingEvent(GetType(), null, GetType().Name, Level.Error, new TestException(), null);
             _appender.DoAppend(errorLoggingEvent);
 
             Assert.That(_fakeRaygunClient.LastMessageSent, Is.Null);
+            Assert.That(otherFakeRaygunClient.LastMessageSent, Is.Not.Null);
         }
     }
 }
