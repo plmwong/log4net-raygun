@@ -75,7 +75,6 @@ namespace log4net.Raygun.Core
 
         public virtual string ExceptionFilter { get; set; }
         public virtual string RenderedMessageFilter { get; set; }
-
         public virtual string CustomRaygunClientFactory { get; set; }
 
         protected override void Append(LoggingEvent loggingEvent)

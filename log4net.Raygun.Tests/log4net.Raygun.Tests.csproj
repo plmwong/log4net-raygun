@@ -85,7 +85,7 @@
     <Compile Include="RenderedMessageFilterTests.cs" />
     <Compile Include="Fakes\FakeMessageFilter.cs" />
     <Compile Include="CustomRaygunClientFactoryTests.cs" />
-    <Compile Include="Fakes\InterceptingTypeActivator.cs" />
+    <Compile Include="Fakes\FakeTypeActivator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AllPropertiesSet.config">
