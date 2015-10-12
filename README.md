@@ -11,6 +11,9 @@ Currently log4net.Raygun supports .NET Target Frameworks 4.0 and 4.5. Releases o
 
 NuGet
 -----
+
+### Latest Version: 4.2.0
+
 https://www.nuget.org/packages/log4net.Raygun/
 
 or for the log4net 1.2.10 compatible version:
