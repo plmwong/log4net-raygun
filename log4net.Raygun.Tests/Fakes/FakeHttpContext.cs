@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Web;
-using log4net.Raygun.Core;
 
 namespace log4net.Raygun.Tests.Fakes
 {

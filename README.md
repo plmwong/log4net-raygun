@@ -11,6 +11,9 @@ Currently log4net.Raygun supports .NET Target Frameworks 4.0 and 4.5. Releases o
 
 NuGet
 -----
+
+### Latest Version: 4.2.0
+
 https://www.nuget.org/packages/log4net.Raygun/
 
 or for the log4net 1.2.10 compatible version:
@@ -32,6 +35,7 @@ Configuration
 * `sendInBackground` (optional) : Toggle whether to send messages to raygun in a background task. If set to false then raygun messages will be sent synchronously. By default this is set to true.
 * `exceptionFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from an `Exception.Message`.
 * `renderedMessageFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from the RenderedMessage in UserCustomData.
+* `customRaygunClientFactory` (optional) : The assembly qualified class name for an implementation of `IRaygunClientFactory`. This factory implementation will be used to construct the `IRaygunClient` used by the appender to send raygun messages and provides a hook for developers to customise the client.
 * `applicationVersion` (optional) : Sets the application version which the raygun messages will use to identify the application. If this is not specified, then the assembly version will be used.
 
 The following configuration properties can be used to omit sensitive data from being sent to raygun:
@@ -99,17 +103,23 @@ public class SensitiveInformationFilter : IMessageFilter
 }
 ```
 
-***What about tags?***
+***What about tags? Or the affected user?***
 
 As of version 2.1, log4net.Raygun provides a basic mechanism for populating tags in a raygun message.
 Tags can be stored as custom data in a pipe-delimited format (e.g. tag1|tag2|tag3) on the `log4net.LogicalThreadContext` or `log4net.GlobalContext` collections, prior to calling a log4net logging method..
 
 ```
 log4net.LogicalThreadContext.Properties[RaygunAppender.PropertyKeys.Tags] = "important|squirrel-related";
-log.Error("Something bad happened to your squirrel!"); 
+log.Error("Something bad happened to your squirrel!");
 ```
 
 When constructing the raygun message to send to raygun.io, log4net.Raygun will use the tags stored in this collection to populate the raygun message tags.
+
+Similarly, you can construct a `RaygunIdentifierMessage` and populate that into the context as well, and this will populate the user information on the raygun message.
+
+```
+log4net.LogicalThreadContext.Properties[RaygunAppender.PropertyKeys.AffectedUser] = new RaygunIdentifierMessage("I was affected");
+```
 
 ***I have to use version X of log4net, because of reasons, and it is newer/older than the one log4net.Raygun is built against***
 
@@ -161,3 +171,6 @@ public static class WebApiConfig
 }
 ```
 
+Contributing
+------------
+If you would like to contribute a feature or bug fix, feel free to fork log4net.Raygun, make and commit your changes, and then raise a pull request against `master`.

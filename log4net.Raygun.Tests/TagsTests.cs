@@ -23,7 +23,11 @@ namespace log4net.Raygun.Tests
             _fakeUserCustomDataBuilder = new FakeUserCustomDataBuilder();
             _fakeRaygunClient = new FakeRaygunClient();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
-            _appender = new TestRaygunAppender(_fakeUserCustomDataBuilder, _raygunMessageBuilder, apiKey => _fakeRaygunClient, _currentThreadTaskScheduler);
+            _appender = new TestRaygunAppender(_fakeUserCustomDataBuilder,
+                                               _raygunMessageBuilder,
+                                               RaygunClientFactoryMethod.From(apiKey => _fakeRaygunClient),
+                                               new TypeActivator(l => { }),
+                                               _currentThreadTaskScheduler);
         }
 
         [Test]
@@ -65,7 +69,7 @@ namespace log4net.Raygun.Tests
         public void WhenLoggingEventDoesNotContainAnyTagsThenRaygunMessageHasNoTags()
         {
             var loggingEventWithProperties = new LoggingEvent(new LoggingEventData { Properties = new PropertiesDictionary() });
-            
+
             _appender.DoAppend(loggingEventWithProperties);
 
             Assert.That(_fakeRaygunClient.LastMessageSent.Details.Tags, Is.Null);
