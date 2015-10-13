@@ -56,7 +56,9 @@
   <ItemGroup>
     <Compile Include="AssemblyResolver.cs" />
     <Compile Include="DoNothingMessageFilter.cs" />
+    <Compile Include="RaygunClientFactoryMethod.cs" />
     <Compile Include="IMessageFilter.cs" />
+    <Compile Include="IRaygunClientFactory.cs" />
     <Compile Include="IRaygunMessageBuilder.cs" />
     <Compile Include="RaygunAppenderBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +70,8 @@
     <Compile Include="IAssembly.cs" />
     <Compile Include="UserCustomDataBuilderExtensions.cs" />
     <Compile Include="IgnoredDataSettings.cs" />
+    <Compile Include="TypeActivator.cs" />
+    <Compile Include="ITypeActivator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -11,6 +11,9 @@ Currently log4net.Raygun supports .NET Target Frameworks 4.0 and 4.5. Releases o
 
 NuGet
 -----
+
+### Latest Version: 4.2.0
+
 https://www.nuget.org/packages/log4net.Raygun/
 
 or for the log4net 1.2.10 compatible version:
@@ -32,6 +35,7 @@ Configuration
 * `sendInBackground` (optional) : Toggle whether to send messages to raygun in a background task. If set to false then raygun messages will be sent synchronously. By default this is set to true.
 * `exceptionFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from an `Exception.Message`.
 * `renderedMessageFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from the RenderedMessage in UserCustomData.
+* `customRaygunClientFactory` (optional) : The assembly qualified class name for an implementation of `IRaygunClientFactory`. This factory implementation will be used to construct the `IRaygunClient` used by the appender to send raygun messages and provides a hook for developers to customise the client.
 * `applicationVersion` (optional) : Sets the application version which the raygun messages will use to identify the application. If this is not specified, then the assembly version will be used.
 
 The following configuration properties can be used to omit sensitive data from being sent to raygun:
@@ -167,3 +171,6 @@ public static class WebApiConfig
 }
 ```
 
+Contributing
+------------
+If you would like to contribute a feature or bug fix, feel free to [https://help.github.com/articles/fork-a-repo/](fork) log4net.Raygun, make and commit your changes, and then raise a pull request against `master`.
