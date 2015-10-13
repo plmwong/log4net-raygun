@@ -170,3 +170,7 @@ public static class WebApiConfig
     }
 }
 ```
+
+Contributing
+------------
+If you would like to contribute a feature or bug fix, feel free to [https://help.github.com/articles/fork-a-repo/](fork) log4net.Raygun, make and commit your changes, and then raise a pull request against `master`.
