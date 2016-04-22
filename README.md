@@ -31,7 +31,7 @@ Configuration
 * `apiKey` (required) : The API key for accessing your application in raygun.io. The API key can be found under 'Application Settings' of your Raygun app.
 * `retries` (optional) : The number of times to try and send the exception raygun message to the raygun.io API before giving up and discarding the message. If this setting is not specified, then retries are *disabled* and the appender will only try to log to raygun once, and discard the message if unsuccessful.
 * `timeBetweenRetries` (optional) : A `TimeSpan` of the time to wait between retry attempts. If this setting is not specified, then a default of '00:00:05' (5 seconds) is used.
-* `onlySendExceptions` (optional) : Toggle whether to send both exceptions and messages logged to ERROR to raygun, or whether to only send logged events which contain exceptions. If this setting is not specified, then by defauly *both* exceptions and error messages will be sent to raygun.
+* `onlySendExceptions` (optional) : Toggle whether to send both exceptions and messages logged to ERROR to raygun, or whether to only send logged events which contain exceptions. If this setting is not specified, then by default *both* exceptions and error messages will be sent to raygun.
 * `sendInBackground` (optional) : Toggle whether to send messages to raygun in a background task. If set to false then raygun messages will be sent synchronously. By default this is set to true.
 * `exceptionFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from an `Exception.Message`.
 * `renderedMessageFilter` (optional) : The assembly qualified class name for an implementation of `IMessageFilter`. This filter will be called prior to the Raygun message being sent and can be used to filter out sensitive information from the RenderedMessage in UserCustomData.
@@ -88,7 +88,7 @@ You can use the https://www.nuget.org/packages/log4net.1.2.10.Raygun version bui
 ***My application logs sensitive information which we would rather not send to a third-party***
 
 log4net.Raygun now allows you to implement an `IMessageFilter`, and then configure the RaygunAppender to use filters in the appender configuration.
-The filters allow for exceptions and/or the rendered log4net message to be sanitized before it is sent to raygun.
+The filters allow for exceptions and/or the rendered log4net message to be sanitised before it is sent to raygun.
 
 E.g.
 
