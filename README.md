@@ -12,17 +12,20 @@ Currently log4net.Raygun supports .NET Target Frameworks 4.0 and 4.5. Releases o
 NuGet
 -----
 
-### Latest Version: 4.2.0
-
+[![NuGet package](https://img.shields.io/nuget/v/log4net.Raygun.svg)](https://www.nuget.org/packages/log4net.Raygun/)
 https://www.nuget.org/packages/log4net.Raygun/
 
 or for the log4net 1.2.10 compatible version:
 
+[![NuGet package](https://img.shields.io/nuget/v/log4net.1.2.10.Raygun.svg)](https://www.nuget.org/packages/log4net.1.2.10.Raygun/)
 https://www.nuget.org/packages/log4net.1.2.10.Raygun
 
 If you use either Mindscape.Raygun4Net.Mvc or Mindscape.Raygun4Net.WebApi, you can use:
 
+[![NuGet package](https://img.shields.io/nuget/v/log4net.Raygun.Mvc.svg)](https://www.nuget.org/packages/log4net.Raygun.Mvc/)
 https://www.nuget.org/packages/log4net.Raygun.Mvc/
+
+[![NuGet package](https://img.shields.io/nuget/v/log4net.Raygun.WebApi.svg)](https://www.nuget.org/packages/log4net.Raygun.WebApi/)
 https://www.nuget.org/packages/log4net.Raygun.WebApi/
 
 Configuration
