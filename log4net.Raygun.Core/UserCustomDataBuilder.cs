@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Raygun.Core
 {
@@ -36,13 +37,11 @@ namespace log4net.Raygun.Core
 
         private static void AddCustomProperties(LoggingEvent loggingEvent, Dictionary<string, string> userCustomData)
         {
-            if (loggingEvent.Properties != null)
+            var properties = loggingEvent.GetProperties() ?? new PropertiesDictionary();
+            foreach (var propertyKey in properties.GetKeys())
             {
-                foreach (var propertyKey in loggingEvent.Properties.GetKeys())
-                {
-                    var propertyValue = loggingEvent.Properties[propertyKey].ToString();
-                    userCustomData.Add(string.Format("{0}.{1}", UserCustomDataKey.PropertiesPrefix, propertyKey), propertyValue);
-                }
+                var propertyValue = properties[propertyKey].ToString();
+                userCustomData.Add($"{UserCustomDataKey.PropertiesPrefix}.{propertyKey}", propertyValue);
             }
         }
 
