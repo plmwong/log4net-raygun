@@ -19,7 +19,7 @@ namespace log4net.Raygun.WebApi
         {
             var raygunMessageBuilder = Mindscape.Raygun4Net.WebApi.RaygunWebApiMessageBuilder.New;
 
-            var httpRequestMessage = ResolveHttpRequestMessageFromLog4NetProperties(loggingEvent.Properties);
+            var httpRequestMessage = ResolveHttpRequestMessageFromLog4NetProperties(loggingEvent.GetProperties());
             if (httpRequestMessage != null)
             {
                 LogLog.Debug(DeclaringType, "RaygunAppender: Setting http details on the raygun message from http context");
@@ -39,8 +39,8 @@ namespace log4net.Raygun.WebApi
             raygunMessageBuilder
                 .SetExceptionDetails(exception)
                 .SetClientDetails()
-                .SetTags(ExtractTags(loggingEvent.Properties))
-                .SetUser(ExtractAffectedUser(loggingEvent.Properties))
+                .SetTags(ExtractTags(loggingEvent.GetProperties()))
+                .SetUser(ExtractAffectedUser(loggingEvent.GetProperties()))
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
                 .SetVersion(GetApplicationVersion(customApplicationVersion))
@@ -109,8 +109,7 @@ namespace log4net.Raygun.WebApi
         private T ResolveFromLog4NetProperties<T>(ReadOnlyPropertiesDictionary loggingEventProperties, string key)
             where T : class
         {
-            return (loggingEventProperties[key] ?? LogicalThreadContext.Properties[key]
-                ?? ThreadContext.Properties[key] ?? GlobalContext.Properties[key]) as T;
+            return loggingEventProperties[key] as T;
         }
 
         private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData, IMessageFilter renderedMessageFilter)

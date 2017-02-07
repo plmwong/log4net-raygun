@@ -24,7 +24,7 @@ namespace log4net.Raygun.Tests
             _fakeRaygunClient = new FakeRaygunClient();
             _currentThreadTaskScheduler = new CurrentThreadTaskScheduler();
             _appender = new TestRaygunAppender(_fakeUserCustomDataBuilder,
-                                               _raygunMessageBuilder, 
+                                               _raygunMessageBuilder,
                                                RaygunClientFactoryMethod.From(apiKey => _fakeRaygunClient),
                                                new TypeActivator(l => { }),
                                                _currentThreadTaskScheduler);

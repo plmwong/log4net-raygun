@@ -42,8 +42,8 @@ namespace log4net.Raygun
             raygunMessageBuilder
                 .SetExceptionDetails(exception)
                 .SetClientDetails()
-                .SetTags(ExtractTags(loggingEvent.Properties))
-                .SetUser(ExtractAffectedUser(loggingEvent.Properties))
+                .SetTags(ExtractTags(loggingEvent.GetProperties()))
+                .SetUser(ExtractAffectedUser(loggingEvent.GetProperties()))
                 .SetEnvironmentDetails()
                 .SetMachineName(Environment.MachineName)
                 .SetVersion(GetApplicationVersion(customApplicationVersion))
@@ -101,7 +101,7 @@ namespace log4net.Raygun
 
         private string ResolveTagsFromLog4NetProperties(ReadOnlyPropertiesDictionary loggingEventProperties)
         {
-            return (loggingEventProperties[RaygunAppenderBase.PropertyKeys.Tags] ?? ThreadContext.Properties[RaygunAppenderBase.PropertyKeys.Tags] ?? GlobalContext.Properties[RaygunAppenderBase.PropertyKeys.Tags]) as string;
+            return loggingEventProperties[RaygunAppenderBase.PropertyKeys.Tags] as string;
         }
 
         private Dictionary<string, string> FilterRenderedMessageInUserCustomData(Dictionary<string, string> userCustomData, IMessageFilter renderedMessageFilter)
@@ -117,7 +117,7 @@ namespace log4net.Raygun
 
         private RaygunIdentifierMessage ExtractAffectedUser(ReadOnlyPropertiesDictionary loggingEventProperties)
         {
-            return (loggingEventProperties[RaygunAppenderBase.PropertyKeys.AffectedUser] ?? ThreadContext.Properties[RaygunAppenderBase.PropertyKeys.AffectedUser] ?? GlobalContext.Properties[RaygunAppenderBase.PropertyKeys.AffectedUser]) as RaygunIdentifierMessage;
+            return loggingEventProperties[RaygunAppenderBase.PropertyKeys.AffectedUser] as RaygunIdentifierMessage;
         }
     }
 }
