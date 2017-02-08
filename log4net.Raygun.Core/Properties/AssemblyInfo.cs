@@ -15,6 +15,6 @@ using System.Runtime.CompilerServices;
 
 [assembly: Guid("93604374-d920-44e2-8bac-32283d0b4ad4")]
 
-[assembly: AssemblyVersion("4.3.0.*")]
-[assembly: AssemblyFileVersion("4.3.0.0")]
+[assembly: AssemblyVersion("4.2.1.*")]
+[assembly: AssemblyFileVersion("4.2.1.0")]
 [assembly: InternalsVisibleTo("log4net.Raygun.Tests")]

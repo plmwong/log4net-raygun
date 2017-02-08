@@ -12,6 +12,8 @@
     <description>Simple log4net appender which logs to the raygun.io API from your WebApi application.</description>
     <releaseNotes>
       Changes:
+      4.2.1 -
+      * Replaces use of loggingEvent.Properties with loggingEvent.GetProperties(), which combines Local, ThreadContext, LogicalThreadContext, and GlobalContext properties.
       4.2.0 -
       * Added capability to add RaygunIdentifierMessage to log4net properties and have those affected user details added to logged messages.
       * Added configuration property: 'customRaygunClientFactory' for injecting in your own factory class for creating IRaygunClient. Provides a hook for more flexibility and configuration on the client itself.
