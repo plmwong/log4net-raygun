@@ -12,6 +12,8 @@
     <description>Simple log4net appender which logs to the raygun.io API.</description>
     <releaseNotes>
       Changes:
+      4.3.0 -
+      * Updated the minimum version for the Mindscape.Raygun4Net dependency to 5.9.0.
       4.2.1 -
       * Replaces use of loggingEvent.Properties with loggingEvent.GetProperties(), which combines Local, ThreadContext, LogicalThreadContext, and GlobalContext properties.
       4.2.0 -
