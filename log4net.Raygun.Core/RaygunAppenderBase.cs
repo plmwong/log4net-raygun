@@ -70,6 +70,8 @@ namespace log4net.Raygun.Core
         public virtual string IgnoredHeaderNames { get; set; }
         public virtual string IgnoredCookieNames { get; set; }
         public virtual string IgnoredServerVariableNames { get; set; }
+        public virtual string IgnoredQueryParameterNames { get; set; }
+        public virtual string IgnoredSensitiveFieldNames { get; set; }
         public virtual bool IsRawDataIgnored { get; set; }
         public virtual string ApplicationVersion { get; set; }
 
@@ -93,13 +95,20 @@ namespace log4net.Raygun.Core
 
                 RaygunMessage raygunMessage = BuildRaygunMessageToSend(exception, loggingEvent);
 
-                if (SendInBackground)
+                if (raygunMessage == null)
                 {
-                    SendErrorToRaygunInBackground(raygunMessage);
+                    LogLog.Warn(DeclaringType, "RaygunAppender: Failed to send due to an invalid RaygunMessage object");
                 }
                 else
                 {
-                    SendErrorToRaygun(raygunMessage);
+                    if (SendInBackground)
+                    {
+                        SendErrorToRaygunInBackground(raygunMessage);
+                    }
+                    else
+                    {
+                        SendErrorToRaygun(raygunMessage);
+                    }
                 }
             }
         }
@@ -130,11 +139,21 @@ namespace log4net.Raygun.Core
 
             var exceptionFilter = ActivateInstanceOfMessageFilter(ExceptionFilter);
             var renderedMessageFilter = ActivateInstanceOfMessageFilter(RenderedMessageFilter);
-            var ignoredFieldSettings = new IgnoredDataSettings(IgnoredFormNames, IgnoredHeaderNames,
-                IgnoredCookieNames, IgnoredServerVariableNames, IsRawDataIgnored);
+            
+            var ignoredFieldSettings = new IgnoredDataSettings(IgnoredFormNames, IgnoredHeaderNames, IgnoredCookieNames, 
+                IgnoredServerVariableNames, IgnoredQueryParameterNames, IgnoredSensitiveFieldNames, IsRawDataIgnored);
 
-            RaygunMessage raygunMessage = _raygunMessageBuilder.BuildMessage(exception, loggingEvent, userCustomData,
-                exceptionFilter, renderedMessageFilter, ignoredFieldSettings, ApplicationVersion);
+            RaygunMessage raygunMessage = null;
+            
+            try
+            {
+                raygunMessage = _raygunMessageBuilder.BuildMessage(exception, loggingEvent, userCustomData, exceptionFilter, 
+                    renderedMessageFilter, ignoredFieldSettings, ApplicationVersion);
+            }
+            catch (Exception ex)
+            {
+               LogLog.Error(DeclaringType, "RaygunAppender: Failed to build RaygunMessage", ex);
+            }
 
             return raygunMessage;
         }
